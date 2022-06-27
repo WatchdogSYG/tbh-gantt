@@ -2,8 +2,11 @@
 A prototype Power BI Visual for a Gantt Chart.
 
 Author: `Brandon Lu`
+
 Work email: `brandon.lu@tbhint.com`
+
 Personal email: `brandonlu001@gmail.com`
+
 LinkedIn: https://www.linkedin.com/in/brandonlu001/
 
 ## Summary
@@ -29,6 +32,6 @@ Follow the CircleCard tutorial above as an introduction to developing a visual.
 
 Ensure https://localhost:8080/assets/status is authorised on your browser.
 
-![Successful blank visual displaying in a report.]{readme-assets/000-SuccessfulInitialDeveloperVisual}
+![Successful blank visual displaying in a report.](readme-assets/000-SuccessfulInitialDeveloperVisual)
 
 ### Requirements Definition
