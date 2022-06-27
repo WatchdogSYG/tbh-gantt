@@ -32,6 +32,11 @@ Follow the CircleCard tutorial above as an introduction to developing a visual.
 
 Ensure https://localhost:8080/assets/status is authorised on your browser.
 
-![Successful blank visual displaying in a report.](readme-assets/000-SuccessfulInitialDeveloperVisual)
+![Successful blank visual displaying in a report.](readme-assets/000-SuccessInitialDeveloperVisual.jpg)
 
-### Requirements Definition
+## Requirements Definition
+
+1. Requirement or Feature 1
+1. Requirement or Feature 2
+1. Requirement or Feature 3
+1. Requirement or Feature 4
