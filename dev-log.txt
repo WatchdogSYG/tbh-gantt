@@ -1,0 +1,11 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\Watchdog> pbiviz --install-cert
+ info   powerbi-visuals-tools version - 4.0.5
+ error  Certificate not found. The new certificate will be generated
+ info   Generating a new certificate...
+ info   Certificate generated. Location is C:\Users\Watchdog\AppData\Roaming\npm\node_modules\powerbi-visuals-tools\certs\PowerBICustomVisualTest_public.pfx. Passphrase is '8422860169431734'
+PS C:\Users\Watchdog>
