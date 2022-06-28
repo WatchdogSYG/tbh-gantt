@@ -34,6 +34,11 @@ Ensure https://localhost:8080/assets/status is authorised on your browser.
 
 ![Successful blank visual displaying in a report.](readme-assets/000-SuccessInitialDeveloperVisual.jpg)
 
+### Understanding Data Mappings
+
+https://docs.microsoft.com/en-us/power-bi/developer/visuals/dataview-mappings
+
+
 ## Requirements Definition
 
 ### Primary
