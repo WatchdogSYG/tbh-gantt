@@ -34,10 +34,13 @@ Ensure https://localhost:8080/assets/status is authorised on your browser.
 
 ![Successful blank visual displaying in a report.](readme-assets/000-SuccessInitialDeveloperVisual.jpg)
 
+CircleCard visual tutorial complete (with sample Power BI data).
+
+![The end result of the CircleCard tutorial.](readme-assets/001-CircleCardComplete.jpg.jpg)
+
 ### Understanding Data Mappings
 
 https://docs.microsoft.com/en-us/power-bi/developer/visuals/dataview-mappings
-
 
 ## Requirements Definition
 
