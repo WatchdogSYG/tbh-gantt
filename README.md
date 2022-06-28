@@ -36,7 +36,25 @@ Ensure https://localhost:8080/assets/status is authorised on your browser.
 
 ## Requirements Definition
 
-1. Requirement or Feature 1
-1. Requirement or Feature 2
-1. Requirement or Feature 3
-1. Requirement or Feature 4
+### Primary
+
+- Timeline (at top by default, axis units YYYY and MMM by default)
+- Timeline scaleable (zoom in or out)
+- Activities (bar, blue by default) and Milestones (diamond, black by default)
+- Summaries?
+- Links between activities and milestones
+- Critical activities identified as red (pull in total float)
+- Status date line
+
+### Secondary
+
+- Mobile compatible
+- Display multiple activities on one line (like rollup summaries)
+
+### Features
+
+- Expand / Collapse summaries
+- [Optional] Timeline position options (bottom of gantt)
+- [Optional] Timeline axis units adjustable
+
+## Mockups / Layouts
