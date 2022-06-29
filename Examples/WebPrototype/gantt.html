@@ -2,21 +2,22 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="https://unpkg.com/ts-gantt/dist/styles.min.css">
-    <script src="https://unpkg.com/ts-gantt/dist/ts-gantt.umd.min.js"></script>
-    <script>
-        function newContent() {
-
-            const chart = new tsGantt.TsGantt("#container-selector");
+    <style>
+        .container-div{
+            background: #990000;
+            width: 60%;
+            height: 60%;
         }
-      </script>
-    </head>
-    
-    <body onload="newContent();">
-        <div style:"position:relative;" id="#container-selector" onload="newContent();">
-            <p>Some original document content.</p>
-        </div>
-      
-    </body>
+    </style>
+</head>
 
+<body>
+<div class = "container-div">
+    <svg>
+        <rect width="100%", height="10%" fill="green"></rect>
+        <rect width="10%", height="100%" fill="blue"></rect>
+    </svg>
+</div>
+
+</body>
 </html>

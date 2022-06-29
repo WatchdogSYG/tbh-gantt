@@ -36,11 +36,18 @@ Ensure https://localhost:8080/assets/status is authorised on your browser.
 
 CircleCard visual tutorial complete (with sample Power BI data).
 
-![The end result of the CircleCard tutorial.](readme-assets/001-CircleCardComplete.jpg.jpg)
+![The end result of the CircleCard tutorial.](readme-assets/001-CircleCardComplete.jpg)
 
 ### Understanding Data Mappings
 
 https://docs.microsoft.com/en-us/power-bi/developer/visuals/dataview-mappings
+
+### Prototype of the front end DOM
+
+Initial positionings of elements in a web page and in ts.
+
+![Web area mappings](readme-assets/003-webPositioningExperiment.jpg)
+![TS visual area mappings](readme-assets/002-tsPositioningExperiment.jpg)
 
 ## Requirements Definition
 
