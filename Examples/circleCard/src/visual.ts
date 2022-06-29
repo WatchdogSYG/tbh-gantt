@@ -75,20 +75,20 @@ export class Visual implements IVisual {
         // https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
         //lines 377 onwards
         //Assigns the first (and only) html element to this.body and then appends a div
-        this.body = d3.select(options.element).append('div').classed('container-div',true)
-        .attr("border-style","solid")
-        .attr("border","5px solid green");
+        this.body = d3.select(options.element).append('div').classed('container-div',true);
+
 
         this.svg = this.body.append('svg').classed('tbh-gantt', true)
-        .attr("width","100%");
+        .attr("width","100%")
+        .attr("height","100%");
 
+        //rectangle for timeline area mockup
         this.container = this.svg.append("rect")
         .attr("width","80%")
         .attr("height","50px")
-        .attr("fill","#FF0000")
-        .attr("border-style","solid")
-        .attr("border","5px blue");
+        .attr("fill","#FF0000");
 
+        //rectangle for task axis area mockup
         this.container = this.svg.append("rect")
         .attr("width","50px")
         .attr("height","100%")
