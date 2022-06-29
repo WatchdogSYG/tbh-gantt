@@ -52,11 +52,29 @@ class Visual {
         //         new_p.appendChild(new_em);
         //         this.target.appendChild(new_p);
         //      }
-        this.svg = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys(options.element).append('svg').classed('circleCard', true);
-        this.container = this.svg.append("g").classed('container', true);
-        this.circle = this.container.append("circle").classed('circle', true);
-        this.textValue = this.container.append("text").classed("textValue", true);
-        this.textLabel = this.container.append("text").classed("textLabel", true);
+        // https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
+        //lines 377 onwards
+        //Assigns the first (and only) html element to this.body and then appends a div
+        this.body = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys(options.element).append('div').classed('container-div', true)
+            .attr("border-style", "solid")
+            .attr("border", "5px solid green");
+        this.svg = this.body.append('svg').classed('tbh-gantt', true)
+            .attr("width", "100%");
+        this.container = this.svg.append("rect")
+            .attr("width", "80%")
+            .attr("height", "50px")
+            .attr("fill", "#FF0000")
+            .attr("border-style", "solid")
+            .attr("border", "5px blue");
+        this.container = this.svg.append("rect")
+            .attr("width", "50px")
+            .attr("height", "100%")
+            .attr("fill", "#FFFF00")
+            .attr("border-style", "solid")
+            .attr("border", "5px black");
+        //this.circle = this.container.append("circle").classed('circle', true);
+        //this.textValue = this.container.append("text").classed("textValue", true);
+        //this.textLabel = this.container.append("text").classed("textLabel", true);
     }
     update(options) {
         //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);

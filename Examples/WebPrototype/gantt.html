@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/ts-gantt/dist/styles.min.css">
+    <script src="https://unpkg.com/ts-gantt/dist/ts-gantt.umd.min.js"></script>
+    <script>
+        function newContent() {
+
+            const chart = new tsGantt.TsGantt("#container-selector");
+        }
+      </script>
+    </head>
+    
+    <body onload="newContent();">
+        <div style:"position:relative;" id="#container-selector" onload="newContent();">
+            <p>Some original document content.</p>
+        </div>
+      
+    </body>
+
+</html>

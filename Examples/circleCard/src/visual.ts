@@ -39,6 +39,7 @@ import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnume
 
 import IVisualHost = powerbi.extensibility.IVisualHost;
 import * as d3 from "d3";
+import { style } from "d3";
 type Selection<T extends d3.BaseType> = d3.Selection<T, any, any, any>;
 
 export class Visual implements IVisual {
@@ -48,6 +49,7 @@ export class Visual implements IVisual {
     // private textNode: Text;
 
     private host: IVisualHost;
+    private body: Selection<any>;
     private svg: Selection<SVGElement>;
     private container: Selection<SVGElement>;
     private circle: Selection<SVGElement>;
@@ -58,25 +60,46 @@ export class Visual implements IVisual {
     constructor(options: VisualConstructorOptions) {
         console.log('Visual constructor', options);
     
-    //     this.target = options.element;
-    //     this.updateCount = 0;
-    //     if (document) {
-    //         const new_p: HTMLElement = document.createElement("p");
-    //         new_p.appendChild(document.createTextNode("Update count:"));
-    //         const new_em: HTMLElement = document.createElement("em");
-    //         this.textNode = document.createTextNode(this.updateCount.toString());
-    //         new_em.appendChild(this.textNode);
-    //         new_p.appendChild(new_em);
-    //         this.target.appendChild(new_p);
-    //      }
+        //     this.target = options.element;
+        //     this.updateCount = 0;
+        //     if (document) {
+        //         const new_p: HTMLElement = document.createElement("p");
+        //         new_p.appendChild(document.createTextNode("Update count:"));
+        //         const new_em: HTMLElement = document.createElement("em");
+        //         this.textNode = document.createTextNode(this.updateCount.toString());
+        //         new_em.appendChild(this.textNode);
+        //         new_p.appendChild(new_em);
+        //         this.target.appendChild(new_p);
+        //      }
         
-        
+        // https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
+        //lines 377 onwards
+        //Assigns the first (and only) html element to this.body and then appends a div
+        this.body = d3.select(options.element).append('div').classed('container-div',true)
+        .attr("border-style","solid")
+        .attr("border","5px solid green");
 
-        this.svg = d3.select(options.element).append('svg').classed('circleCard', true);
-        this.container = this.svg.append("g").classed('container', true);
-        this.circle = this.container.append("circle").classed('circle', true);
-        this.textValue = this.container.append("text").classed("textValue", true);
-        this.textLabel = this.container.append("text").classed("textLabel", true);
+        this.svg = this.body.append('svg').classed('tbh-gantt', true)
+        .attr("width","100%");
+
+        this.container = this.svg.append("rect")
+        .attr("width","80%")
+        .attr("height","50px")
+        .attr("fill","#FF0000")
+        .attr("border-style","solid")
+        .attr("border","5px blue");
+
+        this.container = this.svg.append("rect")
+        .attr("width","50px")
+        .attr("height","100%")
+        .attr("fill","#FFFF00")
+        .attr("border-style","solid")
+        .attr("border","5px black");
+
+        //this.circle = this.container.append("circle").classed('circle', true);
+
+        //this.textValue = this.container.append("text").classed("textValue", true);
+        //this.textLabel = this.container.append("text").classed("textLabel", true);
 
 
     }
