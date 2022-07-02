@@ -1,3 +1,9 @@
+/* -------- VAR -------- */
+:root{
+    --rowHeight: 20px;
+    --timelineHeight: 40px;
+}
+
 /*begin css reset*/
 body {
     line-height: 1;
@@ -30,10 +36,13 @@ table {
 
 body {
     margin: 0px;
+    font-family: 'Segoe UI Semibold',wf_segoe-ui_semibold,helvetica,arial,sans-serif;
 }
 
+/* -------- DIV -------- */
+
 div {
-    border: 1px dashed black;
+    /* border: 1px dashed black; */
     padding: 0px;
     margin: 0px;
 }
@@ -41,6 +50,10 @@ div {
 #div-header {
     height: 10%;
     min-height: 15px;
+
+    border-style: none none solid none;
+    border-width: 1px;
+    border-color: black;
 }
 
 #div-content {
@@ -54,19 +67,61 @@ div {
 }
 
 #div-chartContainer {
-    width: 75%;
+    flex-grow: 1;
+
     display:flex;
     flex-direction: column;
+
+    border-style: none none none solid;
+    border-width: 2px;
+    border-color: black;
 }
 
 #div-timeline {
-    min-height: 15px;
+    height: var(--timelineHeight);
 }
 
 #div-chart {
     height:auto;
     flex-grow: 1;
+    position: relative;
 }
+
+#overlay {
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.0);
+    z-index: 2;
+}
+
+/* ------- TABLE ------- */
+
+table{
+    width: 100%;
+}
+
+th{
+height: var(--timelineHeight);
+}
+
+tr{
+    height: var(--rowHeight);
+}
+
+td {
+    border: 1px #aaaaaa;
+    border-style: solid none solid solid;
+}
+
+/* #table-ganttGrid{
+
+} */
 
 .highlight {
     border: 1px solid #00ff00;
