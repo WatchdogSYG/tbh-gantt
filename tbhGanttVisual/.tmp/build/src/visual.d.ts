@@ -1,0 +1,23 @@
+import "./../style/visual.less";
+import powerbi from "powerbi-visuals-api";
+import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
+import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
+import IVisual = powerbi.extensibility.visual.IVisual;
+export declare class Visual implements IVisual {
+    private host;
+    private body;
+    private divHeader;
+    private divContent;
+    private divTasks;
+    private divChartContainer;
+    private divTimeline;
+    private divChart;
+    private divOverlay;
+    private svg;
+    private container;
+    private circle;
+    private textValue;
+    private textLabel;
+    constructor(options: VisualConstructorOptions);
+    update(options: VisualUpdateOptions): void;
+}

@@ -50,6 +50,8 @@ Initial positionings of elements in a web page and in ts.
 ![TS visual area mappings](readme-assets/002-tsPositioningExperiment.jpg)
 ![Web blockout](readme-assets/004-webBlockout.jpg)
 ![Web prototype (static) using tables and svg](readme-assets/005-webProtoUsingTables.jpg)
+![Div blockout in developer visual using ts.](readme-assets/006-ganttProtoPBIBlockout.jpg)
+
 ## Requirements Definition
 
 ### Primary

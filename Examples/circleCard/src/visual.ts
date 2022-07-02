@@ -51,6 +51,7 @@ export class Visual implements IVisual {
     private host: IVisualHost;
     private body: Selection<any>;
     private svg: Selection<SVGElement>;
+    private divHeader: Selection<HTMLDivElement>;
     private container: Selection<SVGElement>;
     private circle: Selection<SVGElement>;
     private textValue: Selection<SVGElement>;
@@ -59,7 +60,7 @@ export class Visual implements IVisual {
 
     constructor(options: VisualConstructorOptions) {
         console.log('Visual constructor', options);
-    
+
         //     this.target = options.element;
         //     this.updateCount = 0;
         //     if (document) {
@@ -71,30 +72,32 @@ export class Visual implements IVisual {
         //         new_p.appendChild(new_em);
         //         this.target.appendChild(new_p);
         //      }
-        
+
         // https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
         //lines 377 onwards
         //Assigns the first (and only) html element to this.body and then appends a div
-        this.body = d3.select(options.element).append('div').classed('container-div',true);
+        this.body = d3.select(options.element)
+            .append('div')
+            .classed('div-header', true).text("asdasdasd");
 
 
-        this.svg = this.body.append('svg').classed('tbh-gantt', true)
-        .attr("width","100%")
-        .attr("height","100%");
+        // this.svg = this.body.append('svg').classed('tbh-gantt', true)
+        //     .attr("width", "100%")
+        //     .attr("height", "100%");
 
-        //rectangle for timeline area mockup
-        this.container = this.svg.append("rect")
-        .attr("width","80%")
-        .attr("height","50px")
-        .attr("fill","#FF0000");
+        // //rectangle for timeline area mockup
+        // this.container = this.svg.append("rect")
+        //     .attr("width", "80%")
+        //     .attr("height", "50px")
+        //     .attr("fill", "#FF0000");
 
-        //rectangle for task axis area mockup
-        this.container = this.svg.append("rect")
-        .attr("width","50px")
-        .attr("height","100%")
-        .attr("fill","#FFFF00")
-        .attr("border-style","solid")
-        .attr("border","5px black");
+        // //rectangle for task axis area mockup
+        // this.container = this.svg.append("rect")
+        //     .attr("width", "50px")
+        //     .attr("height", "100%")
+        //     .attr("fill", "#FFFF00")
+        //     .attr("border-style", "solid")
+        //     .attr("border", "5px black");
 
         //this.circle = this.container.append("circle").classed('circle', true);
 
@@ -113,35 +116,35 @@ export class Visual implements IVisual {
 
         let dataView: DataView = options.dataViews[0];
 
-        let width: number = options.viewport.width;
-        let height: number = options.viewport.height;
-        this.svg.attr("width", width);
-        this.svg.attr("height", height);
-        let radius: number = Math.min(width, height) / 2.2;
-        this.circle
-            .style("fill", "white")
-            .style("fill-opacity", 0.5)
-            .style("stroke", "black")
-            .style("stroke-width", 2)
-            .attr("r", radius)
-            .attr("cx", width / 2)
-            .attr("cy", height / 2);
-        let fontSizeValue: number = Math.min(width, height) / 5;
-        this.textValue
-            .text(<string>dataView.single.value)
-            .attr("x", "50%")
-            .attr("y", "50%")
-            .attr("dy", "0.35em")
-            .attr("text-anchor", "middle")
-            .style("font-size", fontSizeValue + "px");
-        let fontSizeLabel: number = fontSizeValue / 4;
-        this.textLabel
-            .text(dataView.metadata.columns[0].displayName)
-            .attr("x", "50%")
-            .attr("y", height / 2)
-            .attr("dy", fontSizeValue / 1.2)
-            .attr("text-anchor", "middle")
-            .style("font-size", fontSizeLabel + "px");
+        // let width: number = options.viewport.width;
+        // let height: number = options.viewport.height;
+        // this.svg.attr("width", width);
+        // this.svg.attr("height", height);
+        // let radius: number = Math.min(width, height) / 2.2;
+        // this.circle
+        //     .style("fill", "white")
+        //     .style("fill-opacity", 0.5)
+        //     .style("stroke", "black")
+        //     .style("stroke-width", 2)
+        //     .attr("r", radius)
+        //     .attr("cx", width / 2)
+        //     .attr("cy", height / 2);
+        // let fontSizeValue: number = Math.min(width, height) / 5;
+        // this.textValue
+        //     .text(<string>dataView.single.value)
+        //     .attr("x", "50%")
+        //     .attr("y", "50%")
+        //     .attr("dy", "0.35em")
+        //     .attr("text-anchor", "middle")
+        //     .style("font-size", fontSizeValue + "px");
+        // let fontSizeLabel: number = fontSizeValue / 4;
+        // this.textLabel
+        //     .text(dataView.metadata.columns[0].displayName)
+        //     .attr("x", "50%")
+        //     .attr("y", height / 2)
+        //     .attr("dy", fontSizeValue / 1.2)
+        //     .attr("text-anchor", "middle")
+        //     .style("font-size", fontSizeLabel + "px");
 
     }
 
