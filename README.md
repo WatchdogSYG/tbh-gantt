@@ -49,7 +49,7 @@ Initial positionings of elements in a web page and in ts.
 ![Web area mappings](readme-assets/003-webPositioningExperiment.jpg)
 ![TS visual area mappings](readme-assets/002-tsPositioningExperiment.jpg)
 ![Web blockout](readme-assets/004-webBlockout.jpg)
-
+![Web prototype (static) using tables and svg](readme-assets/005-webProtoUsingTables.jpg)
 ## Requirements Definition
 
 ### Primary
