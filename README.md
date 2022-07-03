@@ -52,6 +52,11 @@ Initial positionings of elements in a web page and in ts.
 ![Web prototype (static) using tables and svg](readme-assets/005-webProtoUsingTables.jpg)
 ![Div blockout in developer visual using ts.](readme-assets/006-ganttProtoPBIBlockout.jpg)
 
+
+After the first iteration, it is proposed to use the following layout for overflow-y scrolling and dynamic sizing of the tasks table.
+
+![Proposed layout of iteration 2](readme-assets/007-iteration2layout.jpg)
+
 ## Requirements Definition
 
 ### Primary
