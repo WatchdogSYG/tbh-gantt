@@ -1,5 +1,5 @@
 /* -------- VAR -------- */
-:root{
+:root {
     --rowHeight: 20px;
     --timelineHeight: 40px;
 }
@@ -42,14 +42,15 @@ body {
 /* -------- DIV -------- */
 
 div {
-    /* border: 1px dashed black; */
+    border: 1px dashed black;
     padding: 0px;
     margin: 0px;
+    width: 100%;
 }
 
 #div-header {
-    height: 10%;
-    min-height: 15px;
+    // height: 10%;
+    min-height: 30px;
 
     border-style: none none solid none;
     border-width: 1px;
@@ -59,7 +60,8 @@ div {
 #div-content {
     height: fit-content;
     display: flex;
-    min-height: 185px;
+    justify-content: flex-end;
+
 }
 
 #div-tasks {
@@ -69,48 +71,76 @@ div {
 #div-chartContainer {
     flex-grow: 1;
 
-    display:flex;
-    flex-direction: column;
-
+    display: grid;
+    grid-template-columns: 1fr;
     border-style: none none none solid;
     border-width: 2px;
     border-color: black;
+
+    height: 500px;
 }
+
+//https://ishadeed.com/article/less-absolute-positioning-modern-css/
+//use grids, not absolutes!
+
+.gridStack {
+    //grid-area: 1 / 2; //can '2' be dynamic? Will fail if  2 =/= no. of grid items.
+    //didnt get the above syntax to work...longhand it is.
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 2;
+}
+
+#div-structureLayer {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+}
+
+#div-svgLayer {
+    height: 100%;
+    z-index: 1;
+}
+
+// #overlay {
+//     position: absolute;
+//     display: block;
+//     width: 100%;
+//     height: 100%;
+//     top: 0;
+//     left: 0;
+//     right: 0;
+//     bottom: 0;
+//     background-color: rgba(0, 0, 0, 0.0);
+//     z-index: 2;
+// }
+
 
 #div-timeline {
     height: var(--timelineHeight);
+
 }
 
 #div-chart {
-    height:auto;
+    height: fit-content;
+    min-height: 150px;
     flex-grow: 1;
     position: relative;
 }
 
-#overlay {
-    position: absolute;
-    display: block;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,0.0);
-    z-index: 2;
-}
-
 /* ------- TABLE ------- */
 
-table{
+table {
     width: 100%;
 }
 
-th{
-height: var(--timelineHeight);
+th {
+    height: var(--timelineHeight);
 }
 
-tr{
+tr {
     height: var(--rowHeight);
 }
 
@@ -122,6 +152,21 @@ td {
 /* #table-ganttGrid{
 
 } */
+
+/* ------- TIMELINE ------- */
+
+#svg-statusLine {
+    z-index: 3;
+}
+
+#statusLine {
+    stroke: rgb(255, 0, 0);
+    stroke-width: 2px;
+}
+
+
+
+/* ------- DEBUG ------- */
 
 .highlight {
     border: 1px solid #00ff00;
