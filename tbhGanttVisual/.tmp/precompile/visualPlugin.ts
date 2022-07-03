@@ -7,7 +7,7 @@ var powerbiKey: any = "powerbi";
 var powerbi: any = window[powerbiKey];
 var tbhGanttVisual02814EA99E75457B80AA513BCFD5A299_DEBUG: IVisualPlugin = {
     name: 'tbhGanttVisual02814EA99E75457B80AA513BCFD5A299_DEBUG',
-    displayName: 'tbhGanttVisual',
+    displayName: 'Gantt Chart Visual by TBH',
     class: 'Visual',
     apiVersion: '3.8.0',
     create: (options: VisualConstructorOptions) => {

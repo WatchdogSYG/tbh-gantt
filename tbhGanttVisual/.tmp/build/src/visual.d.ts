@@ -1,5 +1,5 @@
-import "./../style/visual.less";
-import powerbi from "powerbi-visuals-api";
+import './../style/visual.less';
+import powerbi from 'powerbi-visuals-api';
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
@@ -10,14 +10,23 @@ export declare class Visual implements IVisual {
     private divContent;
     private divTasks;
     private divChartContainer;
+    private divStructureLayer;
+    private divSvgLayer;
     private divTimeline;
     private divChart;
     private divOverlay;
+    private tasksTable;
+    private timelineTable;
+    private ganttGridTable;
     private svg;
     private container;
     private circle;
     private textValue;
     private textLabel;
+    private rows;
+    private cols;
     constructor(options: VisualConstructorOptions);
+    private createTasksTable;
+    private createTaskRow;
     update(options: VisualUpdateOptions): void;
 }
