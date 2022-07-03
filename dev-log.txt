@@ -5,3 +5,5 @@ installed TsGantt via "npm install ts-gantt"
 
 
 Use position grid rather than absolute to overlap divs!
+
+There is actually no reason for div timeline to be in div content.

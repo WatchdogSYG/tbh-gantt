@@ -2,6 +2,11 @@
 :root {
     --rowHeight: 20px;
     --timelineHeight: 40px;
+
+    //the horizontal portion of the container that should be 
+    //taken up by the gantt chart
+    --chartPortionPct: 75%; //for flex
+    --chartPortionFr: 75fr; //for grid
 }
 
 /*begin css reset*/
@@ -48,6 +53,7 @@ div {
     width: 100%;
 }
 
+//div for the header of the graph: title, logo etc.
 #div-header {
     // height: 10%;
     min-height: 30px;
@@ -57,19 +63,59 @@ div {
     border-color: black;
 }
 
+//div that handles the overlapping of the content and status line. Grid.
+#div-statusAndContent {
+    display: grid;
+    grid-template-columns: calc(100fr - var(--chartPortionFr)) var(--chartPortionFr);
+    //grid-template-rows: 1fr 1fr;
+
+    height: fit-content;
+}
+
+//div for the task headers and timeline
+#div-timelineAndTasksHeader {
+    height: fit-content;
+    display: flex;
+
+    grid-row-start: 1;
+    grid-column-start: 1;
+    grid-row-end: span 1;
+    grid-column-end: span 2;
+}
+
+//the div below the above div that contains the tasks table and gantt
 #div-content {
     height: fit-content;
     display: flex;
     justify-content: flex-end;
 
+    grid-row-start: 2;
+    grid-column-start: 1;
+    grid-row-end: span 1;
+    grid-column-end: span 2;
+}
+
+
+//div that contains the status line and accompanying text.
+//Overlaps gantt and timeline but is one level up in the DOM heirachy,
+#div-statusLine {
+    grid-row-start: 1;
+    grid-column-start: 2;
+    grid-row-end: span 2;
+    grid-column-end: span 1;
+
+    height: 100%;
+    z-index: 1;
+
 }
 
 #div-tasks {
     width: 25%;
+    flex-shrink: 0;
 }
 
 #div-chartContainer {
-    flex-grow: 1;
+    width:var(--chartPortionPct);
 
     display: grid;
     grid-template-columns: 1fr;
@@ -134,6 +180,7 @@ div {
 
 table {
     width: 100%;
+    border: 1px solid blue;
 }
 
 th {

@@ -8,6 +8,9 @@ export declare class Visual implements IVisual {
     private body;
     private divHeader;
     private divContent;
+    private statusAndContent;
+    private divTATH;
+    private divStatusLine;
     private divTasks;
     private divChartContainer;
     private divStructureLayer;

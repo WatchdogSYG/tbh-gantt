@@ -54,6 +54,9 @@ export class Visual implements IVisual {
     //divs
     private divHeader: Selection<HTMLDivElement>;
     private divContent: Selection<HTMLDivElement>;
+    private statusAndContent: Selection<HTMLDivElement>;
+    private divTATH: Selection<HTMLDivElement>;
+    private divStatusLine: Selection<HTMLDivElement>;
     private divTasks: Selection<HTMLDivElement>;
     private divChartContainer: Selection<HTMLDivElement>;
     private divStructureLayer: Selection<HTMLDivElement>;
@@ -106,18 +109,40 @@ export class Visual implements IVisual {
         // help from lines 377 onwards at https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
 
 
+        //////// BODY
+
         //Assigns the first (and only) html element to this.body and then appends a div
         this.divHeader = d3.select(options.element)
             .append('div')
-            .classed('highlight', true)
             .attr('id', 'div-header');
 
-        this.divHeader.append('h4').text('Header (include space for title, legend & logos');
+        this.divHeader.append('h4')
+            .text('Header (include space for title, legend & logos');
 
-        this.divContent = d3.select(options.element)
+        this.statusAndContent = d3.select(options.element)
+            .append('div')
+            .attr('id', 'div-statusAndContent');
+
+        //////// STATUSANDCONTENT
+
+        this.divTATH = this.statusAndContent
+            .append('div')
+            .attr('id', 'div-timelineAndTasksHeader');
+
+        this.divContent = this.statusAndContent
             .append('div')
             .attr('id', 'div-content');
 
+        this.divStatusLine = this.statusAndContent
+            .append('div')
+            .attr('id', 'div-statusLine')
+            .attr('class', 'highlight');
+
+        this.divTasks
+        ////////TIMELINEANDTASKSHEADER
+
+
+        //////// CONTENT
         this.divTasks = this.divContent
             .append('div')
             .attr('id', 'div-tasks');
@@ -126,26 +151,55 @@ export class Visual implements IVisual {
             .append('div')
             .attr('id', 'div-chartContainer');
 
+
         this.divStructureLayer = this.divChartContainer
-            .append('div').attr('class', 'gridStack')
+            .append('div')
+            .attr('class', 'gridStack')
             .attr('id', 'div-structureLayer');
 
         this.divSvgLayer = this.divChartContainer
-            .append('div').attr('class', 'gridStack')
+            .append('div')
+            .attr('class', 'gridStack')
             .attr('id', 'div-svgLayer');
 
-        this.divTimeline = this.divStructureLayer
+        this.divTimeline = this.divTATH
             .append('div')
-            .attr('id', 'div-timeline')
-            .classed('highlight', true);
+            .attr('id', 'div-timeline');
 
         this.divChart = this.divStructureLayer
             .append('div')
             .attr('id', 'div-chart');
 
 
+        //https://stackoverflow.com/questions/43356213/understanding-enter-and-exit
+        // https://www.tutorialsteacher.com/d3js/function-of-data-in-d3js
+        // https://stackoverflow.com/questions/21485981/appending-multiple-non-nested-elements-for-each-data-member-with-d3-js/33809812#33809812
+        // https://stackoverflow.com/questions/37583275/how-to-append-multiple-child-elements-to-a-div-in-d3-js?noredirect=1&lq=1
+        // https://stackoverflow.com/questions/21485981/appending-multiple-non-nested-elements-for-each-data-member-with-d3-js
 
-        //this.tasksTable = this.createTasksTable(null);
+        this.tasksTable = this.divTasks
+            .append('table')
+            .attr('id', 'table-tasks').append('tr');
+
+        // for (let i = 0; i < 5; i++) {
+        //     this.tasksTable.append('tr').attr('class', 'row');
+        // }
+
+
+        let keys: string[] = ['a', 'b'];
+        let values1: string[] = ['c', 'd', 'e', 'f', 'g'];
+        let values2: string[] = ['e', 'f'];
+
+        d3.select('#table-tasks')
+            .selectAll('tr')
+            .data(values1)
+            .enter()
+            .append('td')
+            .text(function (d, i) {
+                console.log('d:' + d + ',i:' + i);
+                return d;
+            });//why does this append tds after tr? should be in tr.
+        //this.createTasksTable(null, this.divTasks);
 
         //also put this in a fn later for update()
         // getBBox() help here:
@@ -174,11 +228,11 @@ export class Visual implements IVisual {
     * Returns a <table> element based on the Activities from the DataView.
     * Returns an empty table if options is null.
     */
-    private createTasksTable(options: VisualUpdateOptions): Selection<HTMLTableElement> {
+    private createTasksTable(options: VisualUpdateOptions, divTasks: Selection<HTMLDivElement>) {
         if (options == null) {
             console.log('LOG: createTasksTable called with a null VisualUpdateOptions.');
 
-            let table: Selection<HTMLTableElement>;
+
             let tableRow: Selection<HTMLTableRowElement>;
             let tableData: Selection<HTMLTableCellElement>;
 
@@ -187,11 +241,11 @@ export class Visual implements IVisual {
 
 
             for (let i = 0; i < this.rows; i++) {
-                table.append('tr').append('td').insert('td').insert('td').insert('td').insert('td');
+                divTasks.append('tr').append('td').insert('td').insert('td').insert('td').insert('td');
             }
 
             console.log('LOG: createTasksTable called with a some number of rows.');
-            return table;
+            //return table;
         }
     }
 

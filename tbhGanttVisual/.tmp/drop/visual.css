@@ -2,6 +2,8 @@
 :root {
   --rowHeight: 20px;
   --timelineHeight: 40px;
+  --chartPortionPct: 75%;
+  --chartPortionFr: 75fr;
 }
 /*begin css reset*/
 body {
@@ -43,16 +45,42 @@ div {
   border-width: 1px;
   border-color: black;
 }
+#div-statusAndContent {
+  display: grid;
+  grid-template-columns: calc(100fr - var(--chartPortionFr)) var(--chartPortionFr);
+  height: fit-content;
+}
+#div-timelineAndTasksHeader {
+  height: fit-content;
+  display: flex;
+  grid-row-start: 1;
+  grid-column-start: 1;
+  grid-row-end: span 1;
+  grid-column-end: span 2;
+}
 #div-content {
   height: fit-content;
   display: flex;
   justify-content: flex-end;
+  grid-row-start: 2;
+  grid-column-start: 1;
+  grid-row-end: span 1;
+  grid-column-end: span 2;
+}
+#div-statusLine {
+  grid-row-start: 1;
+  grid-column-start: 2;
+  grid-row-end: span 2;
+  grid-column-end: span 1;
+  height: 100%;
+  z-index: 1;
 }
 #div-tasks {
   width: 25%;
+  flex-shrink: 0;
 }
 #div-chartContainer {
-  flex-grow: 1;
+  width: var(--chartPortionPct);
   display: grid;
   grid-template-columns: 1fr;
   border-style: none none none solid;
@@ -88,6 +116,7 @@ div {
 /* ------- TABLE ------- */
 table {
   width: 100%;
+  border: 1px solid blue;
 }
 th {
   height: var(--timelineHeight);
