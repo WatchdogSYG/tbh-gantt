@@ -179,27 +179,57 @@ export class Visual implements IVisual {
 
         this.tasksTable = this.divTasks
             .append('table')
-            .attr('id', 'table-tasks').append('tr');
+            .attr('id', 'table-tasks');
 
         // for (let i = 0; i < 5; i++) {
         //     this.tasksTable.append('tr').attr('class', 'row');
         // }
 
 
-        let keys: string[] = ['a', 'b'];
-        let values1: string[] = ['c', 'd', 'e', 'f', 'g'];
-        let values2: string[] = ['e', 'f'];
+        let keys: string[] = ['a', 'b', 'c', 'd', 'e'];
+        let values1: string[] = ['A', 'B', 'C', 'D', 'E'];
+        let values2: string[] = ['1', '2', '3', '4', '5'];
 
-        d3.select('#table-tasks')
-            .selectAll('tr')
-            .data(values1)
+        let myData: string[][] = [keys, values1, values2];
+
+        //https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
+        //https://www.dashingd3js.com/d3-tutorial/use-d3-js-to-bind-data-to-dom-elements
+        //BEWARE: I had to change the types of all these following to var and not Selection<T,T,T,T>. the second function (d)
+        // call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
+
+        //create the number of trs required.
+        var tr = d3.select('#table-tasks')//select the table
+            .selectAll('tr')//select all tr elements (which there are none)
+            .data(myData)//select every array element of array myData (there are 3). DATA IS NOW BOUND TO TRs
+            .enter()//since we have 0 trs and 3 elements in myData, we stage 3 references
+            .append('tr');//append a tr to each reference
+        //console.log(tr);
+
+        var v = tr.selectAll('td')//select all tds, there are 0
+            .data(function (e) {
+                // console.log('a');
+                //console.log(d);
+                return e; //THIS DATA COMES FROM THE TR's _data_ PROPERTY
+            })
             .enter()
-            .append('td')
-            .text(function (d, i) {
-                console.log('d:' + d + ',i:' + i);
-                return d;
-            });//why does this append tds after tr? should be in tr.
-        //this.createTasksTable(null, this.divTasks);
+            .append('td').text(function (d) { return d; });
+
+        console.log(v.selectAll('td'));
+
+
+
+        // console.log(v);
+
+        // d3.select('#table-tasks')
+        //     .selectAll('tr')
+        //     .data(values1)
+        //     .enter()
+        //     .append('td')
+        //     .text(function (d, i) {
+        //         console.log('d:' + d + ',i:' + i);
+        //         return d;
+        //     });//why does this append tds after tr? should be in tr.
+        // //this.createTasksTable(null, this.divTasks);
 
         //also put this in a fn later for update()
         // getBBox() help here:
