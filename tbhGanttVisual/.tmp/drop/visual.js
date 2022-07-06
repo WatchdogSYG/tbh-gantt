@@ -106,23 +106,45 @@ class Visual {
         // https://stackoverflow.com/questions/21485981/appending-multiple-non-nested-elements-for-each-data-member-with-d3-js
         this.tasksTable = this.divTasks
             .append('table')
-            .attr('id', 'table-tasks').append('tr');
+            .attr('id', 'table-tasks');
         // for (let i = 0; i < 5; i++) {
         //     this.tasksTable.append('tr').attr('class', 'row');
         // }
-        let keys = ['a', 'b'];
-        let values1 = ['c', 'd', 'e', 'f', 'g'];
-        let values2 = ['e', 'f'];
-        d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#table-tasks')
-            .selectAll('tr')
-            .data(values1)
+        let keys = ['a', 'b', 'c', 'd', 'e'];
+        let values1 = ['A', 'B', 'C', 'D', 'E'];
+        let values2 = ['1', '2', '3', '4', '5'];
+        let myData = [keys, values1, values2];
+        //https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
+        //https://www.dashingd3js.com/d3-tutorial/use-d3-js-to-bind-data-to-dom-elements
+        //BEWARE: I had to change the types of all these following to var and not Selection<T,T,T,T>. the second function (d)
+        // call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
+        //create the number of trs required.
+        var tr = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#table-tasks') //select the table
+            .selectAll('tr') //select all tr elements (which there are none)
+            .data(myData) //select every array element of array myData (there are 3). DATA IS NOW BOUND TO TRs
+            .enter() //since we have 0 trs and 3 elements in myData, we stage 3 references
+            .append('tr'); //append a tr to each reference
+        //console.log(tr);
+        var v = tr.selectAll('td') //select all tds, there are 0
+            .data(function (e) {
+            // console.log('a');
+            //console.log(d);
+            return e; //THIS DATA COMES FROM THE TR's _data_ PROPERTY
+        })
             .enter()
-            .append('td')
-            .text(function (d, i) {
-            console.log('d:' + d + ',i:' + i);
-            return d;
-        }); //why does this append tds after tr? should be in tr.
-        //this.createTasksTable(null, this.divTasks);
+            .append('td').text(function (d) { return d; });
+        console.log(v.selectAll('td'));
+        // console.log(v);
+        // d3.select('#table-tasks')
+        //     .selectAll('tr')
+        //     .data(values1)
+        //     .enter()
+        //     .append('td')
+        //     .text(function (d, i) {
+        //         console.log('d:' + d + ',i:' + i);
+        //         return d;
+        //     });//why does this append tds after tr? should be in tr.
+        // //this.createTasksTable(null, this.divTasks);
         //also put this in a fn later for update()
         // getBBox() help here:
         // https://stackoverflow.com/questions/45792692/property-getbbox-does-not-exist-on-type-svgelement

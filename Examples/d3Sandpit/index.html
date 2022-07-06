@@ -1,0 +1,22 @@
+<!Doctype html>
+
+<head>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+
+
+<body>
+
+    <p>Hello</p>
+
+    <script>
+
+        var mydata = ['askjdhkajdh'];
+        var p = d3.select('body')
+        .selectAll('p')
+        .data(['Goodbye'])
+        .text(function (d) {
+            return d + '.';
+        })
+    </script>
+</body>
