@@ -48,15 +48,16 @@ div {
 #div-statusAndContent {
   height: fit-content;
   display: grid;
-  grid-template-columns: calc(100fr - var(--chartPortionFr)) var(--chartPortionFr);
+  grid-template-columns: 25fr 75fr;
 }
 #div-timelineAndActivitiesHeader {
-  height: fit-content;
+  height: var(--timelineHeight);
   grid-row-start: 1;
   grid-row-end: span 1;
   grid-column-start: 1;
   grid-column-end: span 2;
   display: flex;
+  justify-content: flex-end;
 }
 #div-content {
   height: fit-content;
@@ -105,7 +106,8 @@ div {
   z-index: 1;
 }
 #div-timeline {
-  height: var(--timelineHeight);
+  height: 100%;
+  width: 75%;
 }
 #div-chart {
   height: fit-content;

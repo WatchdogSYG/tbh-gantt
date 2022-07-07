@@ -69,13 +69,14 @@ div {
     height: fit-content;
 
     display: grid;
-    grid-template-columns: calc(100fr - var(--chartPortionFr)) var(--chartPortionFr);
+    grid-template-columns: 25fr 75fr;//calc(100fr - var(--chartPortionFr)) var(--chartPortionFr);
+    //why doesnt the above commented code work?
     //grid-template-rows: 1fr 1fr;
 }
 
 //div for the task headers and timeline
 #div-timelineAndActivitiesHeader {
-    height: fit-content;
+    height: var(--timelineHeight);
 
     grid-row-start: 1;
     grid-row-end: span 1;
@@ -83,6 +84,7 @@ div {
     grid-column-end: span 2;
 
     display: flex;
+    justify-content: flex-end;
 }
 
 //the div below the above div that contains the tasks table and gantt
@@ -97,7 +99,6 @@ div {
     display: flex;
     justify-content: flex-end;
 }
-
 
 //div that contains the status line and accompanying text.
 //Overlaps gantt and timeline but is one level up in the DOM heirachy,
@@ -166,7 +167,9 @@ div {
 
 
 #div-timeline {
-    height: var(--timelineHeight);
+    height: 100%;
+
+    width: 75%;
 }
 
 #div-chart {

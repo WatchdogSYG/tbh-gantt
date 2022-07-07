@@ -36,9 +36,18 @@ var tbhGanttVisual02814EA99E75457B80AA513BCFD5A299_DEBUG;
 *  THE SOFTWARE.
 */
 
+////////////////////////////////////////////////////////////////
+//  Imports
+////////////////////////////////////////////////////////////////
 
 
+////////////////////////////////////////////////////////////////
+//  Begin class definition
+////////////////////////////////////////////////////////////////
 class Visual {
+    ////////////////////////////////////////////////////////////////
+    //  Constructor
+    ////////////////////////////////////////////////////////////////
     constructor(options) {
         console.log('Visual constructor', options);
         this.rows = 5;
@@ -55,46 +64,61 @@ class Visual {
         //         this.target.appendChild(new_p);
         //      }
         // help from lines 377 onwards at https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
-        //////// CREATE BODY CHILDREN
+        ////////////////////////////////////////////////////////////////
+        //  Create body level child elements
+        ////////////////////////////////////////////////////////////////
         //the header including title, logos etc
         this.divHeader = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys(options.element)
             .append('div')
             .attr('id', 'div-header')
             .append('h4')
             .text('Header (include space for title, legend & logos');
+        //structure of the content below the header
         this.statusAndContent = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys(options.element)
             .append('div')
             .attr('id', 'div-statusAndContent');
-        //////// STATUSANDCONTENT
+        ////////////////////////////////////////////////////////////////
+        //  Create elements under the header
+        ////////////////////////////////////////////////////////////////
+        //"header of the gantt chart" containing the activity field headers and timeline
         this.divTimelineAndActivitiesH = this.statusAndContent
             .append('div')
             .attr('id', 'div-timelineAndActivitiesHeader');
+        //div to contain the act table and chart
         this.divContent = this.statusAndContent
             .append('div')
             .attr('id', 'div-content');
+        //overlapping div to contain the status line
         this.divStatusLine = this.statusAndContent
             .append('div')
             .attr('id', 'div-statusLine')
             .attr('class', 'highlight');
-        ////////TIMELINEANDTASKSHEADER
-        //////// CONTENT
+        ////////////////////////////////////////////////////////////////
+        //  Create content elements
+        ////////////////////////////////////////////////////////////////
+        //div to hold the activity data in a table
         this.divActivities = this.divContent
             .append('div')
             .attr('id', 'div-activities');
+        //div to hold the chart elements including background, bars, text, controls
         this.divChartContainer = this.divContent
             .append('div')
             .attr('id', 'div-chartContainer');
+        //the structure layer of the chart (grid, shading)
         this.divStructureLayer = this.divChartContainer
             .append('div')
             .attr('class', 'gridStack')
             .attr('id', 'div-structureLayer');
+        //the svg layer  of the chart (bars, links)
         this.divSvgLayer = this.divChartContainer
             .append('div')
             .attr('class', 'gridStack')
             .attr('id', 'div-svgLayer');
+        //div in the header that contains the timeline
         this.divTimeline = this.divTimelineAndActivitiesH
             .append('div')
             .attr('id', 'div-timeline');
+        //the div that needs more justificatoin for its existence.
         this.divChart = this.divStructureLayer
             .append('div')
             .attr('id', 'div-chart');
@@ -113,26 +137,7 @@ class Visual {
         let values1 = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
         let values2 = ['1', '2', '3', '4', '5', '6', '7', '8'];
         let myData = [keys, values1, values2];
-        //https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
-        //https://www.dashingd3js.com/d3-tutorial/use-d3-js-to-bind-data-to-dom-elements
-        //BEWARE: I had to change the types of all these following to var and not Selection<T,T,T,T>. the second function (d)
-        //call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
-        //create the number of trs required.
-        var tr = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#table-activities') //select the table
-            .selectAll('tr') //select all tr elements (which there are none)
-            .data(myData) //select every array element of array myData (there are 3). DATA IS NOW BOUND TO TRs
-            .enter() //since we have 0 trs and 3 elements in myData, we stage 3 references
-            .append('tr'); //append a tr to each reference
-        var v = tr.selectAll('td') //select all tds, there are 0
-            .data(function (d) {
-            return d; //THIS DATA COMES FROM THE TR's _data_ PROPERTY
-        })
-            .enter()
-            .append('td')
-            .text(function (d) {
-            return d;
-        });
-        console.log(v.selectAll('td'));
+        this.populateActivityTable(myData, 'table-activities');
         //also put this in a fn later for update()
         // getBBox() help here:
         // https://stackoverflow.com/questions/45792692/property-getbbox-does-not-exist-on-type-svgelement
@@ -155,18 +160,33 @@ class Visual {
     * Returns a <table> element based on the Activities from the DataView.
     * Returns an empty table if options is null.
     */
-    createActivityTable(options, divTasks) {
-        if (options == null) {
-            console.log('LOG: createTasksTable called with a null VisualUpdateOptions.');
-            let tableRow;
-            let tableData;
-            tableData.text('null');
-            for (let i = 0; i < this.rows; i++) {
-                divTasks.append('tr').append('td').insert('td').insert('td').insert('td').insert('td');
-            }
-            console.log('LOG: createTasksTable called with a some number of rows.');
-            //return table;
+    populateActivityTable(data, tableID) {
+        //check number of data elements and number of tr and tds to determine
+        //whether to enter(), update() or exit()
+        if (data == null) {
+            console.log('LOG: populateActivityTable called with a null VisualUpdateOptions.');
         }
+        //https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
+        //https://www.dashingd3js.com/d3-tutorial/use-d3-js-to-bind-data-to-dom-elements
+        //BEWARE: I had to change the types of all these following to var and not Selection<T,T,T,T>. the second function (d)
+        //call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
+        console.log('LOG: populateActivityTable called with some number of rows.');
+        //create the number of trs required.
+        var tr = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#' + tableID) //select the table
+            .selectAll('tr') //select all tr elements (which there are none)
+            .data(data) //select every array element of array myData (there are 3). DATA IS NOW BOUND TO TRs
+            .enter() //since we have 0 trs and 3 elements in myData, we stage 3 references
+            .append('tr'); //append a tr to each reference
+        var v = tr.selectAll('td') //select all tds, there are 0
+            .data(function (d) {
+            return d; //THIS DATA COMES FROM THE TR's _data_ PROPERTY
+        })
+            .enter()
+            .append('td')
+            .text(function (d) {
+            return d;
+        });
+        console.log(v.selectAll('td'));
     }
     update(options) {
         //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);

@@ -29,6 +29,6 @@ export declare class Visual implements IVisual {
     private rows;
     private cols;
     constructor(options: VisualConstructorOptions);
-    private createActivityTable;
+    private populateActivityTable;
     update(options: VisualUpdateOptions): void;
 }
