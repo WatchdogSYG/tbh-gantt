@@ -62,6 +62,10 @@ Also, how do we take in data without having to transpose `myData` since we want 
 
 ![Arrays to Table](readme-assets/009-arraysToTabled3.jpg)
 
+SVGs are now rendered in the visual using dummy data. An initial setup has been made to read in the css variables for the svg format. More string manipulation is required since the css vars come out with units attached. d3 multi select shoule be used to format all bars. Todo.
+
+![Dummy SVG bars in PBI viual](readme-assets/010-dummysvgbars.jpg)
+
 ## Requirements Definition
 
 ### Primary
