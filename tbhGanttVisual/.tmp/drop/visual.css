@@ -37,7 +37,6 @@ div {
   padding: 0px;
   margin: 0px;
   width: 100%;
-  border: 1px dashed black;
 }
 #div-header {
   min-height: 30px;
@@ -142,6 +141,7 @@ td {
   stroke: #ff0000;
   stroke-width: 2px;
 }
+/* ------- CHART ------- */
 /* ------- DEBUG ------- */
 .highlight {
   background-color: rgba(0, 255, 0, 0.25);

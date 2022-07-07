@@ -46,7 +46,7 @@ import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnume
 
 import IVisualHost = powerbi.extensibility.IVisualHost;
 import * as d3 from 'd3';
-import { DSVRowAny, style, text } from 'd3';
+import { DSVRowAny, schemeSet3, style, text } from 'd3';
 type Selection<T extends d3.BaseType> = d3.Selection<T, any, any, any>;
 
 
@@ -112,9 +112,6 @@ export class Visual implements IVisual {
     constructor(options: VisualConstructorOptions) {
         console.log('Visual constructor', options);
 
-        this.rows = 5;
-        this.cols = 3;
-
         //     this.target = options.element;
         //     this.updateCount = 0;
         //     if (document) {
@@ -164,8 +161,7 @@ export class Visual implements IVisual {
         //overlapping div to contain the status line
         this.divStatusLine = this.statusAndContent
             .append('div')
-            .attr('id', 'div-statusLine')
-            .attr('class', 'highlight');
+            .attr('id', 'div-statusLine');
 
         ////////////////////////////////////////////////////////////////
         //  Create content elements
@@ -201,7 +197,8 @@ export class Visual implements IVisual {
         //the div that needs more justificatoin for its existence.
         this.divChart = this.divStructureLayer
             .append('div')
-            .attr('id', 'div-chart');
+            .attr('id', 'div-chart')
+            .attr('class','highlight');
 
         // https://stackoverflow.com/questions/43356213/understanding-enter-and-exit
         // https://www.tutorialsteacher.com/d3js/function-of-data-in-d3js
@@ -218,12 +215,72 @@ export class Visual implements IVisual {
             .append('table')
             .attr('id', 'table-activities');
 
-        let keys: string[] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-        let values1: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-        let values2: string[] = ['1', '2', '3', '4', '5', '6', '7', '8'];
-        let myData: string[][] = [keys, values1, values2];
+        let keys: string[] = ['Activity A', '01/03/22', '25/06/22'];
+        let values1: string[] = ['Activity B', '01/03/22', '25/06/22'];
+        let values2: string[] = ['Activity C', '01/03/22', '25/06/22'];
+        let values3: string[] = ['Activity D', '01/03/22', '25/06/22'];
+        let values4: string[] = ['Activity E', '01/03/22', '25/06/22'];
+        let values5: string[] = ['Activity F', '01/03/22', '25/06/22'];
+        let values6: string[] = ['Activity G', '01/03/22', '25/06/22'];
+        let myData: string[][] = [keys, values1, values2, values3, values4, values5, values6];
 
-        this.populateActivityTable(myData, 'table-activities');
+        this.populateActivityTable(myData, null, 'table-activities');
+
+        ////////////////////////////////////////////////////////////////
+        //  Prepare for chart drawing
+        ////////////////////////////////////////////////////////////////
+
+//find the dimensions of the containers. Specifically the timeline and svg area.
+
+let timelineWidth : number = (this.divSvgLayer.node() as HTMLDivElement).getBoundingClientRect().width;
+let timelineHeight: number = (this.divSvgLayer.node() as HTMLDivElement).getBoundingClientRect().height;
+
+let chartWidth: number = (this.divChart.node() as HTMLDivElement).getBoundingClientRect().width;
+let chartHeight: number = (this.divChart.node() as HTMLDivElement).getBoundingClientRect().height;
+
+let style = getComputedStyle(document.querySelector(':root'));
+
+let rowHeight: string = style.getPropertyValue('--rowHeight');
+
+let bars: Selection<SVGSVGElement> = d3.select('#div-chart')
+.append('g')
+.append('svg')
+.attr('id','svg-bars');
+
+bars.append('rect')
+.classed('activitybar',true)
+.attr('height',rowHeight)
+.attr('width','50px')
+.attr('x','0px')
+.attr('y','0px')
+.attr('rx','3px')
+.attr('ry','3px')
+.attr('fill','red');
+
+bars.append('rect')
+.classed('activitybar',true)
+.attr('height',rowHeight)
+.attr('width','50px')
+.attr('x','100px')
+.attr('y',rowHeight)
+.attr('rx','3px')
+.attr('ry','3px')
+.attr('fill','red');
+
+bars.append('rect')
+.classed('activitybar',true)
+.attr('height',rowHeight)
+.attr('width','50px')
+.attr('x','80px')
+.attr('y','80px')
+.attr('rx','3px')
+.attr('ry','3px')
+.attr('fill','red');
+
+
+        ////////////////////////////////////////////////////////////////
+        //  Draw chart
+        ////////////////////////////////////////////////////////////////
 
         //also put this in a fn later for update()
         // getBBox() help here:
@@ -248,10 +305,10 @@ export class Visual implements IVisual {
     * Returns a <table> element based on the Activities from the DataView.
     * Returns an empty table if options is null.
     */
-    private populateActivityTable(data: string[][], tableID: string) {
+    private populateActivityTable(data: string[][], headerID: string, tableID: string) {
         //check number of data elements and number of tr and tds to determine
         //whether to enter(), update() or exit()
-        
+
         if (data == null) {
             console.log('LOG: populateActivityTable called with a null VisualUpdateOptions.');
 
@@ -272,17 +329,10 @@ export class Visual implements IVisual {
             .append('tr');//append a tr to each reference
 
         var v = tr.selectAll('td')//select all tds, there are 0
-            .data(function (d) {
-                return d; //THIS DATA COMES FROM THE TR's _data_ PROPERTY
-            })
+            .data(function (d) { return d; })//THIS DATA COMES FROM THE TR's _data_ PROPERTY
             .enter()
             .append('td')
-            .text(function (d) { //we are taking d from the bound data from the trs
-                return d;
-            });
-
-        console.log(v.selectAll('td'));
-
+            .text(function (d) { return d; });//we are taking d from the bound data from the trs
     }
 
 

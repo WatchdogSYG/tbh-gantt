@@ -50,8 +50,6 @@ class Visual {
     ////////////////////////////////////////////////////////////////
     constructor(options) {
         console.log('Visual constructor', options);
-        this.rows = 5;
-        this.cols = 3;
         //     this.target = options.element;
         //     this.updateCount = 0;
         //     if (document) {
@@ -91,8 +89,7 @@ class Visual {
         //overlapping div to contain the status line
         this.divStatusLine = this.statusAndContent
             .append('div')
-            .attr('id', 'div-statusLine')
-            .attr('class', 'highlight');
+            .attr('id', 'div-statusLine');
         ////////////////////////////////////////////////////////////////
         //  Create content elements
         ////////////////////////////////////////////////////////////////
@@ -121,7 +118,8 @@ class Visual {
         //the div that needs more justificatoin for its existence.
         this.divChart = this.divStructureLayer
             .append('div')
-            .attr('id', 'div-chart');
+            .attr('id', 'div-chart')
+            .attr('class', 'highlight');
         // https://stackoverflow.com/questions/43356213/understanding-enter-and-exit
         // https://www.tutorialsteacher.com/d3js/function-of-data-in-d3js
         // https://stackoverflow.com/questions/21485981/appending-multiple-non-nested-elements-for-each-data-member-with-d3-js/33809812#33809812
@@ -133,11 +131,59 @@ class Visual {
         this.activityTable = this.divActivities
             .append('table')
             .attr('id', 'table-activities');
-        let keys = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-        let values1 = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-        let values2 = ['1', '2', '3', '4', '5', '6', '7', '8'];
-        let myData = [keys, values1, values2];
-        this.populateActivityTable(myData, 'table-activities');
+        let keys = ['Activity A', '01/03/22', '25/06/22'];
+        let values1 = ['Activity B', '01/03/22', '25/06/22'];
+        let values2 = ['Activity C', '01/03/22', '25/06/22'];
+        let values3 = ['Activity D', '01/03/22', '25/06/22'];
+        let values4 = ['Activity E', '01/03/22', '25/06/22'];
+        let values5 = ['Activity F', '01/03/22', '25/06/22'];
+        let values6 = ['Activity G', '01/03/22', '25/06/22'];
+        let myData = [keys, values1, values2, values3, values4, values5, values6];
+        this.populateActivityTable(myData, null, 'table-activities');
+        ////////////////////////////////////////////////////////////////
+        //  Prepare for chart drawing
+        ////////////////////////////////////////////////////////////////
+        //find the dimensions of the containers. Specifically the timeline and svg area.
+        let timelineWidth = this.divSvgLayer.node().getBoundingClientRect().width;
+        let timelineHeight = this.divSvgLayer.node().getBoundingClientRect().height;
+        let chartWidth = this.divChart.node().getBoundingClientRect().width;
+        let chartHeight = this.divChart.node().getBoundingClientRect().height;
+        let style = getComputedStyle(document.querySelector(':root'));
+        let rowHeight = style.getPropertyValue('--rowHeight');
+        let bars = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#div-chart')
+            .append('g')
+            .append('svg')
+            .attr('id', 'svg-bars');
+        bars.append('rect')
+            .classed('activitybar', true)
+            .attr('height', rowHeight)
+            .attr('width', '50px')
+            .attr('x', '0px')
+            .attr('y', '0px')
+            .attr('rx', '3px')
+            .attr('ry', '3px')
+            .attr('fill', 'red');
+        bars.append('rect')
+            .classed('activitybar', true)
+            .attr('height', rowHeight)
+            .attr('width', '50px')
+            .attr('x', '100px')
+            .attr('y', rowHeight)
+            .attr('rx', '3px')
+            .attr('ry', '3px')
+            .attr('fill', 'red');
+        bars.append('rect')
+            .classed('activitybar', true)
+            .attr('height', rowHeight)
+            .attr('width', '50px')
+            .attr('x', '80px')
+            .attr('y', '80px')
+            .attr('rx', '3px')
+            .attr('ry', '3px')
+            .attr('fill', 'red');
+        ////////////////////////////////////////////////////////////////
+        //  Draw chart
+        ////////////////////////////////////////////////////////////////
         //also put this in a fn later for update()
         // getBBox() help here:
         // https://stackoverflow.com/questions/45792692/property-getbbox-does-not-exist-on-type-svgelement
@@ -160,7 +206,7 @@ class Visual {
     * Returns a <table> element based on the Activities from the DataView.
     * Returns an empty table if options is null.
     */
-    populateActivityTable(data, tableID) {
+    populateActivityTable(data, headerID, tableID) {
         //check number of data elements and number of tr and tds to determine
         //whether to enter(), update() or exit()
         if (data == null) {
@@ -178,15 +224,10 @@ class Visual {
             .enter() //since we have 0 trs and 3 elements in myData, we stage 3 references
             .append('tr'); //append a tr to each reference
         var v = tr.selectAll('td') //select all tds, there are 0
-            .data(function (d) {
-            return d; //THIS DATA COMES FROM THE TR's _data_ PROPERTY
-        })
+            .data(function (d) { return d; }) //THIS DATA COMES FROM THE TR's _data_ PROPERTY
             .enter()
             .append('td')
-            .text(function (d) {
-            return d;
-        });
-        console.log(v.selectAll('td'));
+            .text(function (d) { return d; }); //we are taking d from the bound data from the trs
     }
     update(options) {
         //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
