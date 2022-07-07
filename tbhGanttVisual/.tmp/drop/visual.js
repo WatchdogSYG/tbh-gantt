@@ -55,20 +55,20 @@ class Visual {
         //         this.target.appendChild(new_p);
         //      }
         // help from lines 377 onwards at https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
-        //////// BODY
-        //Assigns the first (and only) html element to this.body and then appends a div
+        //////// CREATE BODY CHILDREN
+        //the header including title, logos etc
         this.divHeader = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys(options.element)
             .append('div')
-            .attr('id', 'div-header');
-        this.divHeader.append('h4')
+            .attr('id', 'div-header')
+            .append('h4')
             .text('Header (include space for title, legend & logos');
         this.statusAndContent = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys(options.element)
             .append('div')
             .attr('id', 'div-statusAndContent');
         //////// STATUSANDCONTENT
-        this.divTATH = this.statusAndContent
+        this.divTimelineAndActivitiesH = this.statusAndContent
             .append('div')
-            .attr('id', 'div-timelineAndTasksHeader');
+            .attr('id', 'div-timelineAndActivitiesHeader');
         this.divContent = this.statusAndContent
             .append('div')
             .attr('id', 'div-content');
@@ -76,12 +76,11 @@ class Visual {
             .append('div')
             .attr('id', 'div-statusLine')
             .attr('class', 'highlight');
-        this.divTasks;
         ////////TIMELINEANDTASKSHEADER
         //////// CONTENT
-        this.divTasks = this.divContent
+        this.divActivities = this.divContent
             .append('div')
-            .attr('id', 'div-tasks');
+            .attr('id', 'div-activities');
         this.divChartContainer = this.divContent
             .append('div')
             .attr('id', 'div-chartContainer');
@@ -93,58 +92,47 @@ class Visual {
             .append('div')
             .attr('class', 'gridStack')
             .attr('id', 'div-svgLayer');
-        this.divTimeline = this.divTATH
+        this.divTimeline = this.divTimelineAndActivitiesH
             .append('div')
             .attr('id', 'div-timeline');
         this.divChart = this.divStructureLayer
             .append('div')
             .attr('id', 'div-chart');
-        //https://stackoverflow.com/questions/43356213/understanding-enter-and-exit
+        // https://stackoverflow.com/questions/43356213/understanding-enter-and-exit
         // https://www.tutorialsteacher.com/d3js/function-of-data-in-d3js
         // https://stackoverflow.com/questions/21485981/appending-multiple-non-nested-elements-for-each-data-member-with-d3-js/33809812#33809812
         // https://stackoverflow.com/questions/37583275/how-to-append-multiple-child-elements-to-a-div-in-d3-js?noredirect=1&lq=1
         // https://stackoverflow.com/questions/21485981/appending-multiple-non-nested-elements-for-each-data-member-with-d3-js
-        this.tasksTable = this.divTasks
+        ////////////////////////////////////////////////////////////////
+        //  Create #table-activities
+        ////////////////////////////////////////////////////////////////
+        this.activityTable = this.divActivities
             .append('table')
-            .attr('id', 'table-tasks');
-        // for (let i = 0; i < 5; i++) {
-        //     this.tasksTable.append('tr').attr('class', 'row');
-        // }
-        let keys = ['a', 'b', 'c', 'd', 'e'];
-        let values1 = ['A', 'B', 'C', 'D', 'E'];
-        let values2 = ['1', '2', '3', '4', '5'];
+            .attr('id', 'table-activities');
+        let keys = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+        let values1 = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+        let values2 = ['1', '2', '3', '4', '5', '6', '7', '8'];
         let myData = [keys, values1, values2];
         //https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
         //https://www.dashingd3js.com/d3-tutorial/use-d3-js-to-bind-data-to-dom-elements
         //BEWARE: I had to change the types of all these following to var and not Selection<T,T,T,T>. the second function (d)
-        // call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
+        //call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
         //create the number of trs required.
-        var tr = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#table-tasks') //select the table
+        var tr = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#table-activities') //select the table
             .selectAll('tr') //select all tr elements (which there are none)
             .data(myData) //select every array element of array myData (there are 3). DATA IS NOW BOUND TO TRs
             .enter() //since we have 0 trs and 3 elements in myData, we stage 3 references
             .append('tr'); //append a tr to each reference
-        //console.log(tr);
         var v = tr.selectAll('td') //select all tds, there are 0
-            .data(function (e) {
-            // console.log('a');
-            //console.log(d);
-            return e; //THIS DATA COMES FROM THE TR's _data_ PROPERTY
+            .data(function (d) {
+            return d; //THIS DATA COMES FROM THE TR's _data_ PROPERTY
         })
             .enter()
-            .append('td').text(function (d) { return d; });
+            .append('td')
+            .text(function (d) {
+            return d;
+        });
         console.log(v.selectAll('td'));
-        // console.log(v);
-        // d3.select('#table-tasks')
-        //     .selectAll('tr')
-        //     .data(values1)
-        //     .enter()
-        //     .append('td')
-        //     .text(function (d, i) {
-        //         console.log('d:' + d + ',i:' + i);
-        //         return d;
-        //     });//why does this append tds after tr? should be in tr.
-        // //this.createTasksTable(null, this.divTasks);
         //also put this in a fn later for update()
         // getBBox() help here:
         // https://stackoverflow.com/questions/45792692/property-getbbox-does-not-exist-on-type-svgelement
@@ -162,13 +150,12 @@ class Visual {
             .toString()
             .concat('px'))
             .attr('transform', 'translate(30)');
-        //this.divTasks.append(this.tasksTable);
     }
     /*
     * Returns a <table> element based on the Activities from the DataView.
     * Returns an empty table if options is null.
     */
-    createTasksTable(options, divTasks) {
+    createActivityTable(options, divTasks) {
         if (options == null) {
             console.log('LOG: createTasksTable called with a null VisualUpdateOptions.');
             let tableRow;
@@ -180,8 +167,6 @@ class Visual {
             console.log('LOG: createTasksTable called with a some number of rows.');
             //return table;
         }
-    }
-    createTaskRow(taskData) {
     }
     update(options) {
         //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);

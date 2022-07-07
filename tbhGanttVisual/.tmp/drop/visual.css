@@ -34,10 +34,10 @@ body {
 }
 /* -------- DIV -------- */
 div {
-  border: 1px dashed black;
   padding: 0px;
   margin: 0px;
   width: 100%;
+  border: 1px dashed black;
 }
 #div-header {
   min-height: 30px;
@@ -46,47 +46,48 @@ div {
   border-color: black;
 }
 #div-statusAndContent {
+  height: fit-content;
   display: grid;
   grid-template-columns: calc(100fr - var(--chartPortionFr)) var(--chartPortionFr);
-  height: fit-content;
 }
-#div-timelineAndTasksHeader {
+#div-timelineAndActivitiesHeader {
   height: fit-content;
-  display: flex;
   grid-row-start: 1;
-  grid-column-start: 1;
   grid-row-end: span 1;
+  grid-column-start: 1;
   grid-column-end: span 2;
+  display: flex;
 }
 #div-content {
   height: fit-content;
+  grid-row-start: 2;
+  grid-row-end: span 1;
+  grid-column-start: 1;
+  grid-column-end: span 2;
   display: flex;
   justify-content: flex-end;
-  grid-row-start: 2;
-  grid-column-start: 1;
-  grid-row-end: span 1;
-  grid-column-end: span 2;
 }
 #div-statusLine {
-  grid-row-start: 1;
-  grid-column-start: 2;
-  grid-row-end: span 2;
-  grid-column-end: span 1;
   height: 100%;
   z-index: 1;
+  grid-row-start: 1;
+  grid-row-end: span 2;
+  grid-column-start: 2;
+  grid-column-end: span 1;
 }
-#div-tasks {
+#div-activities {
   width: 25%;
   flex-shrink: 0;
+  overflow-x: scroll;
 }
 #div-chartContainer {
   width: var(--chartPortionPct);
-  display: grid;
-  grid-template-columns: 1fr;
+  height: fit-content;
   border-style: none none none solid;
   border-width: 2px;
   border-color: black;
-  height: 500px;
+  display: grid;
+  grid-template-columns: 1fr;
 }
 .gridStack {
   grid-column-start: 1;
@@ -98,7 +99,6 @@ div {
   height: 100%;
   display: flex;
   flex-direction: column;
-  height: fit-content;
 }
 #div-svgLayer {
   height: 100%;
@@ -125,6 +125,7 @@ tr {
   height: var(--rowHeight);
 }
 td {
+  min-width: 40px;
   border: 1px #aaaaaa;
   border-style: solid none solid solid;
 }
@@ -141,8 +142,8 @@ td {
 }
 /* ------- DEBUG ------- */
 .highlight {
-  border: 1px solid #00ff00;
   background-color: rgba(0, 255, 0, 0.25);
+  border: 1px solid #00ff00;
 }
 
 

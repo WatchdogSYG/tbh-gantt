@@ -23,6 +23,7 @@
 *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 *  THE SOFTWARE.
 */
+
 'use strict';
 
 import './../style/visual.less';
@@ -30,12 +31,13 @@ import powerbi from 'powerbi-visuals-api';
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
-import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
-import VisualObjectInstance = powerbi.VisualObjectInstance;
 import DataView = powerbi.DataView;
-import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnumerationObject;
 
 //import { VisualSettings } from './settings';
+
+import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
+import VisualObjectInstance = powerbi.VisualObjectInstance;
+import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnumerationObject;
 
 import IVisualHost = powerbi.extensibility.IVisualHost;
 import * as d3 from 'd3';
@@ -55,9 +57,9 @@ export class Visual implements IVisual {
     private divHeader: Selection<HTMLDivElement>;
     private divContent: Selection<HTMLDivElement>;
     private statusAndContent: Selection<HTMLDivElement>;
-    private divTATH: Selection<HTMLDivElement>;
+    private divTimelineAndActivitiesH: Selection<HTMLDivElement>;
     private divStatusLine: Selection<HTMLDivElement>;
-    private divTasks: Selection<HTMLDivElement>;
+    private divActivities: Selection<HTMLDivElement>;
     private divChartContainer: Selection<HTMLDivElement>;
     private divStructureLayer: Selection<HTMLDivElement>;
     private divSvgLayer: Selection<HTMLDivElement>;
@@ -67,7 +69,7 @@ export class Visual implements IVisual {
 
     //tables
 
-    private tasksTable: Selection<any>;
+    private activityTable: Selection<any>;
     private timelineTable: Selection<HTMLTableElement>;
     private ganttGridTable: Selection<HTMLTableElement>;
 
@@ -108,15 +110,13 @@ export class Visual implements IVisual {
 
         // help from lines 377 onwards at https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
 
+        //////// CREATE BODY CHILDREN
 
-        //////// BODY
-
-        //Assigns the first (and only) html element to this.body and then appends a div
+        //the header including title, logos etc
         this.divHeader = d3.select(options.element)
             .append('div')
-            .attr('id', 'div-header');
-
-        this.divHeader.append('h4')
+            .attr('id', 'div-header')
+            .append('h4')
             .text('Header (include space for title, legend & logos');
 
         this.statusAndContent = d3.select(options.element)
@@ -125,9 +125,9 @@ export class Visual implements IVisual {
 
         //////// STATUSANDCONTENT
 
-        this.divTATH = this.statusAndContent
+        this.divTimelineAndActivitiesH = this.statusAndContent
             .append('div')
-            .attr('id', 'div-timelineAndTasksHeader');
+            .attr('id', 'div-timelineAndActivitiesHeader');
 
         this.divContent = this.statusAndContent
             .append('div')
@@ -138,14 +138,13 @@ export class Visual implements IVisual {
             .attr('id', 'div-statusLine')
             .attr('class', 'highlight');
 
-        this.divTasks
         ////////TIMELINEANDTASKSHEADER
 
 
         //////// CONTENT
-        this.divTasks = this.divContent
+        this.divActivities = this.divContent
             .append('div')
-            .attr('id', 'div-tasks');
+            .attr('id', 'div-activities');
 
         this.divChartContainer = this.divContent
             .append('div')
@@ -162,7 +161,7 @@ export class Visual implements IVisual {
             .attr('class', 'gridStack')
             .attr('id', 'div-svgLayer');
 
-        this.divTimeline = this.divTATH
+        this.divTimeline = this.divTimelineAndActivitiesH
             .append('div')
             .attr('id', 'div-timeline');
 
@@ -170,66 +169,50 @@ export class Visual implements IVisual {
             .append('div')
             .attr('id', 'div-chart');
 
-
-        //https://stackoverflow.com/questions/43356213/understanding-enter-and-exit
+        // https://stackoverflow.com/questions/43356213/understanding-enter-and-exit
         // https://www.tutorialsteacher.com/d3js/function-of-data-in-d3js
         // https://stackoverflow.com/questions/21485981/appending-multiple-non-nested-elements-for-each-data-member-with-d3-js/33809812#33809812
         // https://stackoverflow.com/questions/37583275/how-to-append-multiple-child-elements-to-a-div-in-d3-js?noredirect=1&lq=1
         // https://stackoverflow.com/questions/21485981/appending-multiple-non-nested-elements-for-each-data-member-with-d3-js
 
-        this.tasksTable = this.divTasks
+
+        ////////////////////////////////////////////////////////////////
+        //  Create #table-activities
+        ////////////////////////////////////////////////////////////////
+
+        this.activityTable = this.divActivities
             .append('table')
-            .attr('id', 'table-tasks');
+            .attr('id', 'table-activities');
 
-        // for (let i = 0; i < 5; i++) {
-        //     this.tasksTable.append('tr').attr('class', 'row');
-        // }
-
-
-        let keys: string[] = ['a', 'b', 'c', 'd', 'e'];
-        let values1: string[] = ['A', 'B', 'C', 'D', 'E'];
-        let values2: string[] = ['1', '2', '3', '4', '5'];
-
+        let keys: string[] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+        let values1: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+        let values2: string[] = ['1', '2', '3', '4', '5', '6', '7', '8'];
         let myData: string[][] = [keys, values1, values2];
 
         //https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
         //https://www.dashingd3js.com/d3-tutorial/use-d3-js-to-bind-data-to-dom-elements
         //BEWARE: I had to change the types of all these following to var and not Selection<T,T,T,T>. the second function (d)
-        // call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
+        //call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
 
         //create the number of trs required.
-        var tr = d3.select('#table-tasks')//select the table
+        var tr = d3.select('#table-activities')//select the table
             .selectAll('tr')//select all tr elements (which there are none)
             .data(myData)//select every array element of array myData (there are 3). DATA IS NOW BOUND TO TRs
             .enter()//since we have 0 trs and 3 elements in myData, we stage 3 references
             .append('tr');//append a tr to each reference
-        //console.log(tr);
 
         var v = tr.selectAll('td')//select all tds, there are 0
-            .data(function (e) {
-                // console.log('a');
-                //console.log(d);
-                return e; //THIS DATA COMES FROM THE TR's _data_ PROPERTY
+            .data(function (d) {
+                return d; //THIS DATA COMES FROM THE TR's _data_ PROPERTY
             })
             .enter()
-            .append('td').text(function (d) { return d; });
+            .append('td')
+            .text(function (d) { //we are taking d from the bound data from the trs
+                return d;
+            });
 
         console.log(v.selectAll('td'));
 
-
-
-        // console.log(v);
-
-        // d3.select('#table-tasks')
-        //     .selectAll('tr')
-        //     .data(values1)
-        //     .enter()
-        //     .append('td')
-        //     .text(function (d, i) {
-        //         console.log('d:' + d + ',i:' + i);
-        //         return d;
-        //     });//why does this append tds after tr? should be in tr.
-        // //this.createTasksTable(null, this.divTasks);
 
         //also put this in a fn later for update()
         // getBBox() help here:
@@ -248,17 +231,13 @@ export class Visual implements IVisual {
                 .toString()
                 .concat('px'))
             .attr('transform', 'translate(30)');
-
-
-
-        //this.divTasks.append(this.tasksTable);
     }
 
     /*
     * Returns a <table> element based on the Activities from the DataView.
     * Returns an empty table if options is null.
     */
-    private createTasksTable(options: VisualUpdateOptions, divTasks: Selection<HTMLDivElement>) {
+    private createActivityTable(options: VisualUpdateOptions, divTasks: Selection<HTMLDivElement>) {
         if (options == null) {
             console.log('LOG: createTasksTable called with a null VisualUpdateOptions.');
 
@@ -277,10 +256,6 @@ export class Visual implements IVisual {
             console.log('LOG: createTasksTable called with a some number of rows.');
             //return table;
         }
-    }
-
-    private createTaskRow(taskData: string[]) {
-
     }
 
     public update(options: VisualUpdateOptions) {
@@ -323,17 +298,4 @@ export class Visual implements IVisual {
         //     .style('font-size', fontSizeLabel + 'px');
 
     }
-
-    // private static parseSettings(dataView: DataView): VisualSettings {
-    //     return <VisualSettings>VisualSettings.parse(dataView);
-    // }
-
-    // /**
-    //  * This function gets called for each of the objects defined in the capabilities files and allows you to select which of the
-    //  * objects and properties you want to expose to the users in the property pane.
-    //  *
-    //  */
-    // public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstance[] | VisualObjectInstanceEnumerationObject {
-    //     return VisualSettings.enumerateObjectInstances(this.settings || VisualSettings.getDefault(), options);
-    // }
 }

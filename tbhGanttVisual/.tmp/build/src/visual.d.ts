@@ -9,16 +9,16 @@ export declare class Visual implements IVisual {
     private divHeader;
     private divContent;
     private statusAndContent;
-    private divTATH;
+    private divTimelineAndActivitiesH;
     private divStatusLine;
-    private divTasks;
+    private divActivities;
     private divChartContainer;
     private divStructureLayer;
     private divSvgLayer;
     private divTimeline;
     private divChart;
     private divOverlay;
-    private tasksTable;
+    private activityTable;
     private timelineTable;
     private ganttGridTable;
     private svg;
@@ -29,7 +29,6 @@ export declare class Visual implements IVisual {
     private rows;
     private cols;
     constructor(options: VisualConstructorOptions);
-    private createTasksTable;
-    private createTaskRow;
+    private createActivityTable;
     update(options: VisualUpdateOptions): void;
 }
