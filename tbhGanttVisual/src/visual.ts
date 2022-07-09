@@ -216,9 +216,11 @@ export class Visual implements IVisual {
         ////////////////////////////////////////////////////////////////
 
         //temp vars to be calcd later
+
+        let startDay: number = 365;
+        let endDay: number = 2000;
         this.tlDayScale = 0.5;
-        let years: number = 3.4;
-        let days: number = years * Time.TimeConversions.daysPerYear();//fix the syntax a bit
+        let days: number = endDay - startDay;
         let tlWidth: number = days * this.tlDayScale;//cannot be less than div width!
 
         let tlHeight: number = Lib.toPxNumber(this.style.getPropertyValue('--timelineHeight'));
@@ -236,10 +238,20 @@ export class Visual implements IVisual {
         let gBottom: Selection<SVGGElement> = tl.append('g')
             .classed('g-tl', true);
 
+
+
         gTop.append('text')
             .attr('x', '0px')
             .attr('y', '0px')
-            .text('yyyy')
+            .text(Time.year(startDay).toString())
+            .attr('text-anchor', 'top')
+            .attr('alignment-baseline', 'hanging')
+            .attr('fill', '#111111');
+
+        gTop.append('text')
+            .attr('x', '100px')
+            .attr('y', '0px')
+            .text(Time.year(endDay).toString())
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
             .attr('fill', '#111111');

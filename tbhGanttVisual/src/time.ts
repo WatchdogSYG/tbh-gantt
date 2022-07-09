@@ -1,112 +1,133 @@
 //A header lib for date and time fns
 
-const month : string[] = [
+// export const month : string[] = [
+//     'January',
+//     'February',
+//     'March',
+//     'April',
+//     'May',
+//     'June',
+//     'July',
+//     'August',
+//     'September',
+//     'October',
+//     'November',
+//     'December'
+// ];
+
+export const monthArray: string[] = [
     'January',
+
     'February',
+
     'March',
+
     'April',
+
     'May',
+
     'June',
+
     'July',
+
     'August',
+
     'September',
+
     'October',
+
     'November',
-    'December'
+
+    'December'];
+
+export const mmmArray: string[] = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'];
+
+export const mArray: string[] = [
+    'J',
+    'F',
+    'M',
+    'A',
+    'M',
+    'J',
+    'J',
+    'A',
+    'S',
+    'O',
+    'N',
+    'D'
 ];
 
-export class TimeConversions {
+export const daysPerMonthArray: number[] = [
+    31,
+    28,
+    31,
+    30,
+    31,
+    30,
+    31,
+    31,
+    30,
+    31,
+    30,
+    31];
 
-    private static monthArray: string[] = [
-        'January',
+export function hoursPerDay(): number {
+    return 24;
+}
+export function daysPerMonth(index): number {
+    return this.daysPerMonthArray[parseInt(index.toString())];
+}
+export function monthsPerYear(): number {
+    return 12;
+}
 
-        'February',
+export function daysPerYear(): number {
+    return 365;
+}
 
-        'March',
+export function monthName(index: number): string {
+    return this.monthArray[parseInt(index.toString())];
+}
 
-        'April',
+export function mmm(index: number): string {
+    return this.mmmArray[parseInt(index.toString())];
+}
+export function m(index: number): string {
+    return this.mArray[parseInt(index.toString())];
+}
 
-        'May',
+export function numberOfLeapYearsBetween(startDay: number, endDay: number): number {
+    //todo
+    return 0;
+}
 
-        'June',
+//BADLY NAMED
+export function date(dayIndex: number): string {
+    return '0000-00-00T00:00:00';
+}
 
-        'July',
+export function year(dayIndex: number): number {
+    var deltaYears = Math.floor(dayIndex / daysPerYear());
 
-        'August',
+    return 1970 + Math.floor(dayIndex / daysPerYear());
+}
 
-        'September',
+export function month(dayIndex: number): string {
+    return '0000-00-00T00:00:00';
+}
 
-        'October',
-
-        'November',
-
-        'December'];
-
-    private static mmmArray: string[] = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec'];
-
-    private static mArray: string[] = [
-        'J',
-        'F',
-        'M',
-        'A',
-        'M',
-        'J',
-        'J',
-        'A',
-        'S',
-        'O',
-        'N',
-        'D'
-    ];
-
-    private static daysPerMonthArray: number[] = [
-        31,
-        28,
-        31,
-        30,
-        31,
-        30,
-        31,
-        31,
-        30,
-        31,
-        30,
-        31];
-
-    private static hoursPerDay(): number {
-        return 24;
-    }
-    private static daysPerMonth(index): number {
-        return this.daysPerMonthArray[parseInt(index.toString())];
-    }
-    private static monthsPerYear(): number {
-        return 12;
-    }
-
-    public static daysPerYear(): number {
-        return 365;
-    }
-
-    private static month(index: number): string {
-        return this.monthArray[parseInt(index.toString())];
-    }
-
-    private static mmm(index: number): string {
-        return this.mmmArray[parseInt(index.toString())];
-    }
-    private static m(index: number): string {
-                return this.mArray[parseInt(index.toString())];
-    }
+export function day(dayIndex: number): string {
+    return '0000-00-00T00:00:00';
 }

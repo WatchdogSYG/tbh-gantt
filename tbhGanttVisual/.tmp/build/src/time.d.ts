@@ -1,13 +1,16 @@
-export declare class TimeConversions {
-    private static monthArray;
-    private static mmmArray;
-    private static mArray;
-    private static daysPerMonthArray;
-    private static hoursPerDay;
-    private static daysPerMonth;
-    private static monthsPerYear;
-    static daysPerYear(): number;
-    private static month;
-    private static mmm;
-    private static m;
-}
+export declare const monthArray: string[];
+export declare const mmmArray: string[];
+export declare const mArray: string[];
+export declare const daysPerMonthArray: number[];
+export declare function hoursPerDay(): number;
+export declare function daysPerMonth(index: any): number;
+export declare function monthsPerYear(): number;
+export declare function daysPerYear(): number;
+export declare function monthName(index: number): string;
+export declare function mmm(index: number): string;
+export declare function m(index: number): string;
+export declare function numberOfLeapYearsBetween(startDay: number, endDay: number): number;
+export declare function date(dayIndex: number): string;
+export declare function year(dayIndex: number): number;
+export declare function month(dayIndex: number): string;
+export declare function day(dayIndex: number): string;
