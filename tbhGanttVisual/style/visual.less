@@ -134,7 +134,7 @@ div {
 
 //https://ishadeed.com/article/less-absolute-positioning-modern-css/
 //use grids, not absolutes!
-
+//stacks the element on row 1 col 1 of the grid
 .gridStack {
     //grid-area: 1 / 2; //can '2' be dynamic? Will fail if  2 =/= no. of grid items.
     //didnt get the above syntax to work...longhand it is.
@@ -174,9 +174,6 @@ div {
     width: 75%;
     overflow-x: visible;
     overflow-y: visible;
-
-    display: grid;
-    grid-template-rows: 1fr 1fr;
 }
 
 #div-chart {
@@ -222,6 +219,7 @@ td {
 
 /* ------- TIMELINE ------- */
 
+//check these
 #svg-statusLine {
     z-index: 3;
 }
@@ -233,6 +231,7 @@ td {
 
 .g-tl{
     border: 1px solid black;
+    //color:#00ff00;
 }
 
 /* ------- CHART ------- */

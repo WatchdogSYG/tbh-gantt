@@ -110,8 +110,6 @@ div {
   width: 75%;
   overflow-x: visible;
   overflow-y: visible;
-  display: grid;
-  grid-template-rows: 1fr 1fr;
 }
 #div-chart {
   height: fit-content;

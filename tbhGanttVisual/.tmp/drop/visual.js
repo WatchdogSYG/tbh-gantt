@@ -41,6 +41,7 @@ var tbhGanttVisual02814EA99E75457B80AA513BCFD5A299_DEBUG;
 ////////////////////////////////////////////////////////////////
 
 
+
 ////////////////////////////////////////////////////////////////
 //  Begin class definition
 ////////////////////////////////////////////////////////////////
@@ -50,6 +51,7 @@ class Visual {
     ////////////////////////////////////////////////////////////////
     constructor(options) {
         console.log('Visual constructor', options);
+        this.style = getComputedStyle(document.querySelector(':root'));
         //     this.target = options.element;
         //     this.updateCount = 0;
         //     if (document) {
@@ -111,15 +113,15 @@ class Visual {
             .append('div')
             .attr('class', 'gridStack')
             .attr('id', 'div-svgLayer');
-        //div in the header that contains the timeline
+        //div in the header that contains the timeline and table header (separate for scrolling purposes)
         this.divTimelineAndActivitiesH.append('table')
             .attr('id', 'table-activityHeader')
             .append('th')
             .text("Activity Header");
+        //the div containing the timeline svgs
         this.divTimeline = this.divTimelineAndActivitiesH
             .append('div')
             .attr('id', 'div-timeline');
-        // this.divTimeline.text('Timeline goes here and this line gets realllllllllllly long to demonstrate the overflow-x setting for long timelines.');
         //the div that needs more justification for its existence.
         this.divChart = this.divStructureLayer
             .append('div')
@@ -128,14 +130,33 @@ class Visual {
         ////////////////////////////////////////////////////////////////
         //  Create svg timeline
         ////////////////////////////////////////////////////////////////
-        var egsvg = this.divTimeline
-            .append('g').classed('g-tl', true).append('svg')
-            .attr('width', '900px')
-            .attr('height', '100%');
-        egsvg.append('text')
+        //temp vars to be calcd later
+        let tlWidth = 900; //cannot be less than div width!
+        //console.log(this.style.getPropertyValue('--timelineHeight'));
+        // console.log(this.toPxNumber(this.style.getPropertyValue('--timelineHeight')));
+        let tlHeight = this.toPxNumber(this.style.getPropertyValue('--timelineHeight'));
+        console.log(tlHeight);
+        let tl = this.divTimeline
+            .append('svg')
+            .attr('id', 'tl-top')
+            .attr('height', '100%')
+            .attr('width', tlWidth.toString() + 'px');
+        let gTop = tl.append('g')
+            .classed('g-tl', true);
+        let gBottom = tl.append('g')
+            .classed('g-tl', true);
+        gTop.append('text')
             .attr('x', '0px')
             .attr('y', '0px')
-            .text('dd-mm-yyyy')
+            .text('yyyy')
+            .attr('text-anchor', 'top')
+            .attr('alignment-baseline', 'hanging')
+            .attr('fill', '#111111');
+        console.log(this.px(tlHeight / 2));
+        gBottom.append('text')
+            .attr('x', '0px')
+            .attr('y', this.px(tlHeight / 2))
+            .text('dd-mm')
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
             .attr('fill', '#111111');
@@ -175,8 +196,7 @@ class Visual {
         let timelineHeight = this.divSvgLayer.node().getBoundingClientRect().height;
         let chartWidth = this.divChart.node().getBoundingClientRect().width;
         let chartHeight = this.divChart.node().getBoundingClientRect().height;
-        let style = getComputedStyle(document.querySelector(':root'));
-        let rowHeight = style.getPropertyValue('--rowHeight');
+        let rowHeight = this.style.getPropertyValue('--rowHeight');
         let bars = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#div-chart')
             .append('g')
             .append('svg')
@@ -225,33 +245,7 @@ class Visual {
             .concat('px'))
             .attr('transform', 'translate(30)');
     }
-    /*
-    * Returns a <table> element based on the Activities from the DataView.
-    * Returns an empty table if options is null.
-    */
-    populateActivityTable(data, headerID, tableID) {
-        //check number of data elements and number of tr and tds to determine
-        //whether to enter(), update() or exit()
-        if (data == null) {
-            console.log('LOG: populateActivityTable called with a null VisualUpdateOptions.');
-        }
-        //https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
-        //https://www.dashingd3js.com/d3-tutorial/use-d3-js-to-bind-data-to-dom-elements
-        //BEWARE: I had to change the types of all these following to var and not Selection<T,T,T,T>. the second function (d)
-        //call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
-        console.log('LOG: populateActivityTable called with some number of rows.');
-        //create the number of trs required.
-        var tr = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#' + tableID) //select the table
-            .selectAll('tr') //select all tr elements (which there are none)
-            .data(data) //select every array element of array myData (there are 3). DATA IS NOW BOUND TO TRs
-            .enter() //since we have 0 trs and 3 elements in myData, we stage 3 references
-            .append('tr'); //append a tr to each reference
-        var v = tr.selectAll('td') //select all tds, there are 0
-            .data(function (d) { return d; }) //THIS DATA COMES FROM THE TR's _data_ PROPERTY
-            .enter()
-            .append('td')
-            .text(function (d) { return d; }); //we are taking d from the bound data from the trs
-    }
+    //on update...
     update(options) {
         //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
         console.log('Visual update', options);
@@ -288,6 +282,58 @@ class Visual {
         //     .attr('dy', fontSizeValue / 1.2)
         //     .attr('text-anchor', 'middle')
         //     .style('font-size', fontSizeLabel + 'px');
+    }
+    /*
+    * Returns a <table> element based on the Activities from the DataView.
+    * Returns an empty table if options is null.
+    * TODO change this to a d3 arg
+    */
+    populateActivityTable(data, headerID, tableID) {
+        //check number of data elements and number of tr and tds to determine
+        //whether to enter(), update() or exit()
+        if (data == null) {
+            console.log('LOG: populateActivityTable called with a null VisualUpdateOptions.');
+        }
+        //https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
+        //https://www.dashingd3js.com/d3-tutorial/use-d3-js-to-bind-data-to-dom-elements
+        //BEWARE: I had to change the types of all these following to var and not Selection<T,T,T,T>. the second function (d)
+        //call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
+        console.log('LOG: populateActivityTable called with some number of rows.');
+        //create the number of trs required.
+        var tr = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#' + tableID) //select the table
+            .selectAll('tr') //select all tr elements (which there are none)
+            .data(data) //select every array element of array myData (there are 3). DATA IS NOW BOUND TO TRs
+            .enter() //since we have 0 trs and 3 elements in myData, we stage 3 references
+            .append('tr'); //append a tr to each reference
+        var v = tr.selectAll('td') //select all tds, there are 0
+            .data(function (d) { return d; }) //THIS DATA COMES FROM THE TR's _data_ PROPERTY
+            .enter()
+            .append('td')
+            .text(function (d) { return d; }); //we are taking d from the bound data from the trs
+    }
+    /**
+     * Returns the number representation of a CSS measurement with pixel units.
+     * @param numberPx the string containing the number of pixels to extract eg. '40.2px'
+     * @returns the number of pixels specified
+     */
+    toPxNumber(numberPx) {
+        //if there is only one instance of 'px' and its at the end
+        if ((numberPx.lastIndexOf('px') == numberPx.indexOf('px'))
+            && (numberPx.length - numberPx.lastIndexOf('px') == 2)) {
+            return +numberPx.substring(0, numberPx.length - 2);
+        }
+        else {
+            //otherwise return null since css can have negative, 0, or positive values
+            return null;
+        }
+    }
+    /**
+ * Converts a number into a string with the units 'px' suffixed on it.
+ * @param pixels the number of pixels
+ * @returns the string representation of the number with 'px' suffixed
+ */
+    px(pixels) {
+        return pixels.toString().concat('px');
     }
 }
 
