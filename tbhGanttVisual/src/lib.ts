@@ -15,21 +15,13 @@ export function px(pixels: number): string {
  * @param numberPx the string containing the number of pixels to extract eg. '40.2px'
  * @returns the number of pixels specified
  */
-export function toPxNumber(numberPx: string): string {
-    return numberPx;
-    // //if there is only one instance of 'px' and its at the end
-    // if ((numberPx.lastIndexOf('px') == numberPx.indexOf('px'))
-    //     && (numberPx.length - numberPx.lastIndexOf('px') == 2)) {
-    //     return numberPx.substring(0, 3);
-    // } else {
-    //     //otherwise return null since css can have negative, 0, or positive values
-    //     return 'error';
-    // }
-
-    // return 'bad';
-    // // let s: string = numberPx.lastIndexOf('px').toString();
-    // // s = s.concat(numberPx.indexOf('px').toString());
-    // // s = s.concat(numberPx.length.toString());
-    // // s = s.concat(numberPx.lastIndexOf('px').toString());
-    // // return s;
+export function toPxNumber(numberPx: string): number {
+   //if there is only one instance of 'px' and its at the end
+   if ((numberPx.lastIndexOf('px') == numberPx.indexOf('px'))
+   && (numberPx.length - numberPx.lastIndexOf('px') == 2)) {
+   return +numberPx.substring(0, numberPx.length - 2);
+} else {
+   //otherwise return null since css can have negative, 0, or positive values
+   return null;
+}
 }

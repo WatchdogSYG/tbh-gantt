@@ -221,9 +221,7 @@ export class Visual implements IVisual {
         let days: number = years * Time.TimeConversions.daysPerYear();//fix the syntax a bit
         let tlWidth: number = days * this.tlDayScale;//cannot be less than div width!
 
-        //console.log(this.style.getPropertyValue('--timelineHeight'));
-        // console.log(this.toPxNumber(this.style.getPropertyValue('--timelineHeight')));
-        let tlHeight: number = this.toPxNumber(this.style.getPropertyValue('--timelineHeight'));
+        let tlHeight: number = Lib.toPxNumber(this.style.getPropertyValue('--timelineHeight'));
 
         console.log(tlHeight);
         let tl: Selection<SVGSVGElement> = this.divTimeline
@@ -436,30 +434,6 @@ export class Visual implements IVisual {
             .text(function (d) { return d; });//we are taking d from the bound data from the trs
     }
 
-    /**
-     * Returns the number representation of a CSS measurement with pixel units.
-     * @param numberPx the string containing the number of pixels to extract eg. '40.2px'
-     * @returns the number of pixels specified
-     */
-    private toPxNumber(numberPx: string): number {
-        //if there is only one instance of 'px' and its at the end
-        if ((numberPx.lastIndexOf('px') == numberPx.indexOf('px'))
-            && (numberPx.length - numberPx.lastIndexOf('px') == 2)) {
-            return +numberPx.substring(0, numberPx.length - 2);
-        } else {
-            //otherwise return null since css can have negative, 0, or positive values
-            return null;
-        }
-    }
-
-//  /**
-//  * Converts a number into a string with the units 'px' suffixed on it.
-//  * @param pixels the number of pixels
-//  * @returns the string representation of the number with 'px' suffixed
-//  */
-//     private px(pixels: number): string {
-//         return pixels.toString().concat('px');
-//     }
     ////////////////////////////////////////////////////////////////
     //  END OF CLASS
     ////////////////////////////////////////////////////////////////

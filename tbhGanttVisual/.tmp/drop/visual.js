@@ -7,9 +7,9 @@ var tbhGanttVisual02814EA99E75457B80AA513BCFD5A299_DEBUG;
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "U": () => (/* binding */ toPxNumber),
 /* harmony export */   "px": () => (/* binding */ px)
 /* harmony export */ });
-/* unused harmony export toPxNumber */
 //library of helper functions
 /**
  * Converts a number into a string with the units 'px' suffixed on it.
@@ -26,21 +26,15 @@ function px(pixels) {
  * @returns the number of pixels specified
  */
 function toPxNumber(numberPx) {
-    return numberPx;
-    // //if there is only one instance of 'px' and its at the end
-    // if ((numberPx.lastIndexOf('px') == numberPx.indexOf('px'))
-    //     && (numberPx.length - numberPx.lastIndexOf('px') == 2)) {
-    //     return numberPx.substring(0, 3);
-    // } else {
-    //     //otherwise return null since css can have negative, 0, or positive values
-    //     return 'error';
-    // }
-    // return 'bad';
-    // // let s: string = numberPx.lastIndexOf('px').toString();
-    // // s = s.concat(numberPx.indexOf('px').toString());
-    // // s = s.concat(numberPx.length.toString());
-    // // s = s.concat(numberPx.lastIndexOf('px').toString());
-    // // return s;
+    //if there is only one instance of 'px' and its at the end
+    if ((numberPx.lastIndexOf('px') == numberPx.indexOf('px'))
+        && (numberPx.length - numberPx.lastIndexOf('px') == 2)) {
+        return +numberPx.substring(0, numberPx.length - 2);
+    }
+    else {
+        //otherwise return null since css can have negative, 0, or positive values
+        return null;
+    }
 }
 
 
@@ -285,9 +279,7 @@ class Visual {
         let years = 3.4;
         let days = years * _src_time__WEBPACK_IMPORTED_MODULE_1__/* .TimeConversions.daysPerYear */ .p.daysPerYear(); //fix the syntax a bit
         let tlWidth = days * this.tlDayScale; //cannot be less than div width!
-        //console.log(this.style.getPropertyValue('--timelineHeight'));
-        // console.log(this.toPxNumber(this.style.getPropertyValue('--timelineHeight')));
-        let tlHeight = this.toPxNumber(this.style.getPropertyValue('--timelineHeight'));
+        let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_2__/* .toPxNumber */ .U(this.style.getPropertyValue('--timelineHeight'));
         console.log(tlHeight);
         let tl = this.divTimeline
             .append('svg')
@@ -463,22 +455,6 @@ class Visual {
             .enter()
             .append('td')
             .text(function (d) { return d; }); //we are taking d from the bound data from the trs
-    }
-    /**
-     * Returns the number representation of a CSS measurement with pixel units.
-     * @param numberPx the string containing the number of pixels to extract eg. '40.2px'
-     * @returns the number of pixels specified
-     */
-    toPxNumber(numberPx) {
-        //if there is only one instance of 'px' and its at the end
-        if ((numberPx.lastIndexOf('px') == numberPx.indexOf('px'))
-            && (numberPx.length - numberPx.lastIndexOf('px') == 2)) {
-            return +numberPx.substring(0, numberPx.length - 2);
-        }
-        else {
-            //otherwise return null since css can have negative, 0, or positive values
-            return null;
-        }
     }
 }
 

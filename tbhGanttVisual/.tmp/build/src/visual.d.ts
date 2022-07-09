@@ -33,10 +33,4 @@ export declare class Visual implements IVisual {
     constructor(options: VisualConstructorOptions);
     update(options: VisualUpdateOptions): void;
     private populateActivityTable;
-    /**
-     * Returns the number representation of a CSS measurement with pixel units.
-     * @param numberPx the string containing the number of pixels to extract eg. '40.2px'
-     * @returns the number of pixels specified
-     */
-    private toPxNumber;
 }

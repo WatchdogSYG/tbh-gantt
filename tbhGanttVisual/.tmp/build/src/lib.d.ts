@@ -10,4 +10,4 @@ export declare function px(pixels: number): string;
  * @param numberPx the string containing the number of pixels to extract eg. '40.2px'
  * @returns the number of pixels specified
  */
-export declare function toPxNumber(numberPx: string): string;
+export declare function toPxNumber(numberPx: string): number;
