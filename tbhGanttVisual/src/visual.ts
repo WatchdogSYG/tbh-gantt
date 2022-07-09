@@ -190,26 +190,60 @@ export class Visual implements IVisual {
             .attr('id', 'div-svgLayer');
 
         //div in the header that contains the timeline
+
+
+        this.divTimelineAndActivitiesH.append('table')
+            .attr('id', 'table-activityHeader')
+            .append('th')
+            .text("Activity Header");
+
         this.divTimeline = this.divTimelineAndActivitiesH
             .append('div')
             .attr('id', 'div-timeline');
 
-        //the div that needs more justificatoin for its existence.
+        // this.divTimeline.text('Timeline goes here and this line gets realllllllllllly long to demonstrate the overflow-x setting for long timelines.');
+
+        //the div that needs more justification for its existence.
         this.divChart = this.divStructureLayer
             .append('div')
             .attr('id', 'div-chart')
-            .attr('class','highlight');
+            .attr('class', 'highlight');
 
+        ////////////////////////////////////////////////////////////////
+        //  Create svg timeline
+        ////////////////////////////////////////////////////////////////
+
+
+        var egsvg = this.divTimeline
+            .append('g').classed('g-tl',true).append('svg')
+            .attr('width', '900px')
+            .attr('height', '100%');
+
+        egsvg.append('text')
+            .attr('x', '0px')
+            .attr('y', '0px')
+            .text('dd-mm-yyyy')
+            .attr('text-anchor', 'top')
+            .attr('alignment-baseline','hanging')
+            .attr('fill','#111111');
+
+        // egsvg.append('rect')
+        //     .classed('activityBar', true)
+        //     .attr('height', '100%')
+        //     .attr('width', '100%')
+        //     .attr('x', '0px')
+        //     .attr('y', '0px')
+        //     .attr('rx', '3px')
+        //     .attr('ry', '3px');
+
+        ////////////////////////////////////////////////////////////////
+        //  Create #table-activities
+        ////////////////////////////////////////////////////////////////
         // https://stackoverflow.com/questions/43356213/understanding-enter-and-exit
         // https://www.tutorialsteacher.com/d3js/function-of-data-in-d3js
         // https://stackoverflow.com/questions/21485981/appending-multiple-non-nested-elements-for-each-data-member-with-d3-js/33809812#33809812
         // https://stackoverflow.com/questions/37583275/how-to-append-multiple-child-elements-to-a-div-in-d3-js?noredirect=1&lq=1
         // https://stackoverflow.com/questions/21485981/appending-multiple-non-nested-elements-for-each-data-member-with-d3-js
-
-
-        ////////////////////////////////////////////////////////////////
-        //  Create #table-activities
-        ////////////////////////////////////////////////////////////////
 
         this.activityTable = this.divActivities
             .append('table')
@@ -230,52 +264,49 @@ export class Visual implements IVisual {
         //  Prepare for chart drawing
         ////////////////////////////////////////////////////////////////
 
-//find the dimensions of the containers. Specifically the timeline and svg area.
+        //find the dimensions of the containers. Specifically the timeline and svg area.
 
-let timelineWidth : number = (this.divSvgLayer.node() as HTMLDivElement).getBoundingClientRect().width;
-let timelineHeight: number = (this.divSvgLayer.node() as HTMLDivElement).getBoundingClientRect().height;
+        let timelineWidth: number = (this.divSvgLayer.node() as HTMLDivElement).getBoundingClientRect().width;
+        let timelineHeight: number = (this.divSvgLayer.node() as HTMLDivElement).getBoundingClientRect().height;
 
-let chartWidth: number = (this.divChart.node() as HTMLDivElement).getBoundingClientRect().width;
-let chartHeight: number = (this.divChart.node() as HTMLDivElement).getBoundingClientRect().height;
+        let chartWidth: number = (this.divChart.node() as HTMLDivElement).getBoundingClientRect().width;
+        let chartHeight: number = (this.divChart.node() as HTMLDivElement).getBoundingClientRect().height;
 
-let style = getComputedStyle(document.querySelector(':root'));
+        let style = getComputedStyle(document.querySelector(':root'));
 
-let rowHeight: string = style.getPropertyValue('--rowHeight');
+        let rowHeight: string = style.getPropertyValue('--rowHeight');
 
-let bars: Selection<SVGSVGElement> = d3.select('#div-chart')
-.append('g')
-.append('svg')
-.attr('id','svg-bars');
+        let bars: Selection<SVGSVGElement> = d3.select('#div-chart')
+            .append('g')
+            .append('svg')
+            .attr('id', 'svg-bars');
 
-bars.append('rect')
-.classed('activitybar',true)
-.attr('height',rowHeight)
-.attr('width','50px')
-.attr('x','0px')
-.attr('y','0px')
-.attr('rx','3px')
-.attr('ry','3px')
-.attr('fill','red');
+        bars.append('rect')
+            .classed('activityBar', true)
+            .attr('height', rowHeight)
+            .attr('width', '90px')
+            .attr('x', '0px')
+            .attr('y', '0px')
+            .attr('rx', '3px')
+            .attr('ry', '3px');
 
-bars.append('rect')
-.classed('activitybar',true)
-.attr('height',rowHeight)
-.attr('width','50px')
-.attr('x','100px')
-.attr('y',rowHeight)
-.attr('rx','3px')
-.attr('ry','3px')
-.attr('fill','red');
+        bars.append('rect')
+            .classed('activityBar', true)
+            .attr('height', rowHeight)
+            .attr('width', '50px')
+            .attr('x', '100px')
+            .attr('y', rowHeight)
+            .attr('rx', '3px')
+            .attr('ry', '3px');
 
-bars.append('rect')
-.classed('activitybar',true)
-.attr('height',rowHeight)
-.attr('width','50px')
-.attr('x','80px')
-.attr('y','80px')
-.attr('rx','3px')
-.attr('ry','3px')
-.attr('fill','red');
+        bars.append('rect')
+            .classed('activityBar', true)
+            .attr('height', rowHeight)
+            .attr('width', '50px')
+            .attr('x', '80px')
+            .attr('y', '80px')
+            .attr('rx', '3px')
+            .attr('ry', '3px');
 
 
         ////////////////////////////////////////////////////////////////
@@ -286,19 +317,22 @@ bars.append('rect')
         // getBBox() help here:
         // https://stackoverflow.com/questions/45792692/property-getbbox-does-not-exist-on-type-svgelement
         // https://stackoverflow.com/questions/24534988/d3-get-the-bounding-box-of-a-selected-element
-        this.divSvgLayer.append('svg')
+        this.divStatusLine.append('svg')
             .attr('id', 'statusLine').attr('width', '100%').attr('height', '100%')
             .append('line')
             .attr('x1', '0px')
             .attr('y1', '0px')
             .attr('x2', '0px')
-            .attr('y2', (d3.select('#div-svgLayer')
-                .node() as HTMLDivElement)
+            .attr('y2', (d3.select('#div-statusLine').node() as HTMLDivElement)
                 .getBoundingClientRect()
                 .height
                 .toString()
                 .concat('px'))
             .attr('transform', 'translate(30)');
+
+
+
+
     }
 
     /*

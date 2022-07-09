@@ -112,22 +112,49 @@ class Visual {
             .attr('class', 'gridStack')
             .attr('id', 'div-svgLayer');
         //div in the header that contains the timeline
+        this.divTimelineAndActivitiesH.append('table')
+            .attr('id', 'table-activityHeader')
+            .append('th')
+            .text("Activity Header");
         this.divTimeline = this.divTimelineAndActivitiesH
             .append('div')
             .attr('id', 'div-timeline');
-        //the div that needs more justificatoin for its existence.
+        // this.divTimeline.text('Timeline goes here and this line gets realllllllllllly long to demonstrate the overflow-x setting for long timelines.');
+        //the div that needs more justification for its existence.
         this.divChart = this.divStructureLayer
             .append('div')
             .attr('id', 'div-chart')
             .attr('class', 'highlight');
+        ////////////////////////////////////////////////////////////////
+        //  Create svg timeline
+        ////////////////////////////////////////////////////////////////
+        var egsvg = this.divTimeline
+            .append('g').classed('g-tl', true).append('svg')
+            .attr('width', '900px')
+            .attr('height', '100%');
+        egsvg.append('text')
+            .attr('x', '0px')
+            .attr('y', '0px')
+            .text('dd-mm-yyyy')
+            .attr('text-anchor', 'top')
+            .attr('alignment-baseline', 'hanging')
+            .attr('fill', '#111111');
+        // egsvg.append('rect')
+        //     .classed('activityBar', true)
+        //     .attr('height', '100%')
+        //     .attr('width', '100%')
+        //     .attr('x', '0px')
+        //     .attr('y', '0px')
+        //     .attr('rx', '3px')
+        //     .attr('ry', '3px');
+        ////////////////////////////////////////////////////////////////
+        //  Create #table-activities
+        ////////////////////////////////////////////////////////////////
         // https://stackoverflow.com/questions/43356213/understanding-enter-and-exit
         // https://www.tutorialsteacher.com/d3js/function-of-data-in-d3js
         // https://stackoverflow.com/questions/21485981/appending-multiple-non-nested-elements-for-each-data-member-with-d3-js/33809812#33809812
         // https://stackoverflow.com/questions/37583275/how-to-append-multiple-child-elements-to-a-div-in-d3-js?noredirect=1&lq=1
         // https://stackoverflow.com/questions/21485981/appending-multiple-non-nested-elements-for-each-data-member-with-d3-js
-        ////////////////////////////////////////////////////////////////
-        //  Create #table-activities
-        ////////////////////////////////////////////////////////////////
         this.activityTable = this.divActivities
             .append('table')
             .attr('id', 'table-activities');
@@ -155,32 +182,29 @@ class Visual {
             .append('svg')
             .attr('id', 'svg-bars');
         bars.append('rect')
-            .classed('activitybar', true)
+            .classed('activityBar', true)
             .attr('height', rowHeight)
-            .attr('width', '50px')
+            .attr('width', '90px')
             .attr('x', '0px')
             .attr('y', '0px')
             .attr('rx', '3px')
-            .attr('ry', '3px')
-            .attr('fill', 'red');
+            .attr('ry', '3px');
         bars.append('rect')
-            .classed('activitybar', true)
+            .classed('activityBar', true)
             .attr('height', rowHeight)
             .attr('width', '50px')
             .attr('x', '100px')
             .attr('y', rowHeight)
             .attr('rx', '3px')
-            .attr('ry', '3px')
-            .attr('fill', 'red');
+            .attr('ry', '3px');
         bars.append('rect')
-            .classed('activitybar', true)
+            .classed('activityBar', true)
             .attr('height', rowHeight)
             .attr('width', '50px')
             .attr('x', '80px')
             .attr('y', '80px')
             .attr('rx', '3px')
-            .attr('ry', '3px')
-            .attr('fill', 'red');
+            .attr('ry', '3px');
         ////////////////////////////////////////////////////////////////
         //  Draw chart
         ////////////////////////////////////////////////////////////////
@@ -188,14 +212,13 @@ class Visual {
         // getBBox() help here:
         // https://stackoverflow.com/questions/45792692/property-getbbox-does-not-exist-on-type-svgelement
         // https://stackoverflow.com/questions/24534988/d3-get-the-bounding-box-of-a-selected-element
-        this.divSvgLayer.append('svg')
+        this.divStatusLine.append('svg')
             .attr('id', 'statusLine').attr('width', '100%').attr('height', '100%')
             .append('line')
             .attr('x1', '0px')
             .attr('y1', '0px')
             .attr('x2', '0px')
-            .attr('y2', d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#div-svgLayer')
-            .node()
+            .attr('y2', d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#div-statusLine').node()
             .getBoundingClientRect()
             .height
             .toString()

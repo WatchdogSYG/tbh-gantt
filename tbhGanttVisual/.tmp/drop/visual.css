@@ -1,7 +1,7 @@
 /* -------- VAR -------- */
 :root {
   --rowHeight: 20px;
-  --timelineHeight: 40px;
+  --timelineHeight: 80px;
   --chartPortionPct: 75%;
   --chartPortionFr: 75fr;
 }
@@ -74,6 +74,7 @@ div {
   grid-row-end: span 2;
   grid-column-start: 2;
   grid-column-end: span 1;
+  pointer-events: none;
 }
 #div-activities {
   width: 25%;
@@ -107,6 +108,10 @@ div {
 #div-timeline {
   height: 100%;
   width: 75%;
+  overflow-x: visible;
+  overflow-y: visible;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
 }
 #div-chart {
   height: fit-content;
@@ -118,6 +123,11 @@ div {
 table {
   width: 100%;
   border: 1px solid blue;
+}
+#table-activityHeader {
+  width: 25%;
+  color: #bbbbbb;
+  flex-shrink: 0;
 }
 th {
   height: var(--timelineHeight);
@@ -138,10 +148,18 @@ td {
   z-index: 3;
 }
 #statusLine {
-  stroke: #ff0000;
+  stroke: #00ffff;
   stroke-width: 2px;
 }
+.g-tl {
+  border: 1px solid black;
+}
 /* ------- CHART ------- */
+.activityBar {
+  fill: red;
+  stroke: black;
+  stroke-width: 1px;
+}
 /* ------- DEBUG ------- */
 .highlight {
   background-color: rgba(0, 255, 0, 0.25);

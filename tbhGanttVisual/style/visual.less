@@ -1,7 +1,7 @@
 /* -------- VAR -------- */
 :root {
     --rowHeight: 20px;
-    --timelineHeight: 40px;
+    --timelineHeight: 80px;
 
     //the horizontal portion of the container that should be 
     //taken up by the gantt chart
@@ -69,7 +69,7 @@ div {
     height: fit-content;
 
     display: grid;
-    grid-template-columns: 25fr 75fr;//calc(100fr - var(--chartPortionFr)) var(--chartPortionFr);
+    grid-template-columns: 25fr 75fr; //calc(100fr - var(--chartPortionFr)) var(--chartPortionFr);
     //why doesnt the above commented code work?
     //grid-template-rows: 1fr 1fr;
 }
@@ -105,13 +105,16 @@ div {
 #div-statusLine {
     height: 100%;
     z-index: 1;
-    
+
     grid-row-start: 1;
     grid-row-end: span 2;
     grid-column-start: 2;
     grid-column-end: span 1;
+
+    pointer-events: none;
 }
 
+//div that contains the activities table
 #div-activities {
     width: 25%;
     flex-shrink: 0;
@@ -126,7 +129,7 @@ div {
     border-color: black;
 
     display: grid;
-    grid-template-columns: 1fr;   
+    grid-template-columns: 1fr;
 }
 
 //https://ishadeed.com/article/less-absolute-positioning-modern-css/
@@ -169,6 +172,11 @@ div {
     height: 100%;
 
     width: 75%;
+    overflow-x: visible;
+    overflow-y: visible;
+
+    display: grid;
+    grid-template-rows: 1fr 1fr;
 }
 
 #div-chart {
@@ -186,9 +194,15 @@ table {
     border: 1px solid blue;
 }
 
+#table-activityHeader {
+    width: 25%;
+    color: #bbbbbb;
+    flex-shrink: 0
+}
 
 th {
     height: var(--timelineHeight);
+    ;
 }
 
 tr {
@@ -197,7 +211,7 @@ tr {
 
 td {
     min-width: 40px;
-    
+
     border: 1px #aaaaaa;
     border-style: solid none solid solid;
 }
@@ -213,13 +227,22 @@ td {
 }
 
 #statusLine {
-    stroke: rgb(255, 0, 0);
+    stroke: rgb(0, 255, 255);
     stroke-width: 2px;
+}
+
+.g-tl{
+    border: 1px solid black;
 }
 
 /* ------- CHART ------- */
 
+.activityBar {
 
+    fill: red;
+    stroke: black;
+    stroke-width: 1px;
+}
 
 /* ------- DEBUG ------- */
 
