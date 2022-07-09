@@ -15,7 +15,7 @@ const month : string[] = [
     'December'
 ];
 
-class TimeConversions {
+export class TimeConversions {
 
     private static monthArray: string[] = [
         'January',

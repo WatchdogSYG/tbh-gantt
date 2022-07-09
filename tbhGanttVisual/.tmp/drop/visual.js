@@ -3,6 +3,153 @@ var tbhGanttVisual02814EA99E75457B80AA513BCFD5A299_DEBUG;
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 809:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "px": () => (/* binding */ px)
+/* harmony export */ });
+/* unused harmony export toPxNumber */
+//library of helper functions
+/**
+ * Converts a number into a string with the units 'px' suffixed on it.
+ * @param pixels the number of pixels
+ * @returns the string representation of the number with 'px' suffixed
+ */
+function px(pixels) {
+    return pixels.toString().concat('px');
+}
+/**
+ * For now this doesnt work and because the return value never comes back... keep this in visual.ts for now
+ * Returns the number representation of a CSS measurement with pixel units.
+ * @param numberPx the string containing the number of pixels to extract eg. '40.2px'
+ * @returns the number of pixels specified
+ */
+function toPxNumber(numberPx) {
+    return numberPx;
+    // //if there is only one instance of 'px' and its at the end
+    // if ((numberPx.lastIndexOf('px') == numberPx.indexOf('px'))
+    //     && (numberPx.length - numberPx.lastIndexOf('px') == 2)) {
+    //     return numberPx.substring(0, 3);
+    // } else {
+    //     //otherwise return null since css can have negative, 0, or positive values
+    //     return 'error';
+    // }
+    // return 'bad';
+    // // let s: string = numberPx.lastIndexOf('px').toString();
+    // // s = s.concat(numberPx.indexOf('px').toString());
+    // // s = s.concat(numberPx.length.toString());
+    // // s = s.concat(numberPx.lastIndexOf('px').toString());
+    // // return s;
+}
+
+
+/***/ }),
+
+/***/ 734:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "p": () => (/* binding */ TimeConversions)
+/* harmony export */ });
+//A header lib for date and time fns
+const month = (/* unused pure expression or super */ null && ([
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+]));
+class TimeConversions {
+    static hoursPerDay() {
+        return 24;
+    }
+    static daysPerMonth(index) {
+        return this.daysPerMonthArray[parseInt(index.toString())];
+    }
+    static monthsPerYear() {
+        return 12;
+    }
+    static daysPerYear() {
+        return 365;
+    }
+    static month(index) {
+        return this.monthArray[parseInt(index.toString())];
+    }
+    static mmm(index) {
+        return this.mmmArray[parseInt(index.toString())];
+    }
+    static m(index) {
+        return this.mArray[parseInt(index.toString())];
+    }
+}
+TimeConversions.monthArray = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+];
+TimeConversions.mmmArray = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+];
+TimeConversions.mArray = [
+    'J',
+    'F',
+    'M',
+    'A',
+    'M',
+    'J',
+    'J',
+    'A',
+    'S',
+    'O',
+    'N',
+    'D'
+];
+TimeConversions.daysPerMonthArray = [
+    31,
+    28,
+    31,
+    30,
+    31,
+    30,
+    31,
+    31,
+    30,
+    31,
+    30,
+    31
+];
+
+
+/***/ }),
+
 /***/ 8104:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -10,6 +157,8 @@ var tbhGanttVisual02814EA99E75457B80AA513BCFD5A299_DEBUG;
 /* harmony export */   "u": () => (/* binding */ Visual)
 /* harmony export */ });
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(662);
+/* harmony import */ var _src_lib__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(809);
+/* harmony import */ var _src_time__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(734);
 /*
 *  Power BI Visual CLI
 *
@@ -39,6 +188,7 @@ var tbhGanttVisual02814EA99E75457B80AA513BCFD5A299_DEBUG;
 ////////////////////////////////////////////////////////////////
 //  Imports
 ////////////////////////////////////////////////////////////////
+
 
 
 
@@ -131,7 +281,10 @@ class Visual {
         //  Create svg timeline
         ////////////////////////////////////////////////////////////////
         //temp vars to be calcd later
-        let tlWidth = 900; //cannot be less than div width!
+        this.tlDayScale = 0.5;
+        let years = 3.4;
+        let days = years * _src_time__WEBPACK_IMPORTED_MODULE_1__/* .TimeConversions.daysPerYear */ .p.daysPerYear(); //fix the syntax a bit
+        let tlWidth = days * this.tlDayScale; //cannot be less than div width!
         //console.log(this.style.getPropertyValue('--timelineHeight'));
         // console.log(this.toPxNumber(this.style.getPropertyValue('--timelineHeight')));
         let tlHeight = this.toPxNumber(this.style.getPropertyValue('--timelineHeight'));
@@ -152,10 +305,10 @@ class Visual {
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
             .attr('fill', '#111111');
-        console.log(this.px(tlHeight / 2));
+        console.log(_src_lib__WEBPACK_IMPORTED_MODULE_2__.px(tlHeight / 2));
         gBottom.append('text')
             .attr('x', '0px')
-            .attr('y', this.px(tlHeight / 2))
+            .attr('y', _src_lib__WEBPACK_IMPORTED_MODULE_2__.px(tlHeight / 2))
             .text('dd-mm')
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
@@ -326,14 +479,6 @@ class Visual {
             //otherwise return null since css can have negative, 0, or positive values
             return null;
         }
-    }
-    /**
- * Converts a number into a string with the units 'px' suffixed on it.
- * @param pixels the number of pixels
- * @returns the string representation of the number with 'px' suffixed
- */
-    px(pixels) {
-        return pixels.toString().concat('px');
     }
 }
 

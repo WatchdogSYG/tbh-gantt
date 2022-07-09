@@ -49,7 +49,8 @@ import * as d3 from 'd3';
 import { DSVRowAny, schemeSet3, style, text } from 'd3';
 type Selection<T extends d3.BaseType> = d3.Selection<T, any, any, any>;
 
-import './../src/lib'
+import * as Lib from './../src/lib';
+import * as Time from './../src/time';
 
 ////////////////////////////////////////////////////////////////
 //  Begin class definition
@@ -103,6 +104,7 @@ export class Visual implements IVisual {
     ////////////////DEV VARS\\\\\\\\\\\\\\\\
     private rows: number;
     private cols: number;
+    private tlDayScale: number;//the number of pixels per day on the timeline
 
     private style;//should be a CSSStyleDeclaration
 
@@ -214,7 +216,10 @@ export class Visual implements IVisual {
         ////////////////////////////////////////////////////////////////
 
         //temp vars to be calcd later
-        let tlWidth: number = 900;//cannot be less than div width!
+        this.tlDayScale = 0.5;
+        let years: number = 3.4;
+        let days: number = years * Time.TimeConversions.daysPerYear();//fix the syntax a bit
+        let tlWidth: number = days * this.tlDayScale;//cannot be less than div width!
 
         //console.log(this.style.getPropertyValue('--timelineHeight'));
         // console.log(this.toPxNumber(this.style.getPropertyValue('--timelineHeight')));
@@ -241,10 +246,10 @@ export class Visual implements IVisual {
             .attr('alignment-baseline', 'hanging')
             .attr('fill', '#111111');
 
-        console.log(this.px(tlHeight / 2));
+        console.log(Lib.px(tlHeight / 2));
         gBottom.append('text')
             .attr('x', '0px')
-            .attr('y', this.px(tlHeight / 2))
+            .attr('y', Lib.px(tlHeight / 2))
             .text('dd-mm')
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
@@ -447,14 +452,14 @@ export class Visual implements IVisual {
         }
     }
 
-    /**
- * Converts a number into a string with the units 'px' suffixed on it.
- * @param pixels the number of pixels
- * @returns the string representation of the number with 'px' suffixed
- */
-    private px(pixels: number): string {
-        return pixels.toString().concat('px');
-    }
+//  /**
+//  * Converts a number into a string with the units 'px' suffixed on it.
+//  * @param pixels the number of pixels
+//  * @returns the string representation of the number with 'px' suffixed
+//  */
+//     private px(pixels: number): string {
+//         return pixels.toString().concat('px');
+//     }
     ////////////////////////////////////////////////////////////////
     //  END OF CLASS
     ////////////////////////////////////////////////////////////////

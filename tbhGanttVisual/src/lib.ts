@@ -5,7 +5,7 @@
  * @param pixels the number of pixels
  * @returns the string representation of the number with 'px' suffixed
  */
-function px(pixels: number): string {
+export function px(pixels: number): string {
     return pixels.toString().concat('px');
 }
 
@@ -15,7 +15,7 @@ function px(pixels: number): string {
  * @param numberPx the string containing the number of pixels to extract eg. '40.2px'
  * @returns the number of pixels specified
  */
-function toPxNumber(numberPx: string): string {
+export function toPxNumber(numberPx: string): string {
     return numberPx;
     // //if there is only one instance of 'px' and its at the end
     // if ((numberPx.lastIndexOf('px') == numberPx.indexOf('px'))
