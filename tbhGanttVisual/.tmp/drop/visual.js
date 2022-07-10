@@ -44,9 +44,11 @@ function toPxNumber(numberPx) {
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Ti": () => (/* binding */ daysBetween)
+/* harmony export */   "Ti": () => (/* binding */ daysBetween),
+/* harmony export */   "Z5": () => (/* binding */ yearsBetween),
+/* harmony export */   "qj": () => (/* binding */ daysPerMonth)
 /* harmony export */ });
-/* unused harmony exports monthArray, mmm, m, daysPerMonthArray, msPerSecond, secondsPerMinute, minutesPerHour, hoursPerDay, daysPerWeek, monthsPerYear, daysPerYear, totalDaysPerYear, epoch0, isLeapYear */
+/* unused harmony exports monthArray, mmm, m, millisPerSecond, secondsPerMinute, minutesPerHour, hoursPerDay, daysPerWeek, monthsPerYear, daysPerYear, totalDaysPerYear, epoch0, isLeapYear, monthsBetween */
 //A header lib for date and time fns
 ////////////////////////////////////////////////////////////////
 //  CONSTANTS
@@ -93,7 +95,7 @@ const m = (/* unused pure expression or super */ null && ([
     'N',
     'D'
 ]));
-const daysPerMonthArray = (/* unused pure expression or super */ null && ([
+const daysPerMonth = [
     31,
     28,
     31,
@@ -106,8 +108,8 @@ const daysPerMonthArray = (/* unused pure expression or super */ null && ([
     31,
     30,
     31
-]));
-const msPerSecond = 1000;
+];
+const millisPerSecond = 1000;
 const secondsPerMinute = 60;
 const minutesPerHour = 60;
 const hoursPerDay = 24;
@@ -165,16 +167,87 @@ function isLeapYear(year) {
     }
 }
 /**
- * Returns the number of days in the epoch timeline between two dates,
- * @param start The start date
- * @param end The end date
+ * Returns the number of days in the epoch timeline between two dates.
+ * @param start The start date.
+ * @param end The end date.
+ * @param round Rounds the number of days to the nearest integer. Rounds up if >0, does not round if == 0, rounds down otherwise.
  * @returns the number of days between the two dates rounded down.
  */
-function daysBetween(start, end) {
-    return Math.floor((end.valueOf() - start.valueOf()) / (msPerSecond *
-        secondsPerMinute *
-        minutesPerHour *
-        hoursPerDay));
+function daysBetween(start, end, round) {
+    if (round > 0) {
+        return Math.ceil((end.valueOf() - start.valueOf()) / (millisPerSecond *
+            secondsPerMinute *
+            minutesPerHour *
+            hoursPerDay));
+    }
+    else if ((round == 0) || (round == undefined)) {
+        return (end.valueOf() - start.valueOf()) / (millisPerSecond *
+            secondsPerMinute *
+            minutesPerHour *
+            hoursPerDay);
+    }
+    else {
+        return Math.floor((end.valueOf() - start.valueOf()) / (millisPerSecond *
+            secondsPerMinute *
+            minutesPerHour *
+            hoursPerDay));
+    }
+}
+/**
+ * Returns the number of months between two dates.
+ * @param start The start date.
+ * @param end The end date.
+ * @param round Rounds the number of months to the nearest integer. Rounds up if >0, does not round if == 0, rounds down otherwise.
+ * @returns the number of days between the two dates rounded down.
+ */
+function monthsBetween(start, end, round) {
+    let t = end.valueOf() - start.valueOf();
+    let m = [start.getMonth(), end.getMonth()];
+    //if they are in the same month
+    if (m[0] == m[1]) {
+        if (isLeapYear(start.getFullYear()) && m[0] == 1) { //we are in a leap february
+            return (daysPerMonth[m[0]] + 1) *
+                ((end.valueOf() - start.valueOf()) /
+                    (millisPerSecond * secondsPerMinute * minutesPerHour * hoursPerDay));
+        }
+        else {
+            return daysPerMonth[m[0]] *
+                ((end.valueOf() - start.valueOf()) /
+                    (millisPerSecond * secondsPerMinute * minutesPerHour * hoursPerDay));
+        }
+    }
+    //if they are in the same year
+    if (yearsBetween(start, end, 0) > 1) {
+        start.getDate;
+    }
+    if (round > 0) {
+        return;
+    }
+    else if ((round == 0) || (round == undefined)) {
+        return end.getFullYear() - start.getFullYear();
+    }
+    else {
+        return Math.floor(end.getFullYear() - start.getFullYear());
+    }
+}
+/**
+ * Returns the number of years between two dates. NOT FULLY IMPLEMENTED
+ * @param start The start date.
+ * @param end The end date.
+ * @param round Rounds the number of years to the nearest integer. Rounds up if >0, does not round if == 0, rounds down otherwise.
+ * @returns the number of days between the two dates rounded down.
+ */
+function yearsBetween(start, end, round) {
+    //TODO get partial years
+    if (round > 0) {
+        return Math.ceil(end.getFullYear() - start.getFullYear());
+    }
+    else if ((round == 0) || (round == undefined)) {
+        return end.getFullYear() - start.getFullYear();
+    }
+    else {
+        return Math.floor(end.getFullYear() - start.getFullYear());
+    }
 }
 // export function numberOfLeapYearsBetween(startDay: number, endDay: number): number {
 //     //todo
@@ -198,6 +271,82 @@ function daysBetween(start, end) {
 
 /***/ }),
 
+/***/ 92:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "T": () => (/* binding */ Timeline)
+/* harmony export */ });
+/* harmony import */ var _src_time__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4734);
+//Class that contains properties and functions that deal with timeline and spacing
+
+class Timeline {
+    ////////////////////////////////////////////////////////////////
+    //  Constructor
+    ////////////////////////////////////////////////////////////////
+    constructor(start, end) {
+        ////////////////////////////////////////////////////////////////
+        //  Define members
+        ////////////////////////////////////////////////////////////////
+        //--------DEV--------//
+        this.verbose = true;
+        this.d1 = start;
+        this.d2 = end;
+        console.log(this.d1, this.d2, _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysBetween */ .Ti(this.d1, this.d2, 1));
+        this.n_days = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysBetween */ .Ti(this.d1, this.d2, 1);
+        this.n_years = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .yearsBetween */ .Z5(this.d1, this.d2, -1);
+        // this.n_months = 
+        this.dayScale = 1;
+        if (this.verbose) {
+            console.log('LOG: Timeline created from ' +
+                start.toISOString() + ' to ' +
+                end.toISOString() +
+                ' spanning ' +
+                this.n_days.toString() +
+                ' days.');
+            console.log('LOG: Timeline scale = ' + this.dayScale.toString());
+        }
+    }
+    ////////////////////////////////////////////////////////////////
+    //  Get/Set
+    ////////////////////////////////////////////////////////////////
+    getStart() { return this.d1; }
+    getEnd() { return this.d2; }
+    getDays() { return this.n_days; }
+    getDayScale() { return this.dayScale; }
+    getMonths() { return this.n_months; }
+    getyears() { return this.n_years; }
+    ////////////////////////////////////////////////////////////////
+    //  Timeline Manipulation Functions
+    ////////////////////////////////////////////////////////////////
+    /**
+     * Not yet implemented
+     * @param daysPerPixel the desired scale factor
+     */
+    setDayScale(daysPerPixel) {
+        console.log("WARNING: Timeline.setDayScale(daysPerPixel: number) Not yet implemented.");
+        this.dayScale = daysPerPixel;
+        this.updateScaleFactors();
+    }
+    ////////////////////////////////////////////////////////////////
+    //  Support Functions
+    ////////////////////////////////////////////////////////////////
+    updateScaleFactors() {
+        this.weekScale = this.dayScale * 7;
+        this.yearScale = this.dayScale * 365;
+        for (let i = 0; i < 12; i++) {
+            this.monthScale[i] = this.dayScale[i] * _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysPerMonth */ .qj[i];
+        }
+        this.quarterScale[0] = this.monthScale[0] + this.monthScale[1] + this.monthScale[2];
+        this.quarterScale[1] = this.monthScale[3] + this.monthScale[4] + this.monthScale[5];
+        this.quarterScale[2] = this.monthScale[6] + this.monthScale[7] + this.monthScale[8];
+        this.quarterScale[3] = this.monthScale[9] + this.monthScale[10] + this.monthScale[11];
+    }
+}
+
+
+/***/ }),
+
 /***/ 8104:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -206,7 +355,7 @@ function daysBetween(start, end) {
 /* harmony export */ });
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(662);
 /* harmony import */ var _src_lib__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(809);
-/* harmony import */ var _src_time__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4734);
+/* harmony import */ var _src_timeline__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(92);
 /*
 *  Power BI Visual CLI
 *
@@ -331,13 +480,9 @@ class Visual {
         //temp vars to be calcd later
         let d1 = new Date(2020, 3, 1);
         let d2 = new Date(2023, 5, 12);
-        let days = _src_time__WEBPACK_IMPORTED_MODULE_1__/* .daysBetween */ .Ti(d1, d2);
-        console.log(d1);
-        console.log(d2);
-        console.log(days);
-        this.tlDayScale = 1;
-        let yearWidth = this.tlDayScale * days;
-        let tlWidth = days * this.tlDayScale; //cannot be less than div width!
+        this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_1__/* .Timeline */ .T(d1, d2);
+        let yearWidth = this.timeline.getDayScale() * this.timeline.getDays();
+        let tlWidth = this.timeline.getDays() * this.timeline.getDayScale(); //cannot be less than div width!
         let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_2__/* .toPxNumber */ .U(this.style.getPropertyValue('--timelineHeight'));
         let tl = this.divTimeline
             .append('svg')
@@ -360,7 +505,7 @@ class Visual {
         console.log(yearText);
         var self = this; //access local var in function (d) callback
         gTop.selectAll('text').data(yearText).enter().append('text')
-            .attr('x', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_2__.px(i * 80); })
+            .attr('x', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_2__.px(i * 250); })
             .attr('y', '0px')
             .text(function (d) { return d; })
             .attr('text-anchor', 'top')

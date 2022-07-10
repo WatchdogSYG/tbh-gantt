@@ -28,8 +28,8 @@ export declare class Visual implements IVisual {
     private textLabel;
     private rows;
     private cols;
-    private tlDayScale;
     private style;
+    private timeline;
     constructor(options: VisualConstructorOptions);
     update(options: VisualUpdateOptions): void;
     private populateActivityTable;

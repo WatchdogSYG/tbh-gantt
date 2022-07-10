@@ -51,6 +51,7 @@ type Selection<T extends d3.BaseType> = d3.Selection<T, any, any, any>;
 
 import * as Lib from './../src/lib';
 import * as Time from './../src/time';
+import {Timeline} from './../src/timeline';
 
 ////////////////////////////////////////////////////////////////
 //  Begin class definition
@@ -104,9 +105,10 @@ export class Visual implements IVisual {
     ////////////////DEV VARS\\\\\\\\\\\\\\\\
     private rows: number;
     private cols: number;
-    private tlDayScale: number;//the number of pixels per day on the timeline
 
     private style;//should be a CSSStyleDeclaration
+
+    private timeline: Timeline;
 
     ////////////////////////////////////////////////////////////////
     //  Constructor
@@ -220,16 +222,11 @@ export class Visual implements IVisual {
         let d1: Date = new Date(2020, 3, 1);
         let d2: Date = new Date(2023, 5, 12);
 
-        let days: number = Time.daysBetween(d1, d2);
-        console.log(d1);
-        console.log(d2);
-        console.log(days);
+        this.timeline = new Timeline(d1, d2);
 
-        this.tlDayScale = 1;
+        let yearWidth: number = this.timeline.getDayScale() * this.timeline.getDays();
 
-        let yearWidth: number = this.tlDayScale * days;
-
-        let tlWidth: number = days * this.tlDayScale;//cannot be less than div width!
+        let tlWidth: number = this.timeline.getDays() * this.timeline.getDayScale();//cannot be less than div width!
         let tlHeight: number = Lib.toPxNumber(this.style.getPropertyValue('--timelineHeight'));
 
         let tl: Selection<SVGSVGElement> = this.divTimeline
@@ -260,7 +257,7 @@ export class Visual implements IVisual {
 
         var self = this; //access local var in function (d) callback
         gTop.selectAll('text').data(yearText).enter().append('text')
-            .attr('x', function (d, i) { return Lib.px(i * 80); })
+            .attr('x', function (d, i) { return Lib.px(i * 250); })
             .attr('y', '0px')
             .text(function (d) { return d; })
             .attr('text-anchor', 'top')
