@@ -1,46 +1,25 @@
 //A header lib for date and time fns
 
-// export const month : string[] = [
-//     'January',
-//     'February',
-//     'March',
-//     'April',
-//     'May',
-//     'June',
-//     'July',
-//     'August',
-//     'September',
-//     'October',
-//     'November',
-//     'December'
-// ];
 
+////////////////////////////////////////////////////////////////
+//  CONSTANTS
+////////////////////////////////////////////////////////////////
 export const monthArray: string[] = [
     'January',
-
     'February',
-
     'March',
-
     'April',
-
     'May',
-
     'June',
-
     'July',
-
     'August',
-
     'September',
-
     'October',
-
     'November',
+    'December'
+];
 
-    'December'];
-
-export const mmmArray: string[] = [
+export const mmm: string[] = [
     'Jan',
     'Feb',
     'Mar',
@@ -52,9 +31,10 @@ export const mmmArray: string[] = [
     'Sep',
     'Oct',
     'Nov',
-    'Dec'];
+    'Dec'
+];
 
-export const mArray: string[] = [
+export const m: string[] = [
     'J',
     'F',
     'M',
@@ -81,17 +61,18 @@ export const daysPerMonthArray: number[] = [
     30,
     31,
     30,
-    31];
+    31
+];
 
-export function hoursPerDay(): number {
-    return 24;
-}
-export function daysPerMonth(index): number {
-    return this.daysPerMonthArray[parseInt(index.toString())];
-}
-export function monthsPerYear(): number {
-    return 12;
-}
+export const hoursPerDay: number = 24;
+export const daysPerWeek: number = 7;
+export const monthsPerYear: number = 12;
+export const minutesPerHour: number = 60;
+export const secondsPerMinute: number = 60;
+
+////////////////////////////////////////////////////////////////
+//  YEAR TO DAYS
+////////////////////////////////////////////////////////////////
 
 /**
  * Returns the number of days in the specified year accounting for leap years.
@@ -139,6 +120,11 @@ export function totalDaysPerYear(startYear: number, endYear?: number): number {
     }
 }
 
+
+////////////////////////////////////////////////////////////////
+//  SUPPORT FUNCTIONS
+////////////////////////////////////////////////////////////////
+
 export function isLeapYear(year: number): boolean {
     if (Math.abs(year % 4) == 0) {
         return true;
@@ -146,37 +132,27 @@ export function isLeapYear(year: number): boolean {
         return false;
     }
 }
-export function monthName(index: number): string {
-    return this.monthArray[parseInt(index.toString())];
-}
 
-export function mmm(index: number): string {
-    return this.mmmArray[parseInt(index.toString())];
-}
-export function m(index: number): string {
-    return this.mArray[parseInt(index.toString())];
-}
-
-export function numberOfLeapYearsBetween(startDay: number, endDay: number): number {
-    //todo
-    return 0;
-}
+// export function numberOfLeapYearsBetween(startDay: number, endDay: number): number {
+//     //todo
+//     return 0;
+// }
 
 //BADLY NAMED
-export function date(dayIndex: number): string {
-    return '0000-00-00T00:00:00';
-}
+// export function date(dayIndex: number): string {
+//     return '0000-00-00T00:00:00';
+// }
 
-export function year(dayIndex: number): number {
-    var deltaYears = Math.floor(dayIndex / totalDaysPerYear(2001));
+// export function year(dayIndex: number): number {
+//     var deltaYears = Math.floor(dayIndex / totalDaysPerYear(2001));
 
-    return 1970 + Math.floor(dayIndex / totalDaysPerYear(2001));
-}
+//     return 1970 + Math.floor(dayIndex / totalDaysPerYear(2001));
+// }
 
-export function month(dayIndex: number): string {
-    return '0000-00-00T00:00:00';
-}
+// export function month(dayIndex: number): string {
+//     return '0000-00-00T00:00:00';
+// }
 
-export function day(dayIndex: number): string {
-    return '0000-00-00T00:00:00';
-}
+// export function day(dayIndex: number): string {
+//     return '0000-00-00T00:00:00';
+// }

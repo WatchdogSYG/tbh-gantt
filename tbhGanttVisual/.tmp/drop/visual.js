@@ -7,9 +7,9 @@ var tbhGanttVisual02814EA99E75457B80AA513BCFD5A299_DEBUG;
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "U": () => (/* binding */ toPxNumber),
-/* harmony export */   "px": () => (/* binding */ px)
+/* harmony export */   "U": () => (/* binding */ toPxNumber)
 /* harmony export */ });
+/* unused harmony export px */
 //library of helper functions
 /**
  * Converts a number into a string with the units 'px' suffixed on it.
@@ -44,25 +44,13 @@ function toPxNumber(numberPx) {
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "rD": () => (/* binding */ totalDaysPerYear),
-/* harmony export */   "ty": () => (/* binding */ year)
+/* harmony export */   "rD": () => (/* binding */ totalDaysPerYear)
 /* harmony export */ });
-/* unused harmony exports monthArray, mmmArray, mArray, daysPerMonthArray, hoursPerDay, daysPerMonth, monthsPerYear, isLeapYear, monthName, mmm, m, numberOfLeapYearsBetween, date, month, day */
+/* unused harmony exports monthArray, mmm, m, daysPerMonthArray, hoursPerDay, daysPerWeek, monthsPerYear, minutesPerHour, secondsPerMinute, isLeapYear */
 //A header lib for date and time fns
-// export const month : string[] = [
-//     'January',
-//     'February',
-//     'March',
-//     'April',
-//     'May',
-//     'June',
-//     'July',
-//     'August',
-//     'September',
-//     'October',
-//     'November',
-//     'December'
-// ];
+////////////////////////////////////////////////////////////////
+//  CONSTANTS
+////////////////////////////////////////////////////////////////
 const monthArray = (/* unused pure expression or super */ null && ([
     'January',
     'February',
@@ -77,7 +65,7 @@ const monthArray = (/* unused pure expression or super */ null && ([
     'November',
     'December'
 ]));
-const mmmArray = (/* unused pure expression or super */ null && ([
+const mmm = (/* unused pure expression or super */ null && ([
     'Jan',
     'Feb',
     'Mar',
@@ -91,7 +79,7 @@ const mmmArray = (/* unused pure expression or super */ null && ([
     'Nov',
     'Dec'
 ]));
-const mArray = (/* unused pure expression or super */ null && ([
+const m = (/* unused pure expression or super */ null && ([
     'J',
     'F',
     'M',
@@ -119,15 +107,11 @@ const daysPerMonthArray = (/* unused pure expression or super */ null && ([
     30,
     31
 ]));
-function hoursPerDay() {
-    return 24;
-}
-function daysPerMonth(index) {
-    return this.daysPerMonthArray[parseInt(index.toString())];
-}
-function monthsPerYear() {
-    return 12;
-}
+const hoursPerDay = 24;
+const daysPerWeek = 7;
+const monthsPerYear = 12;
+const minutesPerHour = 60;
+const secondsPerMinute = 60;
 function totalDaysPerYear(startYear, endYear) {
     //convert to whole number
     let y1 = Math.floor(startYear);
@@ -161,6 +145,9 @@ function totalDaysPerYear(startYear, endYear) {
         return (dy * 365) + leaps;
     }
 }
+////////////////////////////////////////////////////////////////
+//  SUPPORT FUNCTIONS
+////////////////////////////////////////////////////////////////
 function isLeapYear(year) {
     if (Math.abs(year % 4) == 0) {
         return true;
@@ -169,33 +156,24 @@ function isLeapYear(year) {
         return false;
     }
 }
-function monthName(index) {
-    return this.monthArray[parseInt(index.toString())];
-}
-function mmm(index) {
-    return this.mmmArray[parseInt(index.toString())];
-}
-function m(index) {
-    return this.mArray[parseInt(index.toString())];
-}
-function numberOfLeapYearsBetween(startDay, endDay) {
-    //todo
-    return 0;
-}
+// export function numberOfLeapYearsBetween(startDay: number, endDay: number): number {
+//     //todo
+//     return 0;
+// }
 //BADLY NAMED
-function date(dayIndex) {
-    return '0000-00-00T00:00:00';
-}
-function year(dayIndex) {
-    var deltaYears = Math.floor(dayIndex / totalDaysPerYear(2001));
-    return 1970 + Math.floor(dayIndex / totalDaysPerYear(2001));
-}
-function month(dayIndex) {
-    return '0000-00-00T00:00:00';
-}
-function day(dayIndex) {
-    return '0000-00-00T00:00:00';
-}
+// export function date(dayIndex: number): string {
+//     return '0000-00-00T00:00:00';
+// }
+// export function year(dayIndex: number): number {
+//     var deltaYears = Math.floor(dayIndex / totalDaysPerYear(2001));
+//     return 1970 + Math.floor(dayIndex / totalDaysPerYear(2001));
+// }
+// export function month(dayIndex: number): string {
+//     return '0000-00-00T00:00:00';
+// }
+// export function day(dayIndex: number): string {
+//     return '0000-00-00T00:00:00';
+// }
 
 
 /***/ }),
@@ -361,28 +339,31 @@ class Visual {
         //     yearText[i] = Time.year(d).toString();
         //     d = d+ Time.totalDaysPerYear();
         // }
-        gTop.append('text')
-            .attr('x', '0px')
-            .attr('y', '0px')
-            .text(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .year */ .ty(startDay).toString())
-            .attr('text-anchor', 'top')
-            .attr('alignment-baseline', 'hanging')
-            .attr('fill', '#111111');
-        gTop.append('text')
-            .attr('x', '100px')
-            .attr('y', '0px')
-            .text(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .year */ .ty(endDay).toString())
-            .attr('text-anchor', 'top')
-            .attr('alignment-baseline', 'hanging')
-            .attr('fill', '#111111');
-        console.log(_src_lib__WEBPACK_IMPORTED_MODULE_2__.px(tlHeight / 2));
-        gBottom.append('text')
-            .attr('x', '0px')
-            .attr('y', _src_lib__WEBPACK_IMPORTED_MODULE_2__.px(tlHeight / 2))
-            .text('dd-mm')
-            .attr('text-anchor', 'top')
-            .attr('alignment-baseline', 'hanging')
-            .attr('fill', '#111111');
+        let date = new Date(1970, 1, 1);
+        console.log(Date.parse('1970-01-02T00:00:01'));
+        console.log(date);
+        // gTop.append('text')
+        //     .attr('x', '0px')
+        //     .attr('y', '0px')
+        //     .text(Time.year(startDay).toString())
+        //     .attr('text-anchor', 'top')
+        //     .attr('alignment-baseline', 'hanging')
+        //     .attr('fill', '#111111');
+        // gTop.append('text')
+        //     .attr('x', '100px')
+        //     .attr('y', '0px')
+        //     .text(Time.year(endDay).toString())
+        //     .attr('text-anchor', 'top')
+        //     .attr('alignment-baseline', 'hanging')
+        //     .attr('fill', '#111111');
+        // console.log(Lib.px(tlHeight / 2));
+        // gBottom.append('text')
+        //     .attr('x', '0px')
+        //     .attr('y', Lib.px(tlHeight / 2))
+        //     .text('dd-mm')
+        //     .attr('text-anchor', 'top')
+        //     .attr('alignment-baseline', 'hanging')
+        //     .attr('fill', '#111111');
         // egsvg.append('rect')
         //     .classed('activityBar', true)
         //     .attr('height', '100%')
@@ -476,6 +457,7 @@ class Visual {
         //     this.textNode.textContent = (this.updateCount++).toString();
         // }
         let dataView = options.dataViews[0];
+        options.dataViews[0].metadata.columns.entries;
         // let width: number = options.viewport.width;
         // let height: number = options.viewport.height;
         // this.svg.attr('width', width);

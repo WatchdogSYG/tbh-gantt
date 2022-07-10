@@ -261,30 +261,34 @@ export class Visual implements IVisual {
         //     d = d+ Time.totalDaysPerYear();
         // }
 
-        gTop.append('text')
-            .attr('x', '0px')
-            .attr('y', '0px')
-            .text(Time.year(startDay).toString())
-            .attr('text-anchor', 'top')
-            .attr('alignment-baseline', 'hanging')
-            .attr('fill', '#111111');
+        let date :Date = new Date(1970,1,1);
+        console.log(Date.parse('1970-01-02T00:00:01'));
+        console.log(date);
 
-        gTop.append('text')
-            .attr('x', '100px')
-            .attr('y', '0px')
-            .text(Time.year(endDay).toString())
-            .attr('text-anchor', 'top')
-            .attr('alignment-baseline', 'hanging')
-            .attr('fill', '#111111');
+        // gTop.append('text')
+        //     .attr('x', '0px')
+        //     .attr('y', '0px')
+        //     .text(Time.year(startDay).toString())
+        //     .attr('text-anchor', 'top')
+        //     .attr('alignment-baseline', 'hanging')
+        //     .attr('fill', '#111111');
 
-        console.log(Lib.px(tlHeight / 2));
-        gBottom.append('text')
-            .attr('x', '0px')
-            .attr('y', Lib.px(tlHeight / 2))
-            .text('dd-mm')
-            .attr('text-anchor', 'top')
-            .attr('alignment-baseline', 'hanging')
-            .attr('fill', '#111111');
+        // gTop.append('text')
+        //     .attr('x', '100px')
+        //     .attr('y', '0px')
+        //     .text(Time.year(endDay).toString())
+        //     .attr('text-anchor', 'top')
+        //     .attr('alignment-baseline', 'hanging')
+        //     .attr('fill', '#111111');
+
+        // console.log(Lib.px(tlHeight / 2));
+        // gBottom.append('text')
+        //     .attr('x', '0px')
+        //     .attr('y', Lib.px(tlHeight / 2))
+        //     .text('dd-mm')
+        //     .attr('text-anchor', 'top')
+        //     .attr('alignment-baseline', 'hanging')
+        //     .attr('fill', '#111111');
 
 
         // egsvg.append('rect')
@@ -399,7 +403,7 @@ export class Visual implements IVisual {
         // }
 
         let dataView: DataView = options.dataViews[0];
-
+options.dataViews[0].metadata.columns.entries
         // let width: number = options.viewport.width;
         // let height: number = options.viewport.height;
         // this.svg.attr('width', width);
