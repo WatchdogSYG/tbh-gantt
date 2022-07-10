@@ -219,13 +219,27 @@ export class Visual implements IVisual {
 
         let startDay: number = 365;
         let endDay: number = 2000;
-        this.tlDayScale = 0.5;
+
         let days: number = endDay - startDay;
+
+        this.tlDayScale = 1;
+
+        let yearWidth: number = this.tlDayScale * Time.totalDaysPerYear(-1);
+        //let deltaYears = Math.ceil(days / Time.totalDaysPerYear());
+
         let tlWidth: number = days * this.tlDayScale;//cannot be less than div width!
 
         let tlHeight: number = Lib.toPxNumber(this.style.getPropertyValue('--timelineHeight'));
 
-        console.log(tlHeight);
+
+        console.log('start test');
+        console.log(Time.totalDaysPerYear(2000,2003));
+        console.log(Time.totalDaysPerYear(2000,2004));
+        console.log(Time.totalDaysPerYear(2000,2008));
+        console.log(Time.totalDaysPerYear(2000));
+        console.log(Time.totalDaysPerYear(1999));
+        console.log('end test');
+
         let tl: Selection<SVGSVGElement> = this.divTimeline
             .append('svg')
             .attr('id', 'tl-top')
@@ -239,6 +253,13 @@ export class Visual implements IVisual {
             .classed('g-tl', true);
 
 
+        let yearText: string[];
+
+        let d: number = startDay;
+        // for (let i = 0; i < deltaYears; i++) {
+        //     yearText[i] = Time.year(d).toString();
+        //     d = d+ Time.totalDaysPerYear();
+        // }
 
         gTop.append('text')
             .attr('x', '0px')

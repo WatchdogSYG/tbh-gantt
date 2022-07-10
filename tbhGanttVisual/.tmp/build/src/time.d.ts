@@ -5,7 +5,18 @@ export declare const daysPerMonthArray: number[];
 export declare function hoursPerDay(): number;
 export declare function daysPerMonth(index: any): number;
 export declare function monthsPerYear(): number;
-export declare function daysPerYear(): number;
+/**
+ * Returns the number of days in the specified year accounting for leap years.
+ * @param year the year to count the days.
+ */
+export declare function totalDaysPerYear(year: number): number;
+/**
+ * Counts the number of days between the specified years (inclusive), accounting for leap years.
+ * @param startYear the beginning of the year range to consider
+ * @param endYear the end of the year range to consider
+ */
+export declare function totalDaysPerYear(startYear: number, endYear: number): number;
+export declare function isLeapYear(year: number): boolean;
 export declare function monthName(index: number): string;
 export declare function mmm(index: number): string;
 export declare function m(index: number): string;

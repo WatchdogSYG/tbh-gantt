@@ -40,13 +40,14 @@ function toPxNumber(numberPx) {
 
 /***/ }),
 
-/***/ 734:
+/***/ 4734:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "rD": () => (/* binding */ totalDaysPerYear),
 /* harmony export */   "ty": () => (/* binding */ year)
 /* harmony export */ });
-/* unused harmony exports monthArray, mmmArray, mArray, daysPerMonthArray, hoursPerDay, daysPerMonth, monthsPerYear, daysPerYear, monthName, mmm, m, numberOfLeapYearsBetween, date, month, day */
+/* unused harmony exports monthArray, mmmArray, mArray, daysPerMonthArray, hoursPerDay, daysPerMonth, monthsPerYear, isLeapYear, monthName, mmm, m, numberOfLeapYearsBetween, date, month, day */
 //A header lib for date and time fns
 // export const month : string[] = [
 //     'January',
@@ -127,8 +128,46 @@ function daysPerMonth(index) {
 function monthsPerYear() {
     return 12;
 }
-function daysPerYear() {
-    return 365;
+function totalDaysPerYear(startYear, endYear) {
+    //convert to whole number
+    let y1 = Math.floor(startYear);
+    if (endYear == undefined) { //input is the year to determine
+        if (isLeapYear(y1)) { //check leap year
+            return 366;
+        }
+        else {
+            return 365;
+        }
+    }
+    else { //input is a range of years inclusive to determine
+        //convert to whole number
+        let y2 = Math.floor(endYear);
+        //check order
+        if (y1 > y2) {
+            let temp = y1;
+            y1 = y2;
+            y2 = temp;
+        }
+        let dy = y2 - y1;
+        //number of leaps in range
+        let leaps = 0;
+        if (isLeapYear(startYear)) {
+            leaps++;
+        }
+        leaps += Math.floor(dy / 4);
+        if (isLeapYear(endYear) && (dy % 4 != 0)) {
+            leaps++;
+        }
+        return (dy * 365) + leaps;
+    }
+}
+function isLeapYear(year) {
+    if (Math.abs(year % 4) == 0) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 function monthName(index) {
     return this.monthArray[parseInt(index.toString())];
@@ -148,8 +187,8 @@ function date(dayIndex) {
     return '0000-00-00T00:00:00';
 }
 function year(dayIndex) {
-    var deltaYears = Math.floor(dayIndex / daysPerYear());
-    return 1970 + Math.floor(dayIndex / daysPerYear());
+    var deltaYears = Math.floor(dayIndex / totalDaysPerYear(2001));
+    return 1970 + Math.floor(dayIndex / totalDaysPerYear(2001));
 }
 function month(dayIndex) {
     return '0000-00-00T00:00:00';
@@ -168,8 +207,8 @@ function day(dayIndex) {
 /* harmony export */   "u": () => (/* binding */ Visual)
 /* harmony export */ });
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(662);
-/* harmony import */ var _src_lib__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(809);
-/* harmony import */ var _src_time__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(734);
+/* harmony import */ var _src_lib__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(809);
+/* harmony import */ var _src_time__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4734);
 /*
 *  Power BI Visual CLI
 *
@@ -294,11 +333,19 @@ class Visual {
         //temp vars to be calcd later
         let startDay = 365;
         let endDay = 2000;
-        this.tlDayScale = 0.5;
         let days = endDay - startDay;
+        this.tlDayScale = 1;
+        let yearWidth = this.tlDayScale * _src_time__WEBPACK_IMPORTED_MODULE_1__/* .totalDaysPerYear */ .rD(-1);
+        //let deltaYears = Math.ceil(days / Time.totalDaysPerYear());
         let tlWidth = days * this.tlDayScale; //cannot be less than div width!
-        let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_1__/* .toPxNumber */ .U(this.style.getPropertyValue('--timelineHeight'));
-        console.log(tlHeight);
+        let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_2__/* .toPxNumber */ .U(this.style.getPropertyValue('--timelineHeight'));
+        console.log('start test');
+        console.log(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .totalDaysPerYear */ .rD(2000, 2003));
+        console.log(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .totalDaysPerYear */ .rD(2000, 2004));
+        console.log(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .totalDaysPerYear */ .rD(2000, 2008));
+        console.log(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .totalDaysPerYear */ .rD(2000));
+        console.log(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .totalDaysPerYear */ .rD(1999));
+        console.log('end test');
         let tl = this.divTimeline
             .append('svg')
             .attr('id', 'tl-top')
@@ -308,24 +355,30 @@ class Visual {
             .classed('g-tl', true);
         let gBottom = tl.append('g')
             .classed('g-tl', true);
+        let yearText;
+        let d = startDay;
+        // for (let i = 0; i < deltaYears; i++) {
+        //     yearText[i] = Time.year(d).toString();
+        //     d = d+ Time.totalDaysPerYear();
+        // }
         gTop.append('text')
             .attr('x', '0px')
             .attr('y', '0px')
-            .text(_src_time__WEBPACK_IMPORTED_MODULE_2__/* .year */ .ty(startDay).toString())
+            .text(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .year */ .ty(startDay).toString())
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
             .attr('fill', '#111111');
         gTop.append('text')
             .attr('x', '100px')
             .attr('y', '0px')
-            .text(_src_time__WEBPACK_IMPORTED_MODULE_2__/* .year */ .ty(endDay).toString())
+            .text(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .year */ .ty(endDay).toString())
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
             .attr('fill', '#111111');
-        console.log(_src_lib__WEBPACK_IMPORTED_MODULE_1__.px(tlHeight / 2));
+        console.log(_src_lib__WEBPACK_IMPORTED_MODULE_2__.px(tlHeight / 2));
         gBottom.append('text')
             .attr('x', '0px')
-            .attr('y', _src_lib__WEBPACK_IMPORTED_MODULE_1__.px(tlHeight / 2))
+            .attr('y', _src_lib__WEBPACK_IMPORTED_MODULE_2__.px(tlHeight / 2))
             .text('dd-mm')
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
