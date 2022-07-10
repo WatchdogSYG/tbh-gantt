@@ -1,6 +1,7 @@
 //A header lib for date and time fns
 
 import { precisionRound } from "d3";
+import { roundOptions } from "./lib";
 
 
 ////////////////////////////////////////////////////////////////
@@ -174,44 +175,75 @@ export function daysBetween(start: Date, end: Date, round?: number): number {
 }
 
 /**
- * Returns the number of months between two dates.
+ * Returns the number of months between two dates. TODO ROUND OPTIONS
  * @param start The start date.
  * @param end The end date.
  * @param round Rounds the number of months to the nearest integer. Rounds up if >0, does not round if == 0, rounds down otherwise.
  * @returns the number of days between the two dates rounded down.
  */
 export function monthsBetween(start: Date, end: Date, round?: number): number {
-    let t: number = end.valueOf() - start.valueOf();
+    //let t: number = end.valueOf() - start.valueOf();
     let m: number[] = [start.getMonth(), end.getMonth()];
 
     //if they are in the same month
     if (m[0] == m[1]) {
         if (isLeapYear(start.getFullYear()) && m[0] == 1) { //we are in a leap february
-            return (daysPerMonth[m[0]] + 1) *
+            return roundOptions(
+                (daysPerMonth[m[0]] + 1) *
                 ((end.valueOf() - start.valueOf()) /
-                    (millisPerSecond * secondsPerMinute * minutesPerHour * hoursPerDay));
+                    (millisPerSecond * secondsPerMinute * minutesPerHour * hoursPerDay))
+                , round);
         } else {
-            return daysPerMonth[m[0]] *
+            return roundOptions(daysPerMonth[m[0]] *
                 ((end.valueOf() - start.valueOf()) /
-                    (millisPerSecond * secondsPerMinute * minutesPerHour * hoursPerDay));
+                    (millisPerSecond * secondsPerMinute * minutesPerHour * hoursPerDay))
+                , round);
         }
     }
 
     //if they are in the same year
-    if (yearsBetween(start, end, 0) > 1) {
-        start.getDate;
+    if (yearsBetween(start, end, 0) < 1) {
+        //proportion of first month
+        let t: number = monthsBetween(start, new Date(start.getFullYear(),
+            start.getMonth() + 1, 1, 0, 0, 0, 0), 0);
+
+        //guard clause check that our for loop will run more then once
+        if (m[1] - m[0] == 1) {//we only have one more month left, add the proportion of the second month
+            return roundOptions(t + monthsBetween(end, new Date(end.getFullYear(),
+                end.getMonth() + 1, 1, 0, 0, 0, 0), 0), round);
+        }
+
+        //there are more than 2 months left
+        //sum from the second month onwards to the second to last month
+        for (let i = m[0] + 1; i < m[1] - 1; i++) {
+            t += daysPerMonth[i];
+        }
+
+        //return and add the last proportion of the last month
+        return roundOptions(t + monthsBetween(new Date(end.getFullYear(),
+            end.getMonth() + 1, 1, 0, 0, 0, 0), end, 0), round);
     }
 
+    //they are not in the same year
+    //get the year number difference and proceed like with the above if statement
 
+    //the months between now and the end of the year
+    let t: number = monthsBetween(start, new Date(start.getFullYear() + 1, 0, 1, 0, 0, 0, 0));
+    let y: number[] = [end.getFullYear(), start.getFullYear()]
 
-    if (round > 0) {
-
-        return;
-    } else if ((round == 0) || (round == undefined)) {
-        return end.getFullYear() - start.getFullYear();
-    } else {
-        return Math.floor(end.getFullYear() - start.getFullYear());
+    //if there are only 2 years spanned
+    if (y[1] - y[0] == 1) {
+        //add the time between the start of the last year and the end date
+        return roundOptions(t + monthsBetween(new Date(end.getFullYear(), 0, 1, 0, 0, 0, 0), end, 0)
+            , round);
     }
+
+    //there are more than 2 years left
+    t += ((m[1] - m[0]) - 2) * 12; //ignore the start and end years
+
+    //return and add the proportion of the last year
+    return roundOptions(t + monthsBetween(new Date(end.getFullYear(), 0, 1, 0, 0, 0, 0), end, 0)
+        , round);
 }
 
 /**
@@ -223,15 +255,8 @@ export function monthsBetween(start: Date, end: Date, round?: number): number {
  */
 export function yearsBetween(start: Date, end: Date, round?: number): number {
     //TODO get partial years
-    if (round > 0) {
-        return Math.ceil(end.getFullYear() - start.getFullYear());
-    } else if ((round == 0) || (round == undefined)) {
-        return end.getFullYear() - start.getFullYear();
-    } else {
-        return Math.floor(end.getFullYear() - start.getFullYear());
-    }
+    return roundOptions(end.getFullYear() - start.getFullYear(), round);
 }
-
 
 
 // export function numberOfLeapYearsBetween(startDay: number, endDay: number): number {

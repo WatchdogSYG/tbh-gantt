@@ -1,0 +1,16 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "type": "pwa-chrome",
+            "request": "launch",
+            "name": "Launch Chrome against PBI",
+            "url": "https://app.powerbi.com/groups/8a860931-ceaa-451a-8466-683a88118d1a/reports/294d06e6-0e9f-4064-9972-cf3d6c11353f/ReportSectionaff3f0423a736149315a",
+            "webRoot": "${workspaceFolder}"
+        }
+    ]
+}

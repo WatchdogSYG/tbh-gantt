@@ -51,7 +51,10 @@ type Selection<T extends d3.BaseType> = d3.Selection<T, any, any, any>;
 
 import * as Lib from './../src/lib';
 import * as Time from './../src/time';
-import {Timeline} from './../src/timeline';
+import { Timeline } from './../src/timeline';
+
+//UNIT TESTS
+import * as jsUnit from './../tests/globalTests';
 
 ////////////////////////////////////////////////////////////////
 //  Begin class definition
@@ -115,6 +118,10 @@ export class Visual implements IVisual {
     ////////////////////////////////////////////////////////////////
 
     constructor(options: VisualConstructorOptions) {
+
+        jsUnit.allTests();
+
+
         console.log('Visual constructor', options);
 
         this.style = getComputedStyle(document.querySelector(':root'));
@@ -465,7 +472,7 @@ export class Visual implements IVisual {
     }
 
     private getYearTextSpacing(start: Date, end: Date): number[] {
-        
+
         return [0];
     }
     ////////////////////////////////////////////////////////////////

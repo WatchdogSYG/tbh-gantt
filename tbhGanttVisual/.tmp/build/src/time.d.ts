@@ -34,7 +34,7 @@ export declare function isLeapYear(year: number): boolean;
  */
 export declare function daysBetween(start: Date, end: Date, round?: number): number;
 /**
- * Returns the number of months between two dates.
+ * Returns the number of months between two dates. TODO ROUND OPTIONS
  * @param start The start date.
  * @param end The end date.
  * @param round Rounds the number of months to the nearest integer. Rounds up if >0, does not round if == 0, rounds down otherwise.

@@ -25,3 +25,19 @@ export function toPxNumber(numberPx: string): number {
    return null;
 }
 }
+
+/**
+ * Returns a number rounded up, down, or not at all, to the nearest integer.
+ * @param x The number to round.
+ * @param round Rounds x to the nearest integer. Rounds up if > 0, does not round if == 0, rounds down otherwise.
+ * @returns The number rounded as specified.
+ */
+export function roundOptions(x: number, round?: number):number{
+   if (round > 0) {
+      return Math.ceil(x);
+  } else if ((round == 0) || (round == undefined)) {
+      return x;
+  } else {
+      return Math.floor(x);
+  }
+}

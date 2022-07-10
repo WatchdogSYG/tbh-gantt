@@ -8,7 +8,8 @@ var tbhGanttVisual02814EA99E75457B80AA513BCFD5A299_DEBUG;
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "U": () => (/* binding */ toPxNumber),
-/* harmony export */   "px": () => (/* binding */ px)
+/* harmony export */   "px": () => (/* binding */ px),
+/* harmony export */   "y": () => (/* binding */ roundOptions)
 /* harmony export */ });
 //library of helper functions
 /**
@@ -36,6 +37,23 @@ function toPxNumber(numberPx) {
         return null;
     }
 }
+/**
+ * Returns a number rounded up, down, or not at all, to the nearest integer.
+ * @param x The number to round.
+ * @param round Rounds x to the nearest integer. Rounds up if > 0, does not round if == 0, rounds down otherwise.
+ * @returns The number rounded as specified.
+ */
+function roundOptions(x, round) {
+    if (round > 0) {
+        return Math.ceil(x);
+    }
+    else if ((round == 0) || (round == undefined)) {
+        return x;
+    }
+    else {
+        return Math.floor(x);
+    }
+}
 
 
 /***/ }),
@@ -44,12 +62,15 @@ function toPxNumber(numberPx) {
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "PL": () => (/* binding */ monthsBetween),
 /* harmony export */   "Ti": () => (/* binding */ daysBetween),
 /* harmony export */   "Z5": () => (/* binding */ yearsBetween),
 /* harmony export */   "qj": () => (/* binding */ daysPerMonth)
 /* harmony export */ });
-/* unused harmony exports monthArray, mmm, m, millisPerSecond, secondsPerMinute, minutesPerHour, hoursPerDay, daysPerWeek, monthsPerYear, daysPerYear, totalDaysPerYear, epoch0, isLeapYear, monthsBetween */
+/* unused harmony exports monthArray, mmm, m, millisPerSecond, secondsPerMinute, minutesPerHour, hoursPerDay, daysPerWeek, monthsPerYear, daysPerYear, totalDaysPerYear, epoch0, isLeapYear */
+/* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(809);
 //A header lib for date and time fns
+
 ////////////////////////////////////////////////////////////////
 //  CONSTANTS
 ////////////////////////////////////////////////////////////////
@@ -194,41 +215,58 @@ function daysBetween(start, end, round) {
     }
 }
 /**
- * Returns the number of months between two dates.
+ * Returns the number of months between two dates. TODO ROUND OPTIONS
  * @param start The start date.
  * @param end The end date.
  * @param round Rounds the number of months to the nearest integer. Rounds up if >0, does not round if == 0, rounds down otherwise.
  * @returns the number of days between the two dates rounded down.
  */
 function monthsBetween(start, end, round) {
-    let t = end.valueOf() - start.valueOf();
+    //let t: number = end.valueOf() - start.valueOf();
     let m = [start.getMonth(), end.getMonth()];
     //if they are in the same month
     if (m[0] == m[1]) {
         if (isLeapYear(start.getFullYear()) && m[0] == 1) { //we are in a leap february
-            return (daysPerMonth[m[0]] + 1) *
+            return (0,_lib__WEBPACK_IMPORTED_MODULE_0__/* .roundOptions */ .y)((daysPerMonth[m[0]] + 1) *
                 ((end.valueOf() - start.valueOf()) /
-                    (millisPerSecond * secondsPerMinute * minutesPerHour * hoursPerDay));
+                    (millisPerSecond * secondsPerMinute * minutesPerHour * hoursPerDay)), round);
         }
         else {
-            return daysPerMonth[m[0]] *
+            return (0,_lib__WEBPACK_IMPORTED_MODULE_0__/* .roundOptions */ .y)(daysPerMonth[m[0]] *
                 ((end.valueOf() - start.valueOf()) /
-                    (millisPerSecond * secondsPerMinute * minutesPerHour * hoursPerDay));
+                    (millisPerSecond * secondsPerMinute * minutesPerHour * hoursPerDay)), round);
         }
     }
     //if they are in the same year
-    if (yearsBetween(start, end, 0) > 1) {
-        start.getDate;
+    if (yearsBetween(start, end, 0) < 1) {
+        //proportion of first month
+        let t = monthsBetween(start, new Date(start.getFullYear(), start.getMonth() + 1, 1, 0, 0, 0, 0), 0);
+        //guard clause check that our for loop will run more then once
+        if (m[1] - m[0] == 1) { //we only have one more month left, add the proportion of the second month
+            return (0,_lib__WEBPACK_IMPORTED_MODULE_0__/* .roundOptions */ .y)(t + monthsBetween(end, new Date(end.getFullYear(), end.getMonth() + 1, 1, 0, 0, 0, 0), 0), round);
+        }
+        //there are more than 2 months left
+        //sum from the second month onwards to the second to last month
+        for (let i = m[0] + 1; i < m[1] - 1; i++) {
+            t += daysPerMonth[i];
+        }
+        //return and add the last proportion of the last month
+        return (0,_lib__WEBPACK_IMPORTED_MODULE_0__/* .roundOptions */ .y)(t + monthsBetween(new Date(end.getFullYear(), end.getMonth() + 1, 1, 0, 0, 0, 0), end, 0), round);
     }
-    if (round > 0) {
-        return;
+    //they are not in the same year
+    //get the year number difference and proceed like with the above if statement
+    //the months between now and the end of the year
+    let t = monthsBetween(start, new Date(start.getFullYear() + 1, 0, 1, 0, 0, 0, 0));
+    let y = [end.getFullYear(), start.getFullYear()];
+    //if there are only 2 years spanned
+    if (y[1] - y[0] == 1) {
+        //add the time between the start of the last year and the end date
+        return (0,_lib__WEBPACK_IMPORTED_MODULE_0__/* .roundOptions */ .y)(t + monthsBetween(new Date(end.getFullYear(), 0, 1, 0, 0, 0, 0), end, 0), round);
     }
-    else if ((round == 0) || (round == undefined)) {
-        return end.getFullYear() - start.getFullYear();
-    }
-    else {
-        return Math.floor(end.getFullYear() - start.getFullYear());
-    }
+    //there are more than 2 years left
+    t += ((m[1] - m[0]) - 2) * 12; //ignore the start and end years
+    //return and add the proportion of the last year
+    return (0,_lib__WEBPACK_IMPORTED_MODULE_0__/* .roundOptions */ .y)(t + monthsBetween(new Date(end.getFullYear(), 0, 1, 0, 0, 0, 0), end, 0), round);
 }
 /**
  * Returns the number of years between two dates. NOT FULLY IMPLEMENTED
@@ -239,15 +277,7 @@ function monthsBetween(start, end, round) {
  */
 function yearsBetween(start, end, round) {
     //TODO get partial years
-    if (round > 0) {
-        return Math.ceil(end.getFullYear() - start.getFullYear());
-    }
-    else if ((round == 0) || (round == undefined)) {
-        return end.getFullYear() - start.getFullYear();
-    }
-    else {
-        return Math.floor(end.getFullYear() - start.getFullYear());
-    }
+    return (0,_lib__WEBPACK_IMPORTED_MODULE_0__/* .roundOptions */ .y)(end.getFullYear() - start.getFullYear(), round);
 }
 // export function numberOfLeapYearsBetween(startDay: number, endDay: number): number {
 //     //todo
@@ -354,8 +384,9 @@ class Timeline {
 /* harmony export */   "u": () => (/* binding */ Visual)
 /* harmony export */ });
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(662);
-/* harmony import */ var _src_lib__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(809);
-/* harmony import */ var _src_timeline__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(92);
+/* harmony import */ var _src_lib__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(809);
+/* harmony import */ var _src_timeline__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(92);
+/* harmony import */ var _tests_globalTests__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(748);
 /*
 *  Power BI Visual CLI
 *
@@ -389,6 +420,8 @@ class Timeline {
 
 
 
+//UNIT TESTS
+
 ////////////////////////////////////////////////////////////////
 //  Begin class definition
 ////////////////////////////////////////////////////////////////
@@ -397,6 +430,7 @@ class Visual {
     //  Constructor
     ////////////////////////////////////////////////////////////////
     constructor(options) {
+        _tests_globalTests__WEBPACK_IMPORTED_MODULE_1__/* .allTests */ .T();
         console.log('Visual constructor', options);
         this.style = getComputedStyle(document.querySelector(':root'));
         //     this.target = options.element;
@@ -480,15 +514,15 @@ class Visual {
         //temp vars to be calcd later
         let d1 = new Date(2020, 3, 1);
         let d2 = new Date(2023, 5, 12);
-        this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_1__/* .Timeline */ .T(d1, d2);
+        this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_2__/* .Timeline */ .T(d1, d2);
         let yearWidth = this.timeline.getDayScale() * this.timeline.getDays();
         let tlWidth = this.timeline.getDays() * this.timeline.getDayScale(); //cannot be less than div width!
-        let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_2__/* .toPxNumber */ .U(this.style.getPropertyValue('--timelineHeight'));
+        let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_3__/* .toPxNumber */ .U(this.style.getPropertyValue('--timelineHeight'));
         let tl = this.divTimeline
             .append('svg')
             .attr('id', 'tl-top')
             .attr('height', '100%')
-            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_2__.px(tlWidth));
+            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(tlWidth));
         let gTop = tl.append('g')
             .classed('g-tl', true);
         let gBottom = tl.append('g')
@@ -505,7 +539,7 @@ class Visual {
         console.log(yearText);
         var self = this; //access local var in function (d) callback
         gTop.selectAll('text').data(yearText).enter().append('text')
-            .attr('x', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_2__.px(i * 250); })
+            .attr('x', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(i * 250); })
             .attr('y', '0px')
             .text(function (d) { return d; })
             .attr('text-anchor', 'top')
@@ -682,6 +716,84 @@ class Visual {
     getYearTextSpacing(start, end) {
         return [0];
     }
+}
+
+
+/***/ }),
+
+/***/ 748:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "T": () => (/* binding */ allTests)
+/* harmony export */ });
+/* harmony import */ var _tests_test_time__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(473);
+//all unit tests
+
+function allTests() {
+    _tests_test_time__WEBPACK_IMPORTED_MODULE_0__/* .runUnitTests */ .RS(true);
+}
+
+
+/***/ }),
+
+/***/ 473:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "RS": () => (/* binding */ runUnitTests)
+/* harmony export */ });
+/* unused harmony exports test_totalDaysPerYear, test_monthsBetween */
+/* harmony import */ var _src_time__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4734);
+//Unit tests for time.ts
+
+/**
+ * Runs unit tests for the file src/time.ts.
+ * @param verbose Console shows verbose output if true
+ * @returns The proportion of successful tests to failed tests
+ */
+function runUnitTests(verbose) {
+    let total = 0;
+    let passed = 0;
+    ////////////////////////////////////////////////////////////////
+    //total++;
+    //passed += test_totalDaysPerYear();
+    total++;
+    test_monthsBetween(true);
+    ////////////////////////////////////////////////////////////////
+    console.log('LOG: The file /src/time.ts passed ' +
+        passed.toString() +
+        ' unit tests out of ' +
+        total.toString() +
+        ' unit tests. Pass rate: ' +
+        (100 * passed / total).toString() + '%');
+    return passed / total;
+}
+//example
+function test_totalDaysPerYear(verbose) {
+    return 0;
+}
+function test_monthsBetween(verbose) {
+    let total = 0;
+    let passed = 0;
+    ////////////////////////////////////////////////////////////////
+    let d1 = new Date(2000, 0, 1);
+    let d2 = new Date(2000, 1, 1);
+    console.log('TESTCASE: monthsBetween 1-Jan-2000 and 1-Feb-2000');
+    if (verbose) {
+        console.log('RESULT: ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .monthsBetween */ .PL(d1, d2).toString());
+    }
+    total++;
+    if (_src_time__WEBPACK_IMPORTED_MODULE_0__/* .monthsBetween */ .PL(d1, d2) == 12) {
+        passed++;
+        console.log("PASSED");
+    }
+    else {
+        console.log("FAILED");
+    }
+    ////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////
+    return passed / total;
 }
 
 

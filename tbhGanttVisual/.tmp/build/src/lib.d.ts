@@ -11,3 +11,10 @@ export declare function px(pixels: number): string;
  * @returns the number of pixels specified
  */
 export declare function toPxNumber(numberPx: string): number;
+/**
+ * Returns a number rounded up, down, or not at all, to the nearest integer.
+ * @param x The number to round.
+ * @param round Rounds x to the nearest integer. Rounds up if > 0, does not round if == 0, rounds down otherwise.
+ * @returns The number rounded as specified.
+ */
+export declare function roundOptions(x: number, round?: number): number;
