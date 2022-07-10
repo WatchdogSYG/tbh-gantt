@@ -33,4 +33,5 @@ export declare class Visual implements IVisual {
     constructor(options: VisualConstructorOptions);
     update(options: VisualUpdateOptions): void;
     private populateActivityTable;
+    private getYearTextSpacing;
 }

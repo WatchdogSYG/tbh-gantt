@@ -217,34 +217,26 @@ export class Visual implements IVisual {
 
         //temp vars to be calcd later
 
-        let startDay: number = 365;
-        let endDay: number = 2000;
+        let d1: Date = new Date(2020, 3, 1);
+        let d2: Date = new Date(2023, 5, 12);
 
-        let days: number = endDay - startDay;
+        let days: number = Time.daysBetween(d1, d2);
+        console.log(d1);
+        console.log(d2);
+        console.log(days);
 
         this.tlDayScale = 1;
 
-        let yearWidth: number = this.tlDayScale * Time.totalDaysPerYear(-1);
-        //let deltaYears = Math.ceil(days / Time.totalDaysPerYear());
+        let yearWidth: number = this.tlDayScale * days;
 
         let tlWidth: number = days * this.tlDayScale;//cannot be less than div width!
-
         let tlHeight: number = Lib.toPxNumber(this.style.getPropertyValue('--timelineHeight'));
-
-
-        console.log('start test');
-        console.log(Time.totalDaysPerYear(2000,2003));
-        console.log(Time.totalDaysPerYear(2000,2004));
-        console.log(Time.totalDaysPerYear(2000,2008));
-        console.log(Time.totalDaysPerYear(2000));
-        console.log(Time.totalDaysPerYear(1999));
-        console.log('end test');
 
         let tl: Selection<SVGSVGElement> = this.divTimeline
             .append('svg')
             .attr('id', 'tl-top')
             .attr('height', '100%')
-            .attr('width', tlWidth.toString() + 'px');
+            .attr('width', Lib.px(tlWidth));
 
         let gTop: Selection<SVGGElement> = tl.append('g')
             .classed('g-tl', true);
@@ -252,26 +244,30 @@ export class Visual implements IVisual {
         let gBottom: Selection<SVGGElement> = tl.append('g')
             .classed('g-tl', true);
 
+        let deltaYears: number = d2.getFullYear() - d1.getFullYear() + 1;
+        let yearText: string[] = [];
 
-        let yearText: string[];
+        console.log(d2.getFullYear() - d1.getFullYear() + 1);
 
-        let d: number = startDay;
-        // for (let i = 0; i < deltaYears; i++) {
-        //     yearText[i] = Time.year(d).toString();
-        //     d = d+ Time.totalDaysPerYear();
-        // }
+        for (let i = 0; i < deltaYears; i++) {
+            console.log(d1.getFullYear());
+            console.log(i);
+            console.log((d1.getFullYear() + i).toString());
+            yearText[i] = ((d1.getFullYear() + i).toString());
+        }
 
-        let date :Date = new Date(1970,1,1);
-        console.log(Date.parse('1970-01-02T00:00:01'));
-        console.log(date);
+        console.log(yearText);
 
-        // gTop.append('text')
-        //     .attr('x', '0px')
-        //     .attr('y', '0px')
-        //     .text(Time.year(startDay).toString())
-        //     .attr('text-anchor', 'top')
-        //     .attr('alignment-baseline', 'hanging')
-        //     .attr('fill', '#111111');
+        var self = this; //access local var in function (d) callback
+        gTop.selectAll('text').data(yearText).enter().append('text')
+            .attr('x', function (d, i) { return Lib.px(i * 80); })
+            .attr('y', '0px')
+            .text(function (d) { return d; })
+            .attr('text-anchor', 'top')
+            .attr('alignment-baseline', 'hanging')
+            .attr('fill', '#111111')
+            .classed('yearText', true);
+
 
         // gTop.append('text')
         //     .attr('x', '100px')
@@ -403,7 +399,7 @@ export class Visual implements IVisual {
         // }
 
         let dataView: DataView = options.dataViews[0];
-options.dataViews[0].metadata.columns.entries
+        options.dataViews[0].metadata.columns.entries
         // let width: number = options.viewport.width;
         // let height: number = options.viewport.height;
         // this.svg.attr('width', width);
@@ -471,6 +467,10 @@ options.dataViews[0].metadata.columns.entries
             .text(function (d) { return d; });//we are taking d from the bound data from the trs
     }
 
+    private getYearTextSpacing(start: Date, end: Date): number[] {
+        
+        return [0];
+    }
     ////////////////////////////////////////////////////////////////
     //  END OF CLASS
     ////////////////////////////////////////////////////////////////

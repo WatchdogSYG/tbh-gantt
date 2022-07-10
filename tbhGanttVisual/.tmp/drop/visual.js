@@ -7,9 +7,9 @@ var tbhGanttVisual02814EA99E75457B80AA513BCFD5A299_DEBUG;
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "U": () => (/* binding */ toPxNumber)
+/* harmony export */   "U": () => (/* binding */ toPxNumber),
+/* harmony export */   "px": () => (/* binding */ px)
 /* harmony export */ });
-/* unused harmony export px */
 //library of helper functions
 /**
  * Converts a number into a string with the units 'px' suffixed on it.
@@ -44,9 +44,9 @@ function toPxNumber(numberPx) {
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "rD": () => (/* binding */ totalDaysPerYear)
+/* harmony export */   "Ti": () => (/* binding */ daysBetween)
 /* harmony export */ });
-/* unused harmony exports monthArray, mmm, m, daysPerMonthArray, hoursPerDay, daysPerWeek, monthsPerYear, minutesPerHour, secondsPerMinute, isLeapYear */
+/* unused harmony exports monthArray, mmm, m, daysPerMonthArray, msPerSecond, secondsPerMinute, minutesPerHour, hoursPerDay, daysPerWeek, monthsPerYear, daysPerYear, totalDaysPerYear, epoch0, isLeapYear */
 //A header lib for date and time fns
 ////////////////////////////////////////////////////////////////
 //  CONSTANTS
@@ -107,11 +107,16 @@ const daysPerMonthArray = (/* unused pure expression or super */ null && ([
     30,
     31
 ]));
+const msPerSecond = 1000;
+const secondsPerMinute = 60;
+const minutesPerHour = 60;
 const hoursPerDay = 24;
 const daysPerWeek = 7;
 const monthsPerYear = 12;
-const minutesPerHour = 60;
-const secondsPerMinute = 60;
+/**
+ * The number of days in a non-leap year.
+ */
+const daysPerYear = 365;
 function totalDaysPerYear(startYear, endYear) {
     //convert to whole number
     let y1 = Math.floor(startYear);
@@ -148,6 +153,9 @@ function totalDaysPerYear(startYear, endYear) {
 ////////////////////////////////////////////////////////////////
 //  SUPPORT FUNCTIONS
 ////////////////////////////////////////////////////////////////
+function epoch0() {
+    return new Date(1970, 1, 1);
+}
 function isLeapYear(year) {
     if (Math.abs(year % 4) == 0) {
         return true;
@@ -155,6 +163,18 @@ function isLeapYear(year) {
     else {
         return false;
     }
+}
+/**
+ * Returns the number of days in the epoch timeline between two dates,
+ * @param start The start date
+ * @param end The end date
+ * @returns the number of days between the two dates rounded down.
+ */
+function daysBetween(start, end) {
+    return Math.floor((end.valueOf() - start.valueOf()) / (msPerSecond *
+        secondsPerMinute *
+        minutesPerHour *
+        hoursPerDay));
 }
 // export function numberOfLeapYearsBetween(startDay: number, endDay: number): number {
 //     //todo
@@ -309,46 +329,44 @@ class Visual {
         //  Create svg timeline
         ////////////////////////////////////////////////////////////////
         //temp vars to be calcd later
-        let startDay = 365;
-        let endDay = 2000;
-        let days = endDay - startDay;
+        let d1 = new Date(2020, 3, 1);
+        let d2 = new Date(2023, 5, 12);
+        let days = _src_time__WEBPACK_IMPORTED_MODULE_1__/* .daysBetween */ .Ti(d1, d2);
+        console.log(d1);
+        console.log(d2);
+        console.log(days);
         this.tlDayScale = 1;
-        let yearWidth = this.tlDayScale * _src_time__WEBPACK_IMPORTED_MODULE_1__/* .totalDaysPerYear */ .rD(-1);
-        //let deltaYears = Math.ceil(days / Time.totalDaysPerYear());
+        let yearWidth = this.tlDayScale * days;
         let tlWidth = days * this.tlDayScale; //cannot be less than div width!
         let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_2__/* .toPxNumber */ .U(this.style.getPropertyValue('--timelineHeight'));
-        console.log('start test');
-        console.log(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .totalDaysPerYear */ .rD(2000, 2003));
-        console.log(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .totalDaysPerYear */ .rD(2000, 2004));
-        console.log(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .totalDaysPerYear */ .rD(2000, 2008));
-        console.log(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .totalDaysPerYear */ .rD(2000));
-        console.log(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .totalDaysPerYear */ .rD(1999));
-        console.log('end test');
         let tl = this.divTimeline
             .append('svg')
             .attr('id', 'tl-top')
             .attr('height', '100%')
-            .attr('width', tlWidth.toString() + 'px');
+            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_2__.px(tlWidth));
         let gTop = tl.append('g')
             .classed('g-tl', true);
         let gBottom = tl.append('g')
             .classed('g-tl', true);
-        let yearText;
-        let d = startDay;
-        // for (let i = 0; i < deltaYears; i++) {
-        //     yearText[i] = Time.year(d).toString();
-        //     d = d+ Time.totalDaysPerYear();
-        // }
-        let date = new Date(1970, 1, 1);
-        console.log(Date.parse('1970-01-02T00:00:01'));
-        console.log(date);
-        // gTop.append('text')
-        //     .attr('x', '0px')
-        //     .attr('y', '0px')
-        //     .text(Time.year(startDay).toString())
-        //     .attr('text-anchor', 'top')
-        //     .attr('alignment-baseline', 'hanging')
-        //     .attr('fill', '#111111');
+        let deltaYears = d2.getFullYear() - d1.getFullYear() + 1;
+        let yearText = [];
+        console.log(d2.getFullYear() - d1.getFullYear() + 1);
+        for (let i = 0; i < deltaYears; i++) {
+            console.log(d1.getFullYear());
+            console.log(i);
+            console.log((d1.getFullYear() + i).toString());
+            yearText[i] = ((d1.getFullYear() + i).toString());
+        }
+        console.log(yearText);
+        var self = this; //access local var in function (d) callback
+        gTop.selectAll('text').data(yearText).enter().append('text')
+            .attr('x', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_2__.px(i * 80); })
+            .attr('y', '0px')
+            .text(function (d) { return d; })
+            .attr('text-anchor', 'top')
+            .attr('alignment-baseline', 'hanging')
+            .attr('fill', '#111111')
+            .classed('yearText', true);
         // gTop.append('text')
         //     .attr('x', '100px')
         //     .attr('y', '0px')
@@ -515,6 +533,9 @@ class Visual {
             .enter()
             .append('td')
             .text(function (d) { return d; }); //we are taking d from the bound data from the trs
+    }
+    getYearTextSpacing(start, end) {
+        return [0];
     }
 }
 
