@@ -1,6 +1,6 @@
 //Class that contains properties and functions that deal with timeline and spacing
 
-import { timeDay } from 'd3';
+import * as dayjs from 'dayjs';
 import * as Lib from './../src/lib';
 import * as Time from './../src/time';
 
@@ -13,8 +13,8 @@ export class Timeline {
     //--------DEV--------//
     private verbose: boolean = true;
 
-    private d1: Date;
-    private d2: Date;
+    private d1: dayjs.Dayjs;
+    private d2: dayjs.Dayjs;
     private n_days: number;
     private n_months: number;
     private n_years: number;
@@ -33,24 +33,25 @@ export class Timeline {
     //  Get/Set
     ////////////////////////////////////////////////////////////////
 
-    public getStart(): Date { return this.d1; }
-    public getEnd(): Date { return this.d2; }
+    public getStart(): dayjs.Dayjs { return this.d1; }
+    public getEnd(): dayjs.Dayjs { return this.d2; }
     public getDays(): number { return this.n_days; }
     public getDayScale(): number { return this.dayScale; }
     public getMonths(): number { return this.n_months; }
-    public getyears(): number { return this.n_years; }
+    public getYears(): number { return this.n_years; }
 
     ////////////////////////////////////////////////////////////////
     //  Constructor
     ////////////////////////////////////////////////////////////////
 
-    constructor(start: Date, end: Date) {
+    constructor(start: dayjs.Dayjs, end: dayjs.Dayjs) {
         this.d1 = start;
         this.d2 = end;
-        console.log(this.d1, this.d2, Time.daysBetween(this.d1, this.d2,1))
-        this.n_days = Time.daysBetween(this.d1, this.d2,1);
-        this.n_years = Time.yearsBetween(this.d1, this.d2,-1);
-        // this.n_months = 
+
+        this.n_days = Math.abs(this.d2.diff(this.d1, 'd', true));
+        this.n_months = Math.abs(this.d2.diff(this.d1, 'M', true));
+        this.n_years = Math.abs(this.d2.diff(this.d1, 'y', true));
+
         this.dayScale = 1;
 
         if (this.verbose) {
@@ -61,10 +62,13 @@ export class Timeline {
                 this.n_days.toString() +
                 ' days.');
 
+            console.log('LOG: ' + 
+            this.n_years + ' years or ' + 
+            this.n_months + ' months or ' + 
+            this.n_days + ' days.');
+
             console.log('LOG: Timeline scale = ' + this.dayScale.toString());
         }
-
-
     }
 
     ////////////////////////////////////////////////////////////////
@@ -94,6 +98,4 @@ export class Timeline {
         this.quarterScale[2] = this.monthScale[6] + this.monthScale[7] + this.monthScale[8];
         this.quarterScale[3] = this.monthScale[9] + this.monthScale[10] + this.monthScale[11];
     }
-
-
 }

@@ -53,6 +53,8 @@ import * as Lib from './../src/lib';
 import * as Time from './../src/time';
 import { Timeline } from './../src/timeline';
 
+import * as dayjs from 'dayjs';
+
 //UNIT TESTS
 import * as jsUnit from './../tests/globalTests';
 
@@ -118,9 +120,6 @@ export class Visual implements IVisual {
     ////////////////////////////////////////////////////////////////
 
     constructor(options: VisualConstructorOptions) {
-
-        jsUnit.allTests();
-
 
         console.log('Visual constructor', options);
 
@@ -226,8 +225,8 @@ export class Visual implements IVisual {
 
         //temp vars to be calcd later
 
-        let d1: Date = new Date(2020, 3, 1);
-        let d2: Date = new Date(2023, 5, 12);
+        let d1: dayjs.Dayjs = dayjs(new Date(2020, 3, 1));
+        let d2: dayjs.Dayjs = dayjs(new Date(2023, 5, 9));
 
         this.timeline = new Timeline(d1, d2);
 
@@ -248,29 +247,23 @@ export class Visual implements IVisual {
         let gBottom: Selection<SVGGElement> = tl.append('g')
             .classed('g-tl', true);
 
-        let deltaYears: number = d2.getFullYear() - d1.getFullYear() + 1;
+        // the number of year partitions
+        let deltaYears: number = Math.ceil(this.timeline.getYears());
         let yearText: string[] = [];
 
-        console.log(d2.getFullYear() - d1.getFullYear() + 1);
-
-        for (let i = 0; i < deltaYears; i++) {
-            console.log(d1.getFullYear());
-            console.log(i);
-            console.log((d1.getFullYear() + i).toString());
-            yearText[i] = ((d1.getFullYear() + i).toString());
-        }
+        for (let i = 0; i < deltaYears; i++) { yearText[i] = ((d1.year() + i).toString()); }
 
         console.log(yearText);
 
-        var self = this; //access local var in function (d) callback
-        gTop.selectAll('text').data(yearText).enter().append('text')
-            .attr('x', function (d, i) { return Lib.px(i * 250); })
-            .attr('y', '0px')
-            .text(function (d) { return d; })
-            .attr('text-anchor', 'top')
-            .attr('alignment-baseline', 'hanging')
-            .attr('fill', '#111111')
-            .classed('yearText', true);
+        // var self = this; //access local var in function (d) callback
+        // gTop.selectAll('text').data(yearText).enter().append('text')
+        //     .attr('x', function (d, i) { return Lib.px(i * 250); })
+        //     .attr('y', '0px')
+        //     .text(function (d) { return d; })
+        //     .attr('text-anchor', 'top')
+        //     .attr('alignment-baseline', 'hanging')
+        //     .attr('fill', '#111111')
+        //     .classed('yearText', true);
 
 
         // gTop.append('text')

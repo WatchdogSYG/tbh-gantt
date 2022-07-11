@@ -1,3 +1,4 @@
+import * as dayjs from 'dayjs';
 export declare class Timeline {
     private verbose;
     private d1;
@@ -12,13 +13,13 @@ export declare class Timeline {
     private quarterScale;
     private width;
     private height;
-    getStart(): Date;
-    getEnd(): Date;
+    getStart(): dayjs.Dayjs;
+    getEnd(): dayjs.Dayjs;
     getDays(): number;
     getDayScale(): number;
     getMonths(): number;
-    getyears(): number;
-    constructor(start: Date, end: Date);
+    getYears(): number;
+    constructor(start: dayjs.Dayjs, end: dayjs.Dayjs);
     /**
      * Not yet implemented
      * @param daysPerPixel the desired scale factor
