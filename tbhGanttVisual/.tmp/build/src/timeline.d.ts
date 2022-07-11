@@ -13,12 +13,15 @@ export declare class Timeline {
     private quarterScale;
     private width;
     private height;
+    private ts;
     getStart(): dayjs.Dayjs;
     getEnd(): dayjs.Dayjs;
     getDays(): number;
     getDayScale(): number;
     getMonths(): number;
     getYears(): number;
+    getTimelineScale(): TimelineScale;
+    private isLeapYear;
     constructor(start: dayjs.Dayjs, end: dayjs.Dayjs);
     /**
      * Not yet implemented
@@ -26,4 +29,27 @@ export declare class Timeline {
      */
     setDayScale(daysPerPixel: number): void;
     private updateScaleFactors;
+}
+export interface IYearScale {
+    yearText: string;
+    yearOffset: number;
+}
+export interface IMonthScale {
+    monthText: string;
+    monthOffset: number;
+}
+export declare class YearSeparator implements IYearScale {
+    yearText: string;
+    yearOffset: number;
+    constructor(yearText: string, yearOffset: number);
+}
+export declare class MonthSeparator implements IMonthScale {
+    monthText: string;
+    monthOffset: number;
+    constructor(monthText: string, monthOffset: number);
+}
+export declare class TimelineScale {
+    yearScale: YearSeparator[];
+    monthScale: MonthSeparator[];
+    constructor(n_years?: number, n_months?: number);
 }

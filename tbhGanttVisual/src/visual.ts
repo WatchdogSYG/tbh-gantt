@@ -51,7 +51,7 @@ type Selection<T extends d3.BaseType> = d3.Selection<T, any, any, any>;
 
 import * as Lib from './../src/lib';
 import * as Time from './../src/time';
-import { Timeline } from './../src/timeline';
+import { Timeline, TimelineScale } from './../src/timeline';
 
 import * as dayjs from 'dayjs';
 
@@ -247,24 +247,30 @@ export class Visual implements IVisual {
         let gBottom: Selection<SVGGElement> = tl.append('g')
             .classed('g-tl', true);
 
-        // the number of year partitions
-        let deltaYears: number = Math.ceil(this.timeline.getYears());
-        let yearText: string[] = [];
+        let ts: TimelineScale = this.timeline.getTimelineScale();
 
-        for (let i = 0; i < deltaYears; i++) { yearText[i] = ((d1.year() + i).toString()); }
+        //var self = this; //access local var in function (d) callback
+        gTop.selectAll('text').data(ts.yearScale).enter().append('text')
+            .attr('x', function (d, i) {
+                console.log(d);
+                return Lib.px(d.yearOffset + 5);
+            })
+            .attr('y', '0px')
+            .text(function (d, i) { return d.yearText; })
+            .attr('text-anchor', 'top')
+            .attr('alignment-baseline', 'hanging')
+            .attr('fill', '#111111')
+            .classed('yearText', true);
 
-        console.log(yearText);
-
-        // var self = this; //access local var in function (d) callback
-        // gTop.selectAll('text').data(yearText).enter().append('text')
-        //     .attr('x', function (d, i) { return Lib.px(i * 250); })
-        //     .attr('y', '0px')
-        //     .text(function (d) { return d; })
-        //     .attr('text-anchor', 'top')
-        //     .attr('alignment-baseline', 'hanging')
-        //     .attr('fill', '#111111')
-        //     .classed('yearText', true);
-
+        gTop.selectAll('line').data(ts.yearScale).enter().append('line')
+            .attr('x1', function (d, i) { return Lib.px(d.yearOffset); })
+            .attr('y1', '0px')
+            .attr('x2', function (d, i) {
+                console.log(d);
+                return Lib.px(d.yearOffset);
+            })
+            .attr('y2', '50px')
+            .attr('style', 'stroke:black');
 
         // gTop.append('text')
         //     .attr('x', '100px')
