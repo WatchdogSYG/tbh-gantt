@@ -66,6 +66,10 @@ SVGs are now rendered in the visual using dummy data. An initial setup has been 
 
 ![Dummy SVG bars in PBI viual](readme-assets/010-dummysvgbars.jpg)
 
+
+We use `Day.js` for time manipulation.
+
+
 ## Requirements Definition
 
 ### Primary
