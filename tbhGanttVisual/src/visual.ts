@@ -232,7 +232,7 @@ export class Visual implements IVisual {
 
         this.timeline = new Timeline(d1, d2);
 
-        let yearWidth: number = this.timeline.getDayScale() * this.timeline.getDays();
+        // let yearWidth: number = this.timeline.getDayScale() * this.timeline.getDays();
 
         let tlWidth: number = this.timeline.getDays() * this.timeline.getDayScale();//cannot be less than div width!
         let tlHeight: number = Lib.toPxNumber(this.style.getPropertyValue('--timelineHeight'));
@@ -252,13 +252,16 @@ export class Visual implements IVisual {
         let ts: TimeScale = this.timeline.getTimeScale();
 
         //var self = this; //access local var in function (d) callback
-        gTop.selectAll('text').data(ts.yearScale).enter().append('text')
-            .attr('x', function (d, i) {
+        gTop.selectAll('text')
+            .data(ts.yearScale)
+            .enter()
+            .append('text')
+            .attr('x', function (d) {
                 console.log(d);
-                return Lib.px(d.yearOffset + 5);
+                return Lib.px(d.yearOffset);
             })
             .attr('y', '0px')
-            .text(function (d, i) { return d.yearText; })
+            .text(function (d) { return d.yearText; })
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
             .attr('fill', '#111111')
@@ -461,8 +464,8 @@ export class Visual implements IVisual {
         //create the number of trs required.
         var tr = d3.select('#' + tableID)//select the table
             .selectAll('tr')//select all tr elements (which there are none)
-            .data(data)//select every array element of array myData (there are 3). DATA IS NOW BOUND TO TRs
-            .enter()//since we have 0 trs and 3 elements in myData, we stage 3 references
+            .data(data)//select every array element of array myData (there are 7). DATA IS NOW BOUND TO TRs
+            .enter()//since we have 0 trs and 7 elements in myData, we stage 7 references
             .append('tr');//append a tr to each reference
 
         var v = tr.selectAll('td')//select all tds, there are 0
@@ -470,6 +473,7 @@ export class Visual implements IVisual {
             .enter()
             .append('td')
             .text(function (d) { return d; });//we are taking d from the bound data from the trs
+           // .attr('class','style'+d.wbsIndex);
     }
 
     private getYearTextSpacing(start: Date, end: Date): number[] {

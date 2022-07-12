@@ -310,8 +310,8 @@ class Timeline {
         this.n_days = Math.abs(this.d2.diff(this.d1, 'd', true));
         this.n_months = Math.abs(this.d2.diff(this.d1, 'M', true));
         this.n_years = Math.abs(this.d2.diff(this.d1, 'y', true));
-        this.dayScale = 1;
         this.padding = 5;
+        this.dayScale = 1;
         if (this.verbose) {
             console.log('LOG: Timeline created from ' +
                 start.toISOString() + ' to ' +
@@ -340,6 +340,7 @@ class Timeline {
     getMonths() { return this.n_months; }
     getYears() { return this.n_years; }
     getTimeScale() { return this.ts; }
+    getPadding() { return this.padding; }
     ////////////////////////////////////////////////////////////////
     //  Timeline Manipulation Functions
     ////////////////////////////////////////////////////////////////
@@ -356,7 +357,7 @@ class Timeline {
         let cumulativeOffset = 0;
         for (let i = 0; i < Math.ceil(this.getYears()); i++) {
             cumulativeOffset += _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d1.year()) * this.dayScale;
-            this.ts.yearScale[i] = new YearSeparator((this.d1.year() + i).toString(), cumulativeOffset + this.padding);
+            this.ts.yearScale[i] = new YearSeparator((this.d1.year() + i).toString(), cumulativeOffset);
         }
     }
     generateMonths() {
@@ -389,12 +390,9 @@ class MonthSeparator {
     }
 }
 class TimeScale {
-    constructor(n_years, n_months) {
-        console.log('new TimelineScale');
+    constructor() {
         this.yearScale = [];
-        console.log('new YearSeparator');
         this.monthScale = [];
-        console.log('new MonthSeparator');
     }
 }
 
@@ -543,7 +541,7 @@ class Visual {
         let d1 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2020, 3, 1));
         let d2 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2023, 5, 9));
         this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_1__/* .Timeline */ .TY(d1, d2);
-        let yearWidth = this.timeline.getDayScale() * this.timeline.getDays();
+        // let yearWidth: number = this.timeline.getDayScale() * this.timeline.getDays();
         let tlWidth = this.timeline.getDays() * this.timeline.getDayScale(); //cannot be less than div width!
         let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_4__/* .toPxNumber */ .U(this.style.getPropertyValue('--timelineHeight'));
         let tl = this.divTimeline
@@ -557,13 +555,16 @@ class Visual {
             .classed('g-tl', true);
         let ts = this.timeline.getTimeScale();
         //var self = this; //access local var in function (d) callback
-        gTop.selectAll('text').data(ts.yearScale).enter().append('text')
-            .attr('x', function (d, i) {
+        gTop.selectAll('text')
+            .data(ts.yearScale)
+            .enter()
+            .append('text')
+            .attr('x', function (d) {
             console.log(d);
-            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.yearOffset + 5);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.yearOffset);
         })
             .attr('y', '0px')
-            .text(function (d, i) { return d.yearText; })
+            .text(function (d) { return d.yearText; })
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
             .attr('fill', '#111111')
@@ -735,14 +736,15 @@ class Visual {
         //create the number of trs required.
         var tr = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#' + tableID) //select the table
             .selectAll('tr') //select all tr elements (which there are none)
-            .data(data) //select every array element of array myData (there are 3). DATA IS NOW BOUND TO TRs
-            .enter() //since we have 0 trs and 3 elements in myData, we stage 3 references
+            .data(data) //select every array element of array myData (there are 7). DATA IS NOW BOUND TO TRs
+            .enter() //since we have 0 trs and 7 elements in myData, we stage 7 references
             .append('tr'); //append a tr to each reference
         var v = tr.selectAll('td') //select all tds, there are 0
             .data(function (d) { return d; }) //THIS DATA COMES FROM THE TR's _data_ PROPERTY
             .enter()
             .append('td')
             .text(function (d) { return d; }); //we are taking d from the bound data from the trs
+        // .attr('class','style'+d.wbsIndex);
     }
     getYearTextSpacing(start, end) {
         return [0];

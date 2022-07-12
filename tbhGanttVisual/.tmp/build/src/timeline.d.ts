@@ -21,6 +21,7 @@ export declare class Timeline {
     getMonths(): number;
     getYears(): number;
     getTimeScale(): TimeScale;
+    getPadding(): number;
     private padding;
     private isLeapYear;
     constructor(start: dayjs.Dayjs, end: dayjs.Dayjs);
@@ -54,5 +55,5 @@ export declare class MonthSeparator implements IMonthScale {
 export declare class TimeScale {
     yearScale: YearSeparator[];
     monthScale: MonthSeparator[];
-    constructor(n_years?: number, n_months?: number);
+    constructor();
 }

@@ -56,7 +56,7 @@ After the first iteration, it is proposed to use the following layout for overfl
 
 ![Proposed layout of iteration 2](readme-assets/007-iteration2layout.jpg)
 
-Arrays can now be mapped to tables using d3. The next steps are to manage the structured flow of data so we can use the acctivity properties to format the svgs.
+Arrays can now be mapped to tables using d3. The next steps are to manage the structured flow of data so we can use the activity properties to format the svgs.
 
 Also, how do we take in data without having to transpose `myData` since we want to take in a column of actNames, a column of starts etc?
 

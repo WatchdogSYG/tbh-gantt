@@ -42,6 +42,7 @@ export class Timeline {
     public getMonths(): number { return this.n_months; }
     public getYears(): number { return this.n_years; }
     public getTimeScale(): TimeScale { return this.ts; }
+    public getPadding(): number { return this.padding; }
 
     ////////////////////////////////////////////////////////////////
     //  SVG Style
@@ -69,10 +70,10 @@ export class Timeline {
         this.n_days = Math.abs(this.d2.diff(this.d1, 'd', true));
         this.n_months = Math.abs(this.d2.diff(this.d1, 'M', true));
         this.n_years = Math.abs(this.d2.diff(this.d1, 'y', true));
-
+        this.padding = 5;
         this.dayScale = 1;
 
-        this.padding = 5;
+
 
         if (this.verbose) {
             console.log('LOG: Timeline created from ' +
@@ -95,8 +96,6 @@ export class Timeline {
 
         this.generateYears();
 
-
-        
         //console.log(this.ts.yearText);
     }
 
@@ -122,13 +121,13 @@ export class Timeline {
 
             this.ts.yearScale[i] = new YearSeparator((
                 this.d1.year() + i).toString(),
-                cumulativeOffset + this.padding
+                cumulativeOffset
             );
         }
     }
 
-    private generateMonths(){
-        
+    private generateMonths() {
+
     }
 
     ////////////////////////////////////////////////////////////////
@@ -184,11 +183,8 @@ export class TimeScale {
     yearScale: YearSeparator[];
     monthScale: MonthSeparator[];
 
-    constructor(n_years?: number, n_months?: number) {
-        console.log('new TimelineScale');
+    constructor() {
         this.yearScale = [];
-        console.log('new YearSeparator');
         this.monthScale = [];
-        console.log('new MonthSeparator');
     }
 }
