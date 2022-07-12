@@ -86,46 +86,9 @@ export const daysPerYear: number = 365;
  * Returns the number of days in the specified year accounting for leap years.
  * @param year the year to count the days.
  */
-export function totalDaysPerYear(year: number): number;
-
-/**
- * Counts the number of days between the specified years (inclusive), accounting for leap years.
- * @param startYear the beginning of the year range to consider
- * @param endYear the end of the year range to consider
- */
-export function totalDaysPerYear(startYear: number, endYear: number): number;
-
-export function totalDaysPerYear(startYear: number, endYear?: number): number {
-    //convert to whole number
-    let y1: number = Math.floor(startYear);
-
-    if (endYear == undefined) { //input is the year to determine
-        if (isLeapYear(y1)) { //check leap year
-            return 366;
-        } else {
-            return 365;
-        }
-    } else { //input is a range of years inclusive to determine
-        //convert to whole number
-        let y2: number = Math.floor(endYear);
-
-        //check order
-        if (y1 > y2) {
-            let temp: number = y1;
-            y1 = y2;
-            y2 = temp;
-        }
-
-        let dy: number = y2 - y1;
-
-        //number of leaps in range
-        let leaps: number = 0;
-        if (isLeapYear(startYear)) { leaps++; }
-        leaps += Math.floor(dy / 4);
-        if (isLeapYear(endYear) && (dy % 4 != 0)) { leaps++; }
-
-        return (dy * 365) + leaps;
-    }
+export function totalDaysPerYear(year: number): number {
+    let y: number = Math.floor(year);//convert to whole number
+    if (isLeapYear(y)) { return 366; } else { return 365; }
 }
 
 ////////////////////////////////////////////////////////////////
@@ -136,12 +99,13 @@ export function epoch0(): Date {
     return new Date(1970, 1, 1);
 }
 
+/**
+ * Is the year a leap year?
+ * @param year Gregorian and prolaptic Gregorian BCE calendar with defined 0 year.
+ * @returns If the year is a leap year.
+ */
 export function isLeapYear(year: number): boolean {
-    if (Math.abs(year % 4) == 0) {
-        return true;
-    } else {
-        return false;
-    }
+    return (Math.abs(year) % 4 == 0 && Math.abs(year) % 100 !== 0) || (Math.abs(year) % 400 == 0);
 }
 
 /**

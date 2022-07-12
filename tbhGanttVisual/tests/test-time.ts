@@ -15,7 +15,9 @@ export function runUnitTests(verbose: boolean): number {
     //passed += test_totalDaysPerYear();
 
     total++;
-    test_monthsBetween(true);
+    if (test_isLeapYear(true) == 1) { passed++; };
+    total++;
+    if (test_totalDaysPerYear(true) == 1) { passed++; };
 
     ////////////////////////////////////////////////////////////////
     console.log('LOG: The file /src/time.ts passed ' +
@@ -28,32 +30,67 @@ export function runUnitTests(verbose: boolean): number {
     return passed / total;
 }
 
+
+////////////////////////////////////////////////////////////////
+// TESTS
+////////////////////////////////////////////////////////////////
+
 //example
 export function test_totalDaysPerYear(verbose: boolean): number {
     return 0;
 }
 
-export function test_monthsBetween(verbose: boolean): number {
+export function test_isLeapYear(verbose: boolean): number {
     let total: number = 0;
     let passed: number = 0;
 
     ////////////////////////////////////////////////////////////////
-    let d1: Date = new Date(2000, 0, 1);
-    let d2: Date = new Date(2000, 1, 1);
-    console.log('TESTCASE: monthsBetween 1-Jan-2000 and 1-Feb-2000')
 
-    if (verbose) {
-        console.log('RESULT: ' + Time.monthsBetween(d1, d2).toString())
+    let testArgs: number[] = [0, 1, 4, 1900, 2000, 2100, 2022, 2024, -1, -4, -400, -100, -69];
+    let testAns: boolean[] = [true, false, true, false, true, false, false, true, false, true, true, false, false];
+
+    for (let i = 0; i < testArgs.length; i++) {
+        console.log('TESTCASE: year = ' + testArgs[i].toString())
+        if (verbose) {
+            console.log('RESULT: ' + Time.isLeapYear(testArgs[i]))
+        }
+
+        total++;
+        if (Time.isLeapYear(testArgs[i]) == testAns[i]) {
+            passed++;
+            console.log("PASSED");
+        } else {
+            console.log("FAILED");
+        }
     }
 
-    total++;
-    if (Time.monthsBetween(d1, d2) == 12) {
-        passed++;
-        console.log("PASSED");
-    } else {
-        console.log("FAILED");
-    }
     ////////////////////////////////////////////////////////////////
+    return passed / total;
+}
+
+export function test_totalDaysPeryear(verbose: boolean): number {
+    let total: number = 0;
+    let passed: number = 0;
+
+    ////////////////////////////////////////////////////////////////
+
+    let testArgs: number[] = [2, 4, 2000, 2001, -1, -4];
+    let testAns: number[] = [365, 366, 366, 365, 365, 366];
+
+    for (let i = 0; i < testArgs.length; i++) {
+        console.log('TESTCASE: year = ' + testArgs[i].toString())
+        if (verbose) {
+            console.log('RESULT: ' + Time.totalDaysPerYear(testArgs[i]))
+        }
+
+        total++;
+        if (Time.totalDaysPerYear(testArgs[i]) == testAns[i]) {
+            passed++;
+            console.log("PASSED");
+        } else {
+            console.log("FAILED");
+        }
+    }
 
     ////////////////////////////////////////////////////////////////
     return passed / total;

@@ -29,7 +29,7 @@ export class Timeline {
     private width: number;
     private height: number;
 
-    private ts: TimelineScale;
+    private ts: TimeScale;
 
     ////////////////////////////////////////////////////////////////
     //  Get/Set
@@ -41,15 +41,27 @@ export class Timeline {
     public getDayScale(): number { return this.dayScale; }
     public getMonths(): number { return this.n_months; }
     public getYears(): number { return this.n_years; }
-    public getTimelineScale(): TimelineScale { return this.ts; }
+    public getTimeScale(): TimeScale { return this.ts; }
 
-    private isLeapYear;
+    ////////////////////////////////////////////////////////////////
+    //  SVG Style
+    ////////////////////////////////////////////////////////////////
+
+    private padding: number;
+
+    ////////////////////////////////////////////////////////////////
+    //  Day.js
+    ////////////////////////////////////////////////////////////////
+
+    private isLeapYear: NodeRequire;
 
     ////////////////////////////////////////////////////////////////
     //  Constructor
     ////////////////////////////////////////////////////////////////
 
     constructor(start: dayjs.Dayjs, end: dayjs.Dayjs) {
+
+        var isLeapYear = require('dayjs/plugin/isLeapYear');
 
         this.d1 = start;
         this.d2 = end;
@@ -59,6 +71,8 @@ export class Timeline {
         this.n_years = Math.abs(this.d2.diff(this.d1, 'y', true));
 
         this.dayScale = 1;
+
+        this.padding = 5;
 
         if (this.verbose) {
             console.log('LOG: Timeline created from ' +
@@ -76,17 +90,13 @@ export class Timeline {
             console.log('LOG: Timeline scale = ' + this.dayScale.toString());
         }
 
-        this.ts = new TimelineScale();
-
+        this.ts = new TimeScale();
         console.log('Created TimeScale ts');
-        var isLeapYear = require('dayjs/plugin/isLeapYear');
 
-        console.log(Math.ceil(this.getYears()).toString());
-        for (let i = 0; i < Math.ceil(this.getYears()); i++) {
-            this.ts.yearScale[i] = new YearSeparator((this.d1.year() + i).toString(), 365 * i);
-            // console.log('Log: yearText: ' + this.ts.yearScale[i].yearText);
-            // console.log('Log: yearOffset: ' + this.ts.yearScale[i].yearOffset);
-        }
+        this.generateYears();
+
+
+        
         //console.log(this.ts.yearText);
     }
 
@@ -102,6 +112,23 @@ export class Timeline {
         console.log("WARNING: Timeline.setDayScale(daysPerPixel: number) Not yet implemented.")
         this.dayScale = daysPerPixel;
         this.updateScaleFactors()
+    }
+
+    private generateYears() {
+        let cumulativeOffset: number = 0;
+
+        for (let i = 0; i < Math.ceil(this.getYears()); i++) {
+            cumulativeOffset += Time.totalDaysPerYear(this.d1.year()) * this.dayScale;
+
+            this.ts.yearScale[i] = new YearSeparator((
+                this.d1.year() + i).toString(),
+                cumulativeOffset + this.padding
+            );
+        }
+    }
+
+    private generateMonths(){
+        
     }
 
     ////////////////////////////////////////////////////////////////
@@ -153,7 +180,7 @@ export class MonthSeparator implements IMonthScale {
     }
 }
 
-export class TimelineScale {
+export class TimeScale {
     yearScale: YearSeparator[];
     monthScale: MonthSeparator[];
 

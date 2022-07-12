@@ -17,13 +17,12 @@ export declare const daysPerYear: number;
  * @param year the year to count the days.
  */
 export declare function totalDaysPerYear(year: number): number;
-/**
- * Counts the number of days between the specified years (inclusive), accounting for leap years.
- * @param startYear the beginning of the year range to consider
- * @param endYear the end of the year range to consider
- */
-export declare function totalDaysPerYear(startYear: number, endYear: number): number;
 export declare function epoch0(): Date;
+/**
+ * Is the year a leap year?
+ * @param year Gregorian and prolaptic Gregorian BCE calendar with defined 0 year.
+ * @returns If the year is a leap year.
+ */
 export declare function isLeapYear(year: number): boolean;
 /**
  * Returns the number of days in the epoch timeline between two dates.

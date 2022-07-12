@@ -63,9 +63,11 @@ function roundOptions(x, round) {
 
 "use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "qj": () => (/* binding */ daysPerMonth)
+/* harmony export */   "Eg": () => (/* binding */ isLeapYear),
+/* harmony export */   "qj": () => (/* binding */ daysPerMonth),
+/* harmony export */   "rD": () => (/* binding */ totalDaysPerYear)
 /* harmony export */ });
-/* unused harmony exports monthArray, mmm, m, millisPerSecond, secondsPerMinute, minutesPerHour, hoursPerDay, daysPerWeek, monthsPerYear, daysPerYear, totalDaysPerYear, epoch0, isLeapYear, daysBetween, monthsBetween, yearsBetween */
+/* unused harmony exports monthArray, mmm, m, millisPerSecond, secondsPerMinute, minutesPerHour, hoursPerDay, daysPerWeek, monthsPerYear, daysPerYear, epoch0, daysBetween, monthsBetween, yearsBetween */
 //A header lib for date and time fns
 
 ////////////////////////////////////////////////////////////////
@@ -137,37 +139,20 @@ const monthsPerYear = 12;
  * The number of days in a non-leap year.
  */
 const daysPerYear = 365;
-function totalDaysPerYear(startYear, endYear) {
-    //convert to whole number
-    let y1 = Math.floor(startYear);
-    if (endYear == undefined) { //input is the year to determine
-        if (isLeapYear(y1)) { //check leap year
-            return 366;
-        }
-        else {
-            return 365;
-        }
+////////////////////////////////////////////////////////////////
+//  YEAR TO DAYS
+////////////////////////////////////////////////////////////////
+/**
+ * Returns the number of days in the specified year accounting for leap years.
+ * @param year the year to count the days.
+ */
+function totalDaysPerYear(year) {
+    let y = Math.floor(year); //convert to whole number
+    if (isLeapYear(y)) {
+        return 366;
     }
-    else { //input is a range of years inclusive to determine
-        //convert to whole number
-        let y2 = Math.floor(endYear);
-        //check order
-        if (y1 > y2) {
-            let temp = y1;
-            y1 = y2;
-            y2 = temp;
-        }
-        let dy = y2 - y1;
-        //number of leaps in range
-        let leaps = 0;
-        if (isLeapYear(startYear)) {
-            leaps++;
-        }
-        leaps += Math.floor(dy / 4);
-        if (isLeapYear(endYear) && (dy % 4 != 0)) {
-            leaps++;
-        }
-        return (dy * 365) + leaps;
+    else {
+        return 365;
     }
 }
 ////////////////////////////////////////////////////////////////
@@ -176,13 +161,13 @@ function totalDaysPerYear(startYear, endYear) {
 function epoch0() {
     return new Date(1970, 1, 1);
 }
+/**
+ * Is the year a leap year?
+ * @param year Gregorian and prolaptic Gregorian BCE calendar with defined 0 year.
+ * @returns If the year is a leap year.
+ */
 function isLeapYear(year) {
-    if (Math.abs(year % 4) == 0) {
-        return true;
-    }
-    else {
-        return false;
-    }
+    return (Math.abs(year) % 4 == 0 && Math.abs(year) % 100 !== 0) || (Math.abs(year) % 400 == 0);
 }
 /**
  * Returns the number of days in the epoch timeline between two dates.
@@ -305,7 +290,7 @@ function yearsBetween(start, end, round) {
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "TY": () => (/* binding */ Timeline)
 /* harmony export */ });
-/* unused harmony exports YearSeparator, MonthSeparator, TimelineScale */
+/* unused harmony exports YearSeparator, MonthSeparator, TimeScale */
 /* harmony import */ var _src_time__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4734);
 //Class that contains properties and functions that deal with timeline and Offset
 
@@ -319,12 +304,14 @@ class Timeline {
         ////////////////////////////////////////////////////////////////
         //--------DEV--------//
         this.verbose = true;
+        var isLeapYear = __webpack_require__(5709);
         this.d1 = start;
         this.d2 = end;
         this.n_days = Math.abs(this.d2.diff(this.d1, 'd', true));
         this.n_months = Math.abs(this.d2.diff(this.d1, 'M', true));
         this.n_years = Math.abs(this.d2.diff(this.d1, 'y', true));
         this.dayScale = 1;
+        this.padding = 5;
         if (this.verbose) {
             console.log('LOG: Timeline created from ' +
                 start.toISOString() + ' to ' +
@@ -338,15 +325,9 @@ class Timeline {
                 this.n_days + ' days.');
             console.log('LOG: Timeline scale = ' + this.dayScale.toString());
         }
-        this.ts = new TimelineScale();
+        this.ts = new TimeScale();
         console.log('Created TimeScale ts');
-        var isLeapYear = __webpack_require__(5709);
-        console.log(Math.ceil(this.getYears()).toString());
-        for (let i = 0; i < Math.ceil(this.getYears()); i++) {
-            this.ts.yearScale[i] = new YearSeparator((this.d1.year() + i).toString(), 365 * i);
-            // console.log('Log: yearText: ' + this.ts.yearScale[i].yearText);
-            // console.log('Log: yearOffset: ' + this.ts.yearScale[i].yearOffset);
-        }
+        this.generateYears();
         //console.log(this.ts.yearText);
     }
     ////////////////////////////////////////////////////////////////
@@ -358,7 +339,7 @@ class Timeline {
     getDayScale() { return this.dayScale; }
     getMonths() { return this.n_months; }
     getYears() { return this.n_years; }
-    getTimelineScale() { return this.ts; }
+    getTimeScale() { return this.ts; }
     ////////////////////////////////////////////////////////////////
     //  Timeline Manipulation Functions
     ////////////////////////////////////////////////////////////////
@@ -370,6 +351,15 @@ class Timeline {
         console.log("WARNING: Timeline.setDayScale(daysPerPixel: number) Not yet implemented.");
         this.dayScale = daysPerPixel;
         this.updateScaleFactors();
+    }
+    generateYears() {
+        let cumulativeOffset = 0;
+        for (let i = 0; i < Math.ceil(this.getYears()); i++) {
+            cumulativeOffset += _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d1.year()) * this.dayScale;
+            this.ts.yearScale[i] = new YearSeparator((this.d1.year() + i).toString(), cumulativeOffset + this.padding);
+        }
+    }
+    generateMonths() {
     }
     ////////////////////////////////////////////////////////////////
     //  Support Functions
@@ -398,7 +388,7 @@ class MonthSeparator {
         this.monthOffset = monthOffset;
     }
 }
-class TimelineScale {
+class TimeScale {
     constructor(n_years, n_months) {
         console.log('new TimelineScale');
         this.yearScale = [];
@@ -419,10 +409,11 @@ class TimelineScale {
 /* harmony export */   "u": () => (/* binding */ Visual)
 /* harmony export */ });
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(662);
-/* harmony import */ var _src_lib__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(809);
+/* harmony import */ var _src_lib__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(809);
 /* harmony import */ var _src_timeline__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(1092);
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(9665);
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _tests_globalTests__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(6748);
 /*
 *  Power BI Visual CLI
 *
@@ -457,6 +448,8 @@ class TimelineScale {
 
 
 
+//UNIT TESTS
+
 ////////////////////////////////////////////////////////////////
 //  Begin class definition
 ////////////////////////////////////////////////////////////////
@@ -465,6 +458,7 @@ class Visual {
     //  Constructor
     ////////////////////////////////////////////////////////////////
     constructor(options) {
+        _tests_globalTests__WEBPACK_IMPORTED_MODULE_3__/* .allTests */ .T();
         console.log('Visual constructor', options);
         this.style = getComputedStyle(document.querySelector(':root'));
         //     this.target = options.element;
@@ -551,22 +545,22 @@ class Visual {
         this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_1__/* .Timeline */ .TY(d1, d2);
         let yearWidth = this.timeline.getDayScale() * this.timeline.getDays();
         let tlWidth = this.timeline.getDays() * this.timeline.getDayScale(); //cannot be less than div width!
-        let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_3__/* .toPxNumber */ .U(this.style.getPropertyValue('--timelineHeight'));
+        let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_4__/* .toPxNumber */ .U(this.style.getPropertyValue('--timelineHeight'));
         let tl = this.divTimeline
             .append('svg')
             .attr('id', 'tl-top')
             .attr('height', '100%')
-            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(tlWidth));
+            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(tlWidth));
         let gTop = tl.append('g')
             .classed('g-tl', true);
         let gBottom = tl.append('g')
             .classed('g-tl', true);
-        let ts = this.timeline.getTimelineScale();
+        let ts = this.timeline.getTimeScale();
         //var self = this; //access local var in function (d) callback
         gTop.selectAll('text').data(ts.yearScale).enter().append('text')
             .attr('x', function (d, i) {
             console.log(d);
-            return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.yearOffset + 5);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.yearOffset + 5);
         })
             .attr('y', '0px')
             .text(function (d, i) { return d.yearText; })
@@ -575,11 +569,11 @@ class Visual {
             .attr('fill', '#111111')
             .classed('yearText', true);
         gTop.selectAll('line').data(ts.yearScale).enter().append('line')
-            .attr('x1', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.yearOffset); })
+            .attr('x1', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.yearOffset); })
             .attr('y1', '0px')
             .attr('x2', function (d, i) {
             console.log(d);
-            return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.yearOffset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.yearOffset);
         })
             .attr('y2', '50px')
             .attr('style', 'stroke:black');
@@ -753,6 +747,121 @@ class Visual {
     getYearTextSpacing(start, end) {
         return [0];
     }
+}
+
+
+/***/ }),
+
+/***/ 6748:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "T": () => (/* binding */ allTests)
+/* harmony export */ });
+/* harmony import */ var _tests_test_time__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1473);
+//all unit tests
+
+function allTests() {
+    _tests_test_time__WEBPACK_IMPORTED_MODULE_0__/* .runUnitTests */ .RS(true);
+}
+
+
+/***/ }),
+
+/***/ 1473:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "RS": () => (/* binding */ runUnitTests)
+/* harmony export */ });
+/* unused harmony exports test_totalDaysPerYear, test_isLeapYear, test_totalDaysPeryear */
+/* harmony import */ var _src_time__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4734);
+//Unit tests for time.ts
+
+/**
+ * Runs unit tests for the file src/time.ts.
+ * @param verbose Console shows verbose output if true
+ * @returns The proportion of successful tests to failed tests
+ */
+function runUnitTests(verbose) {
+    let total = 0;
+    let passed = 0;
+    ////////////////////////////////////////////////////////////////
+    //total++;
+    //passed += test_totalDaysPerYear();
+    total++;
+    if (test_isLeapYear(true) == 1) {
+        passed++;
+    }
+    ;
+    total++;
+    if (test_totalDaysPerYear(true) == 1) {
+        passed++;
+    }
+    ;
+    ////////////////////////////////////////////////////////////////
+    console.log('LOG: The file /src/time.ts passed ' +
+        passed.toString() +
+        ' unit tests out of ' +
+        total.toString() +
+        ' unit tests. Pass rate: ' +
+        (100 * passed / total).toString() + '%');
+    return passed / total;
+}
+////////////////////////////////////////////////////////////////
+// TESTS
+////////////////////////////////////////////////////////////////
+//example
+function test_totalDaysPerYear(verbose) {
+    return 0;
+}
+function test_isLeapYear(verbose) {
+    let total = 0;
+    let passed = 0;
+    ////////////////////////////////////////////////////////////////
+    let testArgs = [0, 1, 4, 1900, 2000, 2100, 2022, 2024, -1, -4, -400, -100, -69];
+    let testAns = [true, false, true, false, true, false, false, true, false, true, true, false, false];
+    for (let i = 0; i < testArgs.length; i++) {
+        console.log('TESTCASE: year = ' + testArgs[i].toString());
+        if (verbose) {
+            console.log('RESULT: ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .isLeapYear */ .Eg(testArgs[i]));
+        }
+        total++;
+        if (_src_time__WEBPACK_IMPORTED_MODULE_0__/* .isLeapYear */ .Eg(testArgs[i]) == testAns[i]) {
+            passed++;
+            console.log("PASSED");
+        }
+        else {
+            console.log("FAILED");
+        }
+    }
+    ////////////////////////////////////////////////////////////////
+    return passed / total;
+}
+function test_totalDaysPeryear(verbose) {
+    let total = 0;
+    let passed = 0;
+    ////////////////////////////////////////////////////////////////
+    let testArgs = [2, 4, 2000, 2001, -1, -4];
+    let testAns = [365, 366, 366, 365, 365, 366];
+    for (let i = 0; i < testArgs.length; i++) {
+        console.log('TESTCASE: year = ' + testArgs[i].toString());
+        if (verbose) {
+            console.log('RESULT: ' + Time.totalDaysPerYear(testArgs[i]));
+        }
+        total++;
+        if (Time.totalDaysPerYear(testArgs[i]) == testAns[i]) {
+            passed++;
+            console.log("PASSED");
+        }
+        else {
+            console.log("FAILED");
+        }
+    }
+    ////////////////////////////////////////////////////////////////
+    return passed / total;
 }
 
 

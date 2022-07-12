@@ -51,7 +51,7 @@ type Selection<T extends d3.BaseType> = d3.Selection<T, any, any, any>;
 
 import * as Lib from './../src/lib';
 import * as Time from './../src/time';
-import { Timeline, TimelineScale } from './../src/timeline';
+import { Timeline, TimeScale } from './../src/timeline';
 
 import * as dayjs from 'dayjs';
 
@@ -120,6 +120,8 @@ export class Visual implements IVisual {
     ////////////////////////////////////////////////////////////////
 
     constructor(options: VisualConstructorOptions) {
+
+        jsUnit.allTests();
 
         console.log('Visual constructor', options);
 
@@ -247,7 +249,7 @@ export class Visual implements IVisual {
         let gBottom: Selection<SVGGElement> = tl.append('g')
             .classed('g-tl', true);
 
-        let ts: TimelineScale = this.timeline.getTimelineScale();
+        let ts: TimeScale = this.timeline.getTimeScale();
 
         //var self = this; //access local var in function (d) callback
         gTop.selectAll('text').data(ts.yearScale).enter().append('text')

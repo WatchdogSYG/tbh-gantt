@@ -5,4 +5,5 @@
  */
 export declare function runUnitTests(verbose: boolean): number;
 export declare function test_totalDaysPerYear(verbose: boolean): number;
-export declare function test_monthsBetween(verbose: boolean): number;
+export declare function test_isLeapYear(verbose: boolean): number;
+export declare function test_totalDaysPeryear(verbose: boolean): number;
