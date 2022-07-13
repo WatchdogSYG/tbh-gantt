@@ -114,6 +114,38 @@ export class Timeline {
     }
 
     private generateYears() {
+        
+        let cumulativeOffset: number = 0;
+        let proportion: number;
+
+        for (let i = 0; i < Math.ceil(this.getYears()); i++) {
+
+            //check if we are considering the first or last year and calc the pproportion of the section we want
+            if (i == 1) {//this is the first year, take the portion of that year and create the offset. TODO check if the text will overlap
+                proportion = this.d1.diff(
+                    dayjs(
+                        new Date(
+                            this.d1.year() + 1, 0, 1),
+                            'd',
+                            true
+                    )
+                );
+            } else if (i == Math.floor(this.getYears())) { //this is the last year, take the last proportion to the beginning of the year. Same todo as above
+                proportion = dayjs(new Date(this.d2.year())).diff(this.d2, 'd', true);
+            } else {
+                proportion = 1;
+            }
+
+            cumulativeOffset += Time.totalDaysPerYear(this.d1.year()) * this.dayScale * proportion;
+
+            this.ts.yearScale[i] = new YearSeparator((
+                this.d1.year() + i).toString(),
+                cumulativeOffset
+            );
+        }
+    }
+
+    private generateMonths() {
         let cumulativeOffset: number = 0;
 
         for (let i = 0; i < Math.ceil(this.getYears()); i++) {
@@ -124,10 +156,6 @@ export class Timeline {
                 cumulativeOffset
             );
         }
-    }
-
-    private generateMonths() {
-
     }
 
     ////////////////////////////////////////////////////////////////
