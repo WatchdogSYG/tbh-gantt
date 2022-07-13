@@ -2,6 +2,7 @@
 
 import { precisionRound } from "d3";
 import { roundOptions } from "./lib";
+import * as dayjs from 'dayjs';
 
 
 ////////////////////////////////////////////////////////////////
@@ -91,6 +92,21 @@ export function totalDaysPerYear(year: number): number {
     if (isLeapYear(y)) { return 366; } else { return 365; }
 }
 
+export function remainingDaysInYear(d: dayjs.Dayjs): number {
+    return dayjs(new Date(d.year() + 1, 0, 1)).diff(d, 'd', true);
+}
+
+export function daysElapsedInYear(d: dayjs.Dayjs): number {
+    return d.diff(dayjs(new Date(d.year(), 0, 1)), 'd', true);
+}
+
+export function remainingDaysInMonth(d: dayjs.Dayjs): number {
+    return dayjs(new Date(d.year(), d.month()+1, 1)).diff(d, 'd', true);
+}
+
+export function daysElapsedInMonth(d: dayjs.Dayjs): number {
+    return d.diff(dayjs(new Date(d.year(), d.month(), 1)), 'd', true);
+}
 ////////////////////////////////////////////////////////////////
 //  SUPPORT FUNCTIONS
 ////////////////////////////////////////////////////////////////

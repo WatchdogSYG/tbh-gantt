@@ -18,7 +18,9 @@ export class Timeline {
     private n_days: number;
     private n_months: number;
     private n_years: number;
-
+    private span_days: number;
+    private span_months: number;
+    private span_years: number;
     //--------SCALE--------//
     private dayScale: number;
     private weekScale: number;
@@ -64,12 +66,22 @@ export class Timeline {
 
         var isLeapYear = require('dayjs/plugin/isLeapYear');
 
-        this.d1 = start;
-        this.d2 = end;
+        //check which date is larger and round to nearest day
+        if (start > end) {
+            this.d1 = end.startOf('d');
+            this.d2 = start.endOf('d');
+        } else {
+            this.d1 = start.startOf('d');
+            this.d2 = end.endOf('d');
+        }
 
-        this.n_days = Math.abs(this.d2.diff(this.d1, 'd', true));
-        this.n_months = Math.abs(this.d2.diff(this.d1, 'M', true));
-        this.n_years = Math.abs(this.d2.diff(this.d1, 'y', true));
+        this.n_days = this.d2.diff(this.d1, 'd', true);
+        this.n_months = this.d2.diff(this.d1, 'M', true);
+        this.n_years = this.d2.diff(this.d1, 'y', true);
+        // this.span_days;
+        // this.span_months;
+        this.span_years = this.d2.year() - this.d1.year() +1;
+
         this.padding = 5;
         this.dayScale = 1;
 
@@ -77,8 +89,8 @@ export class Timeline {
 
         if (this.verbose) {
             console.log('LOG: Timeline created from ' +
-                start.toISOString() + ' to ' +
-                end.toISOString() +
+                this.d1.toISOString() + ' to ' +
+                this.d2.toISOString() +
                 ' spanning ' +
                 this.n_days.toString() +
                 ' days.');
@@ -113,37 +125,50 @@ export class Timeline {
         this.updateScaleFactors()
     }
 
-    private generateYears() {
-        
+    private generateYears(): YearSeparator[] {
+
         let cumulativeOffset: number = 0;
         let proportion: number;
 
-        for (let i = 0; i < Math.ceil(this.getYears()); i++) {
+        console.log(this.span_years.toString());
+        if (this.span_years == 0) { //same year, return year
+            return [new YearSeparator(this.d1.year().toString(), 0)];
+        }
+
+        for (let i = 0; i < this.span_years; i++) {
+            console.log('i = ' + i);
 
             //check if we are considering the first or last year and calc the pproportion of the section we want
-            if (i == 1) {//this is the first year, take the portion of that year and create the offset. TODO check if the text will overlap
-                proportion = this.d1.diff(
-                    dayjs(
-                        new Date(
-                            this.d1.year() + 1, 0, 1),
-                            'd',
-                            true
-                    )
-                );
-            } else if (i == Math.floor(this.getYears())) { //this is the last year, take the last proportion to the beginning of the year. Same todo as above
-                proportion = dayjs(new Date(this.d2.year())).diff(this.d2, 'd', true);
+            if (i == 0) {//this is the first year, take the portion of that year and create the offset. TODO check if the text will overlap
+                //console.log(this.d1.format());
+                //console.log(dayjs(new Date(this.d1.year() + 1, 0, 1)));
+
+                proportion = Time.remainingDaysInYear(this.d1);
+                proportion = proportion / Time.totalDaysPerYear(this.d1.year());
+                console.log(proportion);
+
+            } else if (i == (this.span_years - 1)) { //this is the last year, take the last proportion to the beginning of the year. Same todo as above
+                console.log(this.d2.format());
+
+                console.log(Time.daysElapsedInYear(this.d2).toString());
+                proportion = Time.daysElapsedInYear(this.d2);
+                proportion = proportion / Time.totalDaysPerYear(this.d2.year());
+                console.log(proportion);
             } else {
                 proportion = 1;
+                console.log(proportion);
             }
-
-            cumulativeOffset += Time.totalDaysPerYear(this.d1.year()) * this.dayScale * proportion;
 
             this.ts.yearScale[i] = new YearSeparator((
                 this.d1.year() + i).toString(),
                 cumulativeOffset
             );
+
+            cumulativeOffset += Time.totalDaysPerYear(this.d1.year()) * this.dayScale * proportion;
         }
+        console.log(this.ts.yearScale);
     }
+
 
     private generateMonths() {
         let cumulativeOffset: number = 0;

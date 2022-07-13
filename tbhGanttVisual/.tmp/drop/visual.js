@@ -64,11 +64,16 @@ function roundOptions(x, round) {
 "use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Eg": () => (/* binding */ isLeapYear),
+/* harmony export */   "jl": () => (/* binding */ remainingDaysInYear),
 /* harmony export */   "qj": () => (/* binding */ daysPerMonth),
-/* harmony export */   "rD": () => (/* binding */ totalDaysPerYear)
+/* harmony export */   "rD": () => (/* binding */ totalDaysPerYear),
+/* harmony export */   "ti": () => (/* binding */ daysElapsedInYear)
 /* harmony export */ });
-/* unused harmony exports monthArray, mmm, m, millisPerSecond, secondsPerMinute, minutesPerHour, hoursPerDay, daysPerWeek, monthsPerYear, daysPerYear, epoch0, daysBetween, monthsBetween, yearsBetween */
+/* unused harmony exports monthArray, mmm, m, millisPerSecond, secondsPerMinute, minutesPerHour, hoursPerDay, daysPerWeek, monthsPerYear, daysPerYear, remainingDaysInMonth, daysElapsedInMonth, epoch0, daysBetween, monthsBetween, yearsBetween */
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9665);
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_0__);
 //A header lib for date and time fns
+
 
 ////////////////////////////////////////////////////////////////
 //  CONSTANTS
@@ -154,6 +159,18 @@ function totalDaysPerYear(year) {
     else {
         return 365;
     }
+}
+function remainingDaysInYear(d) {
+    return dayjs__WEBPACK_IMPORTED_MODULE_0__(new Date(d.year() + 1, 0, 1)).diff(d, 'd', true);
+}
+function daysElapsedInYear(d) {
+    return d.diff(dayjs__WEBPACK_IMPORTED_MODULE_0__(new Date(d.year(), 0, 1)), 'd', true);
+}
+function remainingDaysInMonth(d) {
+    return dayjs(new Date(d.year(), d.month() + 1, 1)).diff(d, 'd', true);
+}
+function daysElapsedInMonth(d) {
+    return d.diff(dayjs(new Date(d.year(), d.month(), 1)), 'd', true);
 }
 ////////////////////////////////////////////////////////////////
 //  SUPPORT FUNCTIONS
@@ -305,17 +322,27 @@ class Timeline {
         //--------DEV--------//
         this.verbose = true;
         var isLeapYear = __webpack_require__(5709);
-        this.d1 = start;
-        this.d2 = end;
-        this.n_days = Math.abs(this.d2.diff(this.d1, 'd', true));
-        this.n_months = Math.abs(this.d2.diff(this.d1, 'M', true));
-        this.n_years = Math.abs(this.d2.diff(this.d1, 'y', true));
+        //check which date is larger and round to nearest day
+        if (start > end) {
+            this.d1 = end.startOf('d');
+            this.d2 = start.endOf('d');
+        }
+        else {
+            this.d1 = start.startOf('d');
+            this.d2 = end.endOf('d');
+        }
+        this.n_days = this.d2.diff(this.d1, 'd', true);
+        this.n_months = this.d2.diff(this.d1, 'M', true);
+        this.n_years = this.d2.diff(this.d1, 'y', true);
+        // this.span_days;
+        // this.span_months;
+        this.span_years = this.d2.year() - this.d1.year() + 1;
         this.padding = 5;
         this.dayScale = 1;
         if (this.verbose) {
             console.log('LOG: Timeline created from ' +
-                start.toISOString() + ' to ' +
-                end.toISOString() +
+                this.d1.toISOString() + ' to ' +
+                this.d2.toISOString() +
                 ' spanning ' +
                 this.n_days.toString() +
                 ' days.');
@@ -355,12 +382,43 @@ class Timeline {
     }
     generateYears() {
         let cumulativeOffset = 0;
+        let proportion;
+        console.log(this.span_years.toString());
+        if (this.span_years == 0) { //same year, return year
+            return [new YearSeparator(this.d1.year().toString(), 0)];
+        }
+        for (let i = 0; i < this.span_years; i++) {
+            console.log('i = ' + i);
+            //check if we are considering the first or last year and calc the pproportion of the section we want
+            if (i == 0) { //this is the first year, take the portion of that year and create the offset. TODO check if the text will overlap
+                //console.log(this.d1.format());
+                //console.log(dayjs(new Date(this.d1.year() + 1, 0, 1)));
+                proportion = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .remainingDaysInYear */ .jl(this.d1);
+                proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d1.year());
+                console.log(proportion);
+            }
+            else if (i == (this.span_years - 1)) { //this is the last year, take the last proportion to the beginning of the year. Same todo as above
+                console.log(this.d2.format());
+                console.log(_src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInYear */ .ti(this.d2).toString());
+                proportion = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInYear */ .ti(this.d2);
+                proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d2.year());
+                console.log(proportion);
+            }
+            else {
+                proportion = 1;
+                console.log(proportion);
+            }
+            this.ts.yearScale[i] = new YearSeparator((this.d1.year() + i).toString(), cumulativeOffset);
+            cumulativeOffset += _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d1.year()) * this.dayScale * proportion;
+        }
+        console.log(this.ts.yearScale);
+    }
+    generateMonths() {
+        let cumulativeOffset = 0;
         for (let i = 0; i < Math.ceil(this.getYears()); i++) {
             cumulativeOffset += _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d1.year()) * this.dayScale;
             this.ts.yearScale[i] = new YearSeparator((this.d1.year() + i).toString(), cumulativeOffset);
         }
-    }
-    generateMonths() {
     }
     ////////////////////////////////////////////////////////////////
     //  Support Functions
@@ -538,9 +596,10 @@ class Visual {
         //  Create svg timeline
         ////////////////////////////////////////////////////////////////
         //temp vars to be calcd later
-        let d1 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2020, 3, 1));
-        let d2 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2023, 5, 9));
+        let d1 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2020, 4, 6));
+        let d2 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2023, 9, 12));
         this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_1__/* .Timeline */ .TY(d1, d2);
+        let padding = this.timeline.getPadding();
         // let yearWidth: number = this.timeline.getDayScale() * this.timeline.getDays();
         let tlWidth = this.timeline.getDays() * this.timeline.getDayScale(); //cannot be less than div width!
         let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_4__/* .toPxNumber */ .U(this.style.getPropertyValue('--timelineHeight'));
@@ -561,7 +620,7 @@ class Visual {
             .append('text')
             .attr('x', function (d) {
             console.log(d);
-            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.yearOffset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.yearOffset + padding);
         })
             .attr('y', '0px')
             .text(function (d) { return d.yearText; })
@@ -570,13 +629,13 @@ class Visual {
             .attr('fill', '#111111')
             .classed('yearText', true);
         gTop.selectAll('line').data(ts.yearScale).enter().append('line')
-            .attr('x1', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.yearOffset); })
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.yearOffset); })
             .attr('y1', '0px')
-            .attr('x2', function (d, i) {
+            .attr('x2', function (d) {
             console.log(d);
             return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.yearOffset);
         })
-            .attr('y2', '50px')
+            .attr('y2', tlHeight)
             .attr('style', 'stroke:black');
         // gTop.append('text')
         //     .attr('x', '100px')

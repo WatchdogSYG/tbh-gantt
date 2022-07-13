@@ -227,10 +227,11 @@ export class Visual implements IVisual {
 
         //temp vars to be calcd later
 
-        let d1: dayjs.Dayjs = dayjs(new Date(2020, 3, 1));
-        let d2: dayjs.Dayjs = dayjs(new Date(2023, 5, 9));
+        let d1: dayjs.Dayjs = dayjs(new Date(2020, 4, 6));
+        let d2: dayjs.Dayjs = dayjs(new Date(2023, 9, 12));
 
         this.timeline = new Timeline(d1, d2);
+        let padding: number = this.timeline.getPadding();
 
         // let yearWidth: number = this.timeline.getDayScale() * this.timeline.getDays();
 
@@ -258,7 +259,7 @@ export class Visual implements IVisual {
             .append('text')
             .attr('x', function (d) {
                 console.log(d);
-                return Lib.px(d.yearOffset);
+                return Lib.px(d.yearOffset+padding);
             })
             .attr('y', '0px')
             .text(function (d) { return d.yearText; })
@@ -268,13 +269,13 @@ export class Visual implements IVisual {
             .classed('yearText', true);
 
         gTop.selectAll('line').data(ts.yearScale).enter().append('line')
-            .attr('x1', function (d, i) { return Lib.px(d.yearOffset); })
+            .attr('x1', function (d) { return Lib.px(d.yearOffset ); })
             .attr('y1', '0px')
-            .attr('x2', function (d, i) {
+            .attr('x2', function (d) {
                 console.log(d);
                 return Lib.px(d.yearOffset);
             })
-            .attr('y2', '50px')
+            .attr('y2', tlHeight)
             .attr('style', 'stroke:black');
 
         // gTop.append('text')
@@ -473,7 +474,7 @@ export class Visual implements IVisual {
             .enter()
             .append('td')
             .text(function (d) { return d; });//we are taking d from the bound data from the trs
-           // .attr('class','style'+d.wbsIndex);
+        // .attr('class','style'+d.wbsIndex);
     }
 
     private getYearTextSpacing(start: Date, end: Date): number[] {

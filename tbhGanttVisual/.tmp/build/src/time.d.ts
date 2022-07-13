@@ -1,3 +1,4 @@
+import * as dayjs from 'dayjs';
 export declare const monthArray: string[];
 export declare const mmm: string[];
 export declare const m: string[];
@@ -17,6 +18,10 @@ export declare const daysPerYear: number;
  * @param year the year to count the days.
  */
 export declare function totalDaysPerYear(year: number): number;
+export declare function remainingDaysInYear(d: dayjs.Dayjs): number;
+export declare function daysElapsedInYear(d: dayjs.Dayjs): number;
+export declare function remainingDaysInMonth(d: dayjs.Dayjs): number;
+export declare function daysElapsedInMonth(d: dayjs.Dayjs): number;
 export declare function epoch0(): Date;
 /**
  * Is the year a leap year?

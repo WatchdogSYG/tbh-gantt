@@ -6,6 +6,9 @@ export declare class Timeline {
     private n_days;
     private n_months;
     private n_years;
+    private span_days;
+    private span_months;
+    private span_years;
     private dayScale;
     private weekScale;
     private yearScale;
