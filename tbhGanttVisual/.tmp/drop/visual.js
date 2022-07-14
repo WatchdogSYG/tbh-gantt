@@ -66,11 +66,12 @@ function roundOptions(x, round) {
 /* harmony export */   "Eg": () => (/* binding */ isLeapYear),
 /* harmony export */   "Km": () => (/* binding */ daysInMonth),
 /* harmony export */   "LP": () => (/* binding */ spanYears),
+/* harmony export */   "V7": () => (/* binding */ spanMonths),
 /* harmony export */   "dT": () => (/* binding */ daysInYear),
 /* harmony export */   "jl": () => (/* binding */ remainingDaysInYear),
 /* harmony export */   "ti": () => (/* binding */ daysElapsedInYear)
 /* harmony export */ });
-/* unused harmony exports millisPerSecond, secondsPerMinute, minutesPerHour, hoursPerDay, daysPerWeek, monthsPerYear, daysPerYear, mmm, m, month, remainingDaysInMonth, daysElapsedInMonth, spanMonths, epoch0 */
+/* unused harmony exports millisPerSecond, secondsPerMinute, minutesPerHour, hoursPerDay, daysPerWeek, monthsPerYear, daysPerYear, mmm, m, month, remainingDaysInMonth, daysElapsedInMonth, epoch0 */
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9665);
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_0__);
 //A header lib for date and time fns
@@ -212,16 +213,40 @@ function spanYears(start, end) {
  * @param end the end date
  */
 function spanMonths(start, end) {
-    //if they are in the same year, just do an index comparison
-    if (start.year() == end.year()) {
-        if (start > end) {
-            return start.year() - end.year() + 1;
-        }
-        else {
-            return end.year() - start.year() + 1;
-        }
+    // var dayjs = require('dayjs');
+    // var utc = require('dayjs/plugin/utc');
+    // dayjs.extend(utc);
+    // dayjs.utc();
+    //to simplify, order the dates
+    let d1;
+    let d2;
+    // if (start > end) {
+    //     d1 = end.subtract(end.utcOffset(), 'm');
+    //     d2 = start.subtract(start.utcOffset(), 'm');
+    // } else {
+    //     d1 = start.subtract(start.utcOffset(), 'm');
+    //     d2 = end.subtract(end.utcOffset(), 'm');
+    // }
+    if (start > end) {
+        d1 = end;
+        d2 = start;
     }
     else {
+        d1 = start;
+        d2 = end;
+    }
+    if (d2.year() == d1.year()) { //if they are in the same year, just do an index comparison
+        return d2.month() - d1.month() + 1;
+    }
+    else if (d2.year() - d1.year() == 1) { //if they are in consecutive years
+        return (monthsPerYear - d1.month()) + (d2.month() + 1);
+    }
+    else {
+        console.log('n>=2');
+        //the number of months in the first year + 
+        // the number of months in the middle year(s) + 
+        // the number of months in the last year
+        return (monthsPerYear - d1.month()) + (monthsPerYear * (spanYears(d2, d1) - 2)) + (d2.month() + 1);
     }
 }
 ////////////////////////////////////////////////////////////////
@@ -385,7 +410,7 @@ class Timeline {
         //  Define members
         ////////////////////////////////////////////////////////////////
         //--------DEV--------//
-        this.verbose = true;
+        this.verbose = false;
         var isLeapYear = __webpack_require__(5709);
         //check which date is larger and round to nearest day
         if (start > end) {
@@ -959,7 +984,7 @@ function allTests() {
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "RS": () => (/* binding */ runUnitTests)
 /* harmony export */ });
-/* unused harmony exports test_totalDaysPerYear, test_isLeapYear, test_totalDaysPeryear */
+/* unused harmony exports test_isLeapYear, test_totalDaysPerYear, test_spanMonths */
 /* harmony import */ var _src_time__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4734);
 //Unit tests for time.ts
 
@@ -974,13 +999,21 @@ function runUnitTests(verbose) {
     ////////////////////////////////////////////////////////////////
     //total++;
     //passed += test_totalDaysPerYear();
+    console.log('UNIT TEST: Time.isLeapYear()');
     total++;
-    if (test_isLeapYear(true) == 1) {
+    if (test_isLeapYear(false) == 1) {
         passed++;
     }
     ;
+    console.log('UNIT TEST: Time.totalDaysPerYear()');
     total++;
-    if (test_totalDaysPerYear(true) == 1) {
+    if (test_totalDaysPerYear(false) == 1) {
+        passed++;
+    }
+    ;
+    console.log('UNIT TEST: Time.spanMonths()');
+    total++;
+    if (test_spanMonths(true) == 1) {
         passed++;
     }
     ;
@@ -996,14 +1029,9 @@ function runUnitTests(verbose) {
 ////////////////////////////////////////////////////////////////
 // TESTS
 ////////////////////////////////////////////////////////////////
-//example
-function test_totalDaysPerYear(verbose) {
-    return 0;
-}
 function test_isLeapYear(verbose) {
     let total = 0;
     let passed = 0;
-    ////////////////////////////////////////////////////////////////
     let testArgs = [0, 1, 4, 1900, 2000, 2100, 2022, 2024, -1, -4, -400, -100, -69];
     let testAns = [true, false, true, false, true, false, false, true, false, true, true, false, false];
     for (let i = 0; i < testArgs.length; i++) {
@@ -1020,22 +1048,21 @@ function test_isLeapYear(verbose) {
             console.log("FAILED");
         }
     }
-    ////////////////////////////////////////////////////////////////
     return passed / total;
 }
-function test_totalDaysPeryear(verbose) {
+////////////////////////////////////////////////////////////////
+function test_totalDaysPerYear(verbose) {
     let total = 0;
     let passed = 0;
-    ////////////////////////////////////////////////////////////////
     let testArgs = [2, 4, 2000, 2001, -1, -4];
     let testAns = [365, 366, 366, 365, 365, 366];
     for (let i = 0; i < testArgs.length; i++) {
         console.log('TESTCASE: year = ' + testArgs[i].toString());
         if (verbose) {
-            console.log('RESULT: ' + Time.daysInYear(testArgs[i]));
+            console.log('RESULT: ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(testArgs[i]));
         }
         total++;
-        if (Time.daysInYear(testArgs[i]) == testAns[i]) {
+        if (_src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(testArgs[i]) == testAns[i]) {
             passed++;
             console.log("PASSED");
         }
@@ -1043,9 +1070,63 @@ function test_totalDaysPeryear(verbose) {
             console.log("FAILED");
         }
     }
-    ////////////////////////////////////////////////////////////////
     return passed / total;
 }
+////////////////////////////////////////////////////////////////
+function test_spanMonths(verbose) {
+    var dayjs = __webpack_require__(9665);
+    var utc = __webpack_require__(149);
+    dayjs.extend(utc);
+    let total = 0;
+    let passed = 0;
+    let testArgs = [
+        [dayjs(new Date(2000, 0, 1)), dayjs(new Date(2000, 0, 1))],
+        [dayjs(new Date(2000, 0, 1)), dayjs(new Date(2001, 0, 1))],
+        [dayjs(new Date(2000, 0, 1)), dayjs(new Date(2000, 5, 1))],
+        [dayjs(new Date(2040, 4, 12)), dayjs(new Date(2040, 10, 7))],
+        [dayjs(new Date(2000, 10, 1)), dayjs(new Date(2001, 1, 1))],
+        [dayjs(new Date(2000, 10, 30)), dayjs(new Date(2001, 1, 1))],
+        [dayjs(new Date(2000, 9, 27)), dayjs(new Date(2001, 1, 3))],
+        [dayjs(new Date(1999, 1, 1)), dayjs(new Date(2003, 1, 1))],
+        [dayjs(new Date(1998, 5, 2)), dayjs(new Date(2004, 7, 19))],
+        [dayjs(new Date(2040, 9, 7)), dayjs(new Date(2040, 4, 12))],
+        [dayjs(new Date(2001, 1, 3)), dayjs(new Date(2000, 9, 27))],
+        [dayjs(new Date(2004, 7, 19)), dayjs(new Date(1998, 5, 2))], //12 //reversed args, more than 1 year apart && arbitrary dates
+    ];
+    let testAns = [
+        1,
+        13,
+        6,
+        7,
+        4,
+        4,
+        5,
+        49,
+        75,
+        6,
+        5,
+        75 //12
+    ];
+    for (let i = 0; i < testArgs.length; i++) {
+        let a = testArgs[i][0];
+        let b = testArgs[i][1];
+        dayjs.utc().format();
+        console.log('TESTCASE: date = ' + a.format() + ',' + b.format());
+        if (verbose) {
+            console.log('RESULT: ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .spanMonths */ .V7(testArgs[i][0], testArgs[i][1]));
+        }
+        total++;
+        if (_src_time__WEBPACK_IMPORTED_MODULE_0__/* .spanMonths */ .V7(testArgs[i][0], testArgs[i][1]) == testAns[i]) {
+            passed++;
+            console.log("PASSED");
+        }
+        else {
+            console.log("FAILED");
+        }
+    }
+    return passed / total;
+}
+////////////////////////////////////////////////////////////////
 
 
 /***/ }),
@@ -10647,6 +10728,13 @@ var dependencies = {"d3-array":"1","d3-axis":"1","d3-brush":"1","d3-chord":"1","
 /***/ (function(module) {
 
 !function(e,t){ true?module.exports=t():0}(this,(function(){"use strict";return function(e,t){t.prototype.isLeapYear=function(){return this.$y%4==0&&this.$y%100!=0||this.$y%400==0}}}));
+
+/***/ }),
+
+/***/ 149:
+/***/ (function(module) {
+
+!function(t,i){ true?module.exports=i():0}(this,(function(){"use strict";var t="minute",i=/[+-]\d\d(?::?\d\d)?/g,e=/([+-]|\d\d)/g;return function(s,f,n){var u=f.prototype;n.utc=function(t){var i={date:t,utc:!0,args:arguments};return new f(i)},u.utc=function(i){var e=n(this.toDate(),{locale:this.$L,utc:!0});return i?e.add(this.utcOffset(),t):e},u.local=function(){return n(this.toDate(),{locale:this.$L,utc:!1})};var o=u.parse;u.parse=function(t){t.utc&&(this.$u=!0),this.$utils().u(t.$offset)||(this.$offset=t.$offset),o.call(this,t)};var r=u.init;u.init=function(){if(this.$u){var t=this.$d;this.$y=t.getUTCFullYear(),this.$M=t.getUTCMonth(),this.$D=t.getUTCDate(),this.$W=t.getUTCDay(),this.$H=t.getUTCHours(),this.$m=t.getUTCMinutes(),this.$s=t.getUTCSeconds(),this.$ms=t.getUTCMilliseconds()}else r.call(this)};var a=u.utcOffset;u.utcOffset=function(s,f){var n=this.$utils().u;if(n(s))return this.$u?0:n(this.$offset)?a.call(this):this.$offset;if("string"==typeof s&&(s=function(t){void 0===t&&(t="");var s=t.match(i);if(!s)return null;var f=(""+s[0]).match(e)||["-",0,0],n=f[0],u=60*+f[1]+ +f[2];return 0===u?0:"+"===n?u:-u}(s),null===s))return this;var u=Math.abs(s)<=16?60*s:s,o=this;if(f)return o.$offset=u,o.$u=0===s,o;if(0!==s){var r=this.$u?this.toDate().getTimezoneOffset():-1*this.utcOffset();(o=this.local().add(u+r,t)).$offset=u,o.$x.$localOffset=r}else o=this.utc();return o};var h=u.format;u.format=function(t){var i=t||(this.$u?"YYYY-MM-DDTHH:mm:ss[Z]":"");return h.call(this,i)},u.valueOf=function(){var t=this.$utils().u(this.$offset)?0:this.$offset+(this.$x.$localOffset||this.$d.getTimezoneOffset());return this.$d.valueOf()-6e4*t},u.isUTC=function(){return!!this.$u},u.toISOString=function(){return this.toDate().toISOString()},u.toString=function(){return this.toDate().toUTCString()};var l=u.toDate;u.toDate=function(t){return"s"===t&&this.$offset?n(this.format("YYYY-MM-DD HH:mm:ss:SSS")).toDate():l.call(this)};var c=u.diff;u.diff=function(t,i,e){if(t&&this.$u===t.$u)return c.call(this,t,i,e);var s=this.local(),f=n(t).local();return c.call(s,f,i,e)}}}));
 
 /***/ }),
 

@@ -11,7 +11,7 @@ export class Timeline {
     ////////////////////////////////////////////////////////////////
 
     //--------DEV--------//
-    private verbose: boolean = true;
+    private verbose: boolean = false;
 
     private d1: dayjs.Dayjs;
     private d2: dayjs.Dayjs;

@@ -1,9 +1,6 @@
 //A header lib for date and time fns
 
-import { precisionRound } from "d3";
-import { roundOptions } from "./lib";
 import * as dayjs from 'dayjs';
-
 
 ////////////////////////////////////////////////////////////////
 //  CONSTANTS
@@ -151,18 +148,39 @@ export function spanYears(start: dayjs.Dayjs, end: dayjs.Dayjs): number {
  * @param start the start date
  * @param end the end date
  */
- export function spanMonths(start: dayjs.Dayjs, end: dayjs.Dayjs): number {
-    //if they are in the same year, just do an index comparison
-    if(start.year()==end.year()){
-        if (start > end) {
-        return start.year() - end.year() + 1;
+export function spanMonths(start: dayjs.Dayjs, end: dayjs.Dayjs): number {
+    // var dayjs = require('dayjs');
+    // var utc = require('dayjs/plugin/utc');
+    // dayjs.extend(utc);
+    // dayjs.utc();
+
+    //to simplify, order the dates
+    let d1: dayjs.Dayjs; let d2: dayjs.Dayjs;
+
+    // if (start > end) {
+    //     d1 = end.subtract(end.utcOffset(), 'm');
+    //     d2 = start.subtract(start.utcOffset(), 'm');
+    // } else {
+    //     d1 = start.subtract(start.utcOffset(), 'm');
+    //     d2 = end.subtract(end.utcOffset(), 'm');
+    // }
+
+    if (start > end) { d1 = end; d2 = start; } else { d1 = start; d2 = end; }
+
+    if (d2.year() == d1.year()) {           //if they are in the same year, just do an index comparison
+        return d2.month() - d1.month() + 1;
+
+    } else if (d2.year() - d1.year() ==1) {     //if they are in consecutive years
+        return (monthsPerYear - d1.month()) + (d2.month() + 1);
     } else {
-        return end.year() - start.year() + 1;
+        console.log('n>=2');
+        //the number of months in the first year + 
+        // the number of months in the middle year(s) + 
+        // the number of months in the last year
+        return (monthsPerYear - d1.month()) + (monthsPerYear * (spanYears(d2, d1) - 2)) + (d2.month() + 1);
+
     }
-    }else{
-        
-    }
-    
+
 }
 
 ////////////////////////////////////////////////////////////////
