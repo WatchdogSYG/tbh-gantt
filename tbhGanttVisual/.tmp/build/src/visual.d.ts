@@ -21,15 +21,9 @@ export declare class Visual implements IVisual {
     private activityTable;
     private timelineTable;
     private ganttGridTable;
-    private svg;
-    private container;
-    private circle;
-    private textValue;
-    private textLabel;
-    private rows;
-    private cols;
     private style;
     private timeline;
+    private verbose;
     constructor(options: VisualConstructorOptions);
     update(options: VisualUpdateOptions): void;
     private populateActivityTable;

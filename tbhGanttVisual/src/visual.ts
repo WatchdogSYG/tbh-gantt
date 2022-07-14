@@ -26,7 +26,6 @@
 
 'use strict';
 
-
 ////////////////////////////////////////////////////////////////
 //  Imports
 ////////////////////////////////////////////////////////////////
@@ -99,21 +98,13 @@ export class Visual implements IVisual {
     //svgs
 
     //text
-    private svg: Selection<SVGElement>;
-
-    private container: Selection<SVGElement>;
-    private circle: Selection<SVGElement>;
-    private textValue: Selection<SVGElement>;
-    private textLabel: Selection<SVGElement>;
-
 
     ////////////////DEV VARS\\\\\\\\\\\\\\\\
-    private rows: number;
-    private cols: number;
-
     private style;//should be a CSSStyleDeclaration
 
     private timeline: Timeline;
+
+    private verbose: boolean = false;
 
     ////////////////////////////////////////////////////////////////
     //  Constructor
@@ -121,9 +112,9 @@ export class Visual implements IVisual {
 
     constructor(options: VisualConstructorOptions) {
 
-        jsUnit.allTests();
+        //jsUnit.allTests();
 
-        console.log('Visual constructor', options);
+        if (this.verbose) { console.log('Visual constructor', options); }
 
         this.style = getComputedStyle(document.querySelector(':root'));
 
@@ -227,11 +218,14 @@ export class Visual implements IVisual {
 
         //temp vars to be calcd later
 
-        let d1: dayjs.Dayjs = dayjs(new Date(2020, 4, 6));
-        let d2: dayjs.Dayjs = dayjs(new Date(2023, 9, 12));
+        // let d1: dayjs.Dayjs = dayjs(new Date(2020, 4, 6));
+        // let d2: dayjs.Dayjs = dayjs(new Date(2023, 9, 12));
+
+         let d1: dayjs.Dayjs = dayjs(new Date(2020, 0, 1));
+        let d2: dayjs.Dayjs = dayjs(new Date(2023, 5, 30));
 
         this.timeline = new Timeline(d1, d2);
-        let padding: number = this.timeline.getPadding();
+        let padding: number = 0;//this.timeline.getPadding();
 
         // let yearWidth: number = this.timeline.getDayScale() * this.timeline.getDays();
 
@@ -252,58 +246,55 @@ export class Visual implements IVisual {
 
         let ts: TimeScale = this.timeline.getTimeScale();
 
-        //var self = this; //access local var in function (d) callback
+        //////////////////////////////////////////////////////////////// YearText
         gTop.selectAll('text')
             .data(ts.yearScale)
             .enter()
             .append('text')
             .attr('x', function (d) {
-                console.log(d);
-                return Lib.px(d.yearOffset+padding);
+                return Lib.px(d.yearOffset + padding);
             })
             .attr('y', '0px')
             .text(function (d) { return d.yearText; })
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
-            .attr('fill', '#111111')
             .classed('yearText', true);
 
+        //////////////////////////////////////////////////////////////// YearLine
         gTop.selectAll('line').data(ts.yearScale).enter().append('line')
-            .attr('x1', function (d) { return Lib.px(d.yearOffset ); })
+            .attr('x1', function (d) { return Lib.px(d.yearOffset); })
             .attr('y1', '0px')
             .attr('x2', function (d) {
-                console.log(d);
                 return Lib.px(d.yearOffset);
             })
             .attr('y2', tlHeight)
             .attr('style', 'stroke:black');
 
-        // gTop.append('text')
-        //     .attr('x', '100px')
-        //     .attr('y', '0px')
-        //     .text(Time.year(endDay).toString())
-        //     .attr('text-anchor', 'top')
-        //     .attr('alignment-baseline', 'hanging')
-        //     .attr('fill', '#111111');
+        //////////////////////////////////////////////////////////////// MonthText
+        gBottom.selectAll('text')
+            .data(ts.monthScale)
+            .enter()
+            .append('text')
+            .attr('x', function (d) {
+                return Lib.px(d.monthOffset + padding);
+            })
+            .attr('y', Lib.px(tlHeight/2))
+            .text(function (d) { return d.monthText; })
+            .attr('text-anchor', 'top')
+            .attr('alignment-baseline', 'hanging')
+            .classed('yearText', true);
 
-        // console.log(Lib.px(tlHeight / 2));
-        // gBottom.append('text')
-        //     .attr('x', '0px')
-        //     .attr('y', Lib.px(tlHeight / 2))
-        //     .text('dd-mm')
-        //     .attr('text-anchor', 'top')
-        //     .attr('alignment-baseline', 'hanging')
-        //     .attr('fill', '#111111');
+        //////////////////////////////////////////////////////////////// YMonthLine
+        gBottom.selectAll('line').data(ts.monthScale).enter().append('line')
+            .attr('x1', function (d) { return Lib.px(d.monthOffset); })
+            .attr('y1', Lib.px(tlHeight/2))
+            .attr('x2', function (d) {
+                return Lib.px(d.monthOffset);
+            })
+            .attr('y2', tlHeight)
+            .attr('style', 'stroke:blue');
 
 
-        // egsvg.append('rect')
-        //     .classed('activityBar', true)
-        //     .attr('height', '100%')
-        //     .attr('width', '100%')
-        //     .attr('x', '0px')
-        //     .attr('y', '0px')
-        //     .attr('rx', '3px')
-        //     .attr('ry', '3px');
 
         ////////////////////////////////////////////////////////////////
         //  Create #table-activities
@@ -402,7 +393,7 @@ export class Visual implements IVisual {
     //on update...
     public update(options: VisualUpdateOptions) {
         //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
-        console.log('Visual update', options);
+        if (this.verbose) { console.log('Visual update', options); }
         // if (this.textNode) {
         //     this.textNode.textContent = (this.updateCount++).toString();
         // }
@@ -451,7 +442,7 @@ export class Visual implements IVisual {
         //whether to enter(), update() or exit()
 
         if (data == null) {
-            console.log('LOG: populateActivityTable called with a null VisualUpdateOptions.');
+            if (this.verbose) { console.log('LOG: populateActivityTable called with a null VisualUpdateOptions.'); }
 
         }
 
@@ -460,7 +451,7 @@ export class Visual implements IVisual {
         //BEWARE: I had to change the types of all these following to var and not Selection<T,T,T,T>. the second function (d)
         //call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
 
-        console.log('LOG: populateActivityTable called with some number of rows.');
+        if (this.verbose) { console.log('LOG: populateActivityTable called with some number of rows.'); }
 
         //create the number of trs required.
         var tr = d3.select('#' + tableID)//select the table

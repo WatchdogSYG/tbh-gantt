@@ -63,15 +63,18 @@ function roundOptions(x, round) {
 
 "use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Eg": () => (/* binding */ isLeapYear),
+/* harmony export */   "DO": () => (/* binding */ remainingDaysInMonth),
 /* harmony export */   "Km": () => (/* binding */ daysInMonth),
 /* harmony export */   "LP": () => (/* binding */ spanYears),
 /* harmony export */   "V7": () => (/* binding */ spanMonths),
 /* harmony export */   "dT": () => (/* binding */ daysInYear),
+/* harmony export */   "iL": () => (/* binding */ month),
 /* harmony export */   "jl": () => (/* binding */ remainingDaysInYear),
-/* harmony export */   "ti": () => (/* binding */ daysElapsedInYear)
+/* harmony export */   "m": () => (/* binding */ m),
+/* harmony export */   "ti": () => (/* binding */ daysElapsedInYear),
+/* harmony export */   "tp": () => (/* binding */ daysElapsedInMonth)
 /* harmony export */ });
-/* unused harmony exports millisPerSecond, secondsPerMinute, minutesPerHour, hoursPerDay, daysPerWeek, monthsPerYear, daysPerYear, mmm, m, month, remainingDaysInMonth, daysElapsedInMonth, epoch0 */
+/* unused harmony exports millisPerSecond, secondsPerMinute, minutesPerHour, hoursPerDay, daysPerWeek, monthsPerYear, daysPerYear, mmmArray, mArray, epoch0, isLeapYear */
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9665);
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_0__);
 //A header lib for date and time fns
@@ -89,7 +92,7 @@ const monthsPerYear = 12;
  * The number of days in a non-leap year.
  */
 const daysPerYear = 365;
-const monthArray = (/* unused pure expression or super */ null && ([
+const monthArray = [
     'January',
     'February',
     'March',
@@ -102,8 +105,8 @@ const monthArray = (/* unused pure expression or super */ null && ([
     'October',
     'November',
     'December'
-]));
-const mmm = (/* unused pure expression or super */ null && ([
+];
+const mmmArray = (/* unused pure expression or super */ null && ([
     'Jan',
     'Feb',
     'Mar',
@@ -117,7 +120,7 @@ const mmm = (/* unused pure expression or super */ null && ([
     'Nov',
     'Dec'
 ]));
-const m = (/* unused pure expression or super */ null && ([
+const mArray = [
     'J',
     'F',
     'M',
@@ -130,7 +133,7 @@ const m = (/* unused pure expression or super */ null && ([
     'O',
     'N',
     'D'
-]));
+];
 const daysPerMonth = [
     31,
     28,
@@ -151,7 +154,10 @@ const daysPerMonth = [
  * @returns the month string eg. 'January'
  */
 function month(month) {
-    return monthArray[(Math.floor(month)) % 11];
+    return monthArray[(Math.floor(month)) % 12];
+}
+function m(month) {
+    return mArray[(Math.floor(month)) % 12];
 }
 ////////////////////////////////////////////////////////////////
 //  CONVERSIONS
@@ -171,10 +177,16 @@ function daysInYear(year) {
 /**
  * Returns the number of days in the specified month.
  * @param month the month index (0 is Jan, 11 is Dec)
+ * @param year the year to consider for leap year purposes
  * @returns the number of days in the month
  */
-function daysInMonth(month) {
-    return daysPerMonth[(Math.floor(month)) % 11];
+function daysInMonth(month, year) {
+    if ((isLeapYear(year)) && (month == 1)) { //check leap Feb
+        return 29;
+    }
+    else {
+        return daysPerMonth[(Math.floor(month)) % 12];
+    }
 }
 ////////////////////////////////////////////////////////////////
 //  ELAPSED AND REMAINING TIME UNITS
@@ -186,10 +198,10 @@ function daysElapsedInYear(d) {
     return d.diff(dayjs__WEBPACK_IMPORTED_MODULE_0__(new Date(d.year(), 0, 1)), 'd', true);
 }
 function remainingDaysInMonth(d) {
-    return dayjs(new Date(d.year(), d.month() + 1, 1)).diff(d, 'd', true);
+    return dayjs__WEBPACK_IMPORTED_MODULE_0__(new Date(d.year(), d.month() + 1, 1)).diff(d, 'd', true);
 }
 function daysElapsedInMonth(d) {
-    return d.diff(dayjs(new Date(d.year(), d.month(), 1)), 'd', true);
+    return d.diff(dayjs__WEBPACK_IMPORTED_MODULE_0__(new Date(d.year(), d.month(), 1)), 'd', true);
 }
 ////////////////////////////////////////////////////////////////
 //  DURATIONS AND SPANS
@@ -242,7 +254,6 @@ function spanMonths(start, end) {
         return (monthsPerYear - d1.month()) + (d2.month() + 1);
     }
     else {
-        console.log('n>=2');
         //the number of months in the first year + 
         // the number of months in the middle year(s) + 
         // the number of months in the last year
@@ -410,7 +421,7 @@ class Timeline {
         //  Define members
         ////////////////////////////////////////////////////////////////
         //--------DEV--------//
-        this.verbose = false;
+        this.verbose = true;
         var isLeapYear = __webpack_require__(5709);
         //check which date is larger and round to nearest day
         if (start > end) {
@@ -425,7 +436,7 @@ class Timeline {
         this.n_months = this.d2.diff(this.d1, 'M', true);
         this.n_days = this.d2.diff(this.d1, 'd', true);
         // this.span_days;
-        // this.span_months;
+        this.span_months = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .spanMonths */ .V7(start, end);
         this.span_years = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .spanYears */ .LP(start, end);
         this.padding = 5;
         this.dayScale = 1;
@@ -443,8 +454,11 @@ class Timeline {
             console.log('LOG: Timeline scale = ' + this.dayScale.toString());
         }
         this.ts = new TimeScale();
-        console.log('Created TimeScale ts');
+        if (this.verbose) {
+            console.log('LOG: Created TimeScale ts');
+        }
         this.ts.yearScale = this.generateYears();
+        this.ts.monthScale = this.generateMonths();
     }
     ////////////////////////////////////////////////////////////////
     //  Get/Set
@@ -469,6 +483,7 @@ class Timeline {
         this.dayScale = daysPerPixel;
         this.updateScaleFactors();
     }
+    //TODO there is a 1 px misalignment
     generateYears() {
         console.log('LOG: Generating YearSeparator array for timeline.');
         let result;
@@ -481,38 +496,38 @@ class Timeline {
             console.log('LOG: YearScale generation complete.');
             return result;
         }
-        result = [];
         //the dates are not in the same year, run this loop
+        result = [];
         for (let i = 0; i < this.span_years; i++) {
             if (this.verbose) {
                 console.log('LOG: year index = ' + i);
-                //check if we are considering the first or last year and calc the proportion of the section we want
-                if (i == 0) { //this is the first year, take the portion of that year and create the offset. TODO check if the text will overlap
-                    proportion = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .remainingDaysInYear */ .jl(this.d1);
-                    proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d1.year());
-                    if (this.verbose) {
-                        console.log('LOG: proportion = ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .remainingDaysInYear */ .jl(this.d1) + '/' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d1.year()) + ' = ' + proportion);
-                    }
-                }
-                else if (i == (this.span_years - 1)) { //this is the last year, take the last proportion to the beginning of the year. Same todo as above
-                    proportion = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInYear */ .ti(this.d2);
-                    proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d2.year());
-                    if (this.verbose) {
-                        console.log('LOG: proportion = ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInYear */ .ti(this.d2) + '/' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d2.year()) + ' = ' + proportion);
-                    }
-                }
-                else { //somewhere in the middle
-                    proportion = 1;
-                    if (this.verbose) {
-                        console.log('LOG: proportion = ' + proportion);
-                    }
-                }
-                result[i] = new YearSeparator((this.d1.year() + i).toString(), cumulativeOffset);
-                if (this.verbose) {
-                    console.log('LOG: created new YearSeparator(' + (this.d1.year() + i) + ', ' + cumulativeOffset + ') at this.ts.yearScale[' + i + ']');
-                }
-                cumulativeOffset += _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d1.year()) * this.dayScale * proportion;
             }
+            //check if we are considering the first or last year and calc the proportion of the section we want
+            if (i == 0) { //this is the first year, take the portion of that year and create the offset. TODO check if the text will overlap
+                proportion = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .remainingDaysInYear */ .jl(this.d1);
+                proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d1.year());
+                if (this.verbose) {
+                    console.log('LOG: proportion = ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .remainingDaysInYear */ .jl(this.d1) + '/' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d1.year()) + ' = ' + proportion);
+                }
+            }
+            else if (i == (this.span_years - 1)) { //this is the last year, take the last proportion to the beginning of the year. Same todo as above
+                proportion = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInYear */ .ti(this.d2);
+                proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d2.year());
+                if (this.verbose) {
+                    console.log('LOG: proportion = ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInYear */ .ti(this.d2) + '/' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d2.year()) + ' = ' + proportion);
+                }
+            }
+            else { //somewhere in the middle
+                proportion = 1;
+                if (this.verbose) {
+                    console.log('LOG: proportion = ' + proportion);
+                }
+            }
+            result[i] = new YearSeparator((this.d1.year() + i).toString(), cumulativeOffset);
+            if (this.verbose) {
+                console.log('LOG: created new YearSeparator(' + (this.d1.year() + i) + ', ' + cumulativeOffset + ') at this.ts.yearScale[' + i + ']');
+            }
+            cumulativeOffset += _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d1.year()) * this.dayScale * proportion;
         }
         console.log(result);
         console.log('LOG: YearScale generation complete.');
@@ -524,44 +539,43 @@ class Timeline {
         let cumulativeOffset = 0;
         let proportion;
         //If the dates are in the same year, the loop will not return the correct value. Handle it here.      
-        if (this.span_months == 0) { //same year, return year
-            result = [new MonthSeparator(this.d1.year().toString(), 0)];
+        if (this.span_months == 0) { //same month, return month
+            result = [new MonthSeparator(_src_time__WEBPACK_IMPORTED_MODULE_0__/* .month */ .iL(this.d1.month()), 0)];
             console.log(result);
             console.log('LOG: MonthSeparator array generation complete.');
             return result;
         }
+        //the dates are not in the same month, run this loop
         result = [];
-        //the dates are not in the same year, run this loop
-        for (let i = 0; i < this.span_years; i++) {
+        for (let i = 0; i < this.span_months; i++) {
             if (this.verbose) {
-                console.log('LOG: year index = ' + i);
-                //check if we are considering the first or last year and calc the proportion of the section we want
-                if (i == 0) { //this is the first year, take the portion of that year and create the offset. TODO check if the text will overlap
-                    proportion = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .remainingDaysInYear */ .jl(this.d1);
-                    proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d1.year());
-                    if (this.verbose) {
-                        console.log('LOG: proportion = ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .remainingDaysInYear */ .jl(this.d1) + '/' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d1.year()) + ' = ' + proportion);
-                    }
-                }
-                else if (i == (this.span_years - 1)) { //this is the last year, take the last proportion to the beginning of the year. Same todo as above
-                    proportion = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInYear */ .ti(this.d2);
-                    proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d2.year());
-                    if (this.verbose) {
-                        console.log('LOG: proportion = ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInYear */ .ti(this.d2) + '/' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d2.year()) + ' = ' + proportion);
-                    }
-                }
-                else { //somewhere in the middle
-                    proportion = 1;
-                    if (this.verbose) {
-                        console.log('LOG: proportion = ' + proportion);
-                    }
-                }
-                result[i] = new MonthSeparator((this.d1.year() + i).toString(), cumulativeOffset);
-                if (this.verbose) {
-                    console.log('LOG: created new MonthSeparator(' + (this.d1.year() + i) + ', ' + cumulativeOffset + ') at this.ts.monthScale[' + i + ']');
-                }
-                cumulativeOffset += _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d1.year()) * this.dayScale * proportion;
             }
+            //check if we are considering the first or last month and calc the proportion of the section we want
+            if (i == 0) { //this is the first month, take the portion of that month and create the offset. TODO check if the text will overlap
+                proportion = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .remainingDaysInMonth */ .DO(this.d1);
+                proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(this.d1.month(), this.d1.year());
+                if (this.verbose) {
+                    console.log('LOG: first proportion = ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .remainingDaysInMonth */ .DO(this.d1) + '/' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(this.d1.month(), this.d1.year()) + ' = ' + proportion);
+                }
+            }
+            else if (i == (this.span_months - 1)) { //this is the last year, take the last proportion to the beginning of the year. Same todo as above
+                proportion = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInMonth */ .tp(this.d2);
+                proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(this.d2.month(), this.d1.year());
+                if (this.verbose) {
+                    console.log('LOG: last proportion = ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInMonth */ .tp(this.d2) + '/' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(this.d2.month(), this.d1.year()) + ' = ' + proportion);
+                }
+            }
+            else { //somewhere in the middle
+                proportion = 1;
+                if (this.verbose) {
+                    console.log('LOG: proportion = ' + proportion);
+                }
+            }
+            result[i] = new MonthSeparator(_src_time__WEBPACK_IMPORTED_MODULE_0__.m(this.d1.month() + i), cumulativeOffset);
+            if (this.verbose) {
+                console.log('LOG: created new MonthSeparator(' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .month */ .iL(this.d1.month() + i) + ', ' + cumulativeOffset + ') at this.ts.monthScale[' + i + '] with dOffset ' + (_src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(this.d1.month() + i, this.d1.year()) * this.dayScale * proportion) + 'px');
+            }
+            cumulativeOffset += _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(this.d1.month() + i, this.d1.year()) * this.dayScale * proportion;
         }
         console.log(result);
         console.log('LOG: MonthSeparator array generation complete.');
@@ -612,11 +626,10 @@ class TimeScale {
 /* harmony export */   "u": () => (/* binding */ Visual)
 /* harmony export */ });
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(662);
-/* harmony import */ var _src_lib__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(809);
+/* harmony import */ var _src_lib__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(809);
 /* harmony import */ var _src_timeline__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(1092);
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(9665);
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _tests_globalTests__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(6748);
 /*
 *  Power BI Visual CLI
 *
@@ -651,8 +664,6 @@ class TimeScale {
 
 
 
-//UNIT TESTS
-
 ////////////////////////////////////////////////////////////////
 //  Begin class definition
 ////////////////////////////////////////////////////////////////
@@ -661,8 +672,11 @@ class Visual {
     //  Constructor
     ////////////////////////////////////////////////////////////////
     constructor(options) {
-        _tests_globalTests__WEBPACK_IMPORTED_MODULE_3__/* .allTests */ .T();
-        console.log('Visual constructor', options);
+        //jsUnit.allTests();
+        this.verbose = false;
+        if (this.verbose) {
+            console.log('Visual constructor', options);
+        }
         this.style = getComputedStyle(document.querySelector(':root'));
         //     this.target = options.element;
         //     this.updateCount = 0;
@@ -743,70 +757,69 @@ class Visual {
         //  Create svg timeline
         ////////////////////////////////////////////////////////////////
         //temp vars to be calcd later
-        let d1 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2020, 4, 6));
-        let d2 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2023, 9, 12));
+        // let d1: dayjs.Dayjs = dayjs(new Date(2020, 4, 6));
+        // let d2: dayjs.Dayjs = dayjs(new Date(2023, 9, 12));
+        let d1 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2020, 0, 1));
+        let d2 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2023, 5, 30));
         this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_1__/* .Timeline */ .TY(d1, d2);
-        let padding = this.timeline.getPadding();
+        let padding = 0; //this.timeline.getPadding();
         // let yearWidth: number = this.timeline.getDayScale() * this.timeline.getDays();
         let tlWidth = this.timeline.getDays() * this.timeline.getDayScale(); //cannot be less than div width!
-        let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_4__/* .toPxNumber */ .U(this.style.getPropertyValue('--timelineHeight'));
+        let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_3__/* .toPxNumber */ .U(this.style.getPropertyValue('--timelineHeight'));
         let tl = this.divTimeline
             .append('svg')
             .attr('id', 'tl-top')
             .attr('height', '100%')
-            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(tlWidth));
+            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(tlWidth));
         let gTop = tl.append('g')
             .classed('g-tl', true);
         let gBottom = tl.append('g')
             .classed('g-tl', true);
         let ts = this.timeline.getTimeScale();
-        //var self = this; //access local var in function (d) callback
+        //////////////////////////////////////////////////////////////// YearText
         gTop.selectAll('text')
             .data(ts.yearScale)
             .enter()
             .append('text')
             .attr('x', function (d) {
-            console.log(d);
-            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.yearOffset + padding);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.yearOffset + padding);
         })
             .attr('y', '0px')
             .text(function (d) { return d.yearText; })
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
-            .attr('fill', '#111111')
             .classed('yearText', true);
+        //////////////////////////////////////////////////////////////// YearLine
         gTop.selectAll('line').data(ts.yearScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.yearOffset); })
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.yearOffset); })
             .attr('y1', '0px')
             .attr('x2', function (d) {
-            console.log(d);
-            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.yearOffset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.yearOffset);
         })
             .attr('y2', tlHeight)
             .attr('style', 'stroke:black');
-        // gTop.append('text')
-        //     .attr('x', '100px')
-        //     .attr('y', '0px')
-        //     .text(Time.year(endDay).toString())
-        //     .attr('text-anchor', 'top')
-        //     .attr('alignment-baseline', 'hanging')
-        //     .attr('fill', '#111111');
-        // console.log(Lib.px(tlHeight / 2));
-        // gBottom.append('text')
-        //     .attr('x', '0px')
-        //     .attr('y', Lib.px(tlHeight / 2))
-        //     .text('dd-mm')
-        //     .attr('text-anchor', 'top')
-        //     .attr('alignment-baseline', 'hanging')
-        //     .attr('fill', '#111111');
-        // egsvg.append('rect')
-        //     .classed('activityBar', true)
-        //     .attr('height', '100%')
-        //     .attr('width', '100%')
-        //     .attr('x', '0px')
-        //     .attr('y', '0px')
-        //     .attr('rx', '3px')
-        //     .attr('ry', '3px');
+        //////////////////////////////////////////////////////////////// MonthText
+        gBottom.selectAll('text')
+            .data(ts.monthScale)
+            .enter()
+            .append('text')
+            .attr('x', function (d) {
+            return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.monthOffset + padding);
+        })
+            .attr('y', _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(tlHeight / 2))
+            .text(function (d) { return d.monthText; })
+            .attr('text-anchor', 'top')
+            .attr('alignment-baseline', 'hanging')
+            .classed('yearText', true);
+        //////////////////////////////////////////////////////////////// YMonthLine
+        gBottom.selectAll('line').data(ts.monthScale).enter().append('line')
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.monthOffset); })
+            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(tlHeight / 2))
+            .attr('x2', function (d) {
+            return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.monthOffset);
+        })
+            .attr('y2', tlHeight)
+            .attr('style', 'stroke:blue');
         ////////////////////////////////////////////////////////////////
         //  Create #table-activities
         ////////////////////////////////////////////////////////////////
@@ -887,7 +900,9 @@ class Visual {
     //on update...
     update(options) {
         //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
-        console.log('Visual update', options);
+        if (this.verbose) {
+            console.log('Visual update', options);
+        }
         // if (this.textNode) {
         //     this.textNode.textContent = (this.updateCount++).toString();
         // }
@@ -932,13 +947,17 @@ class Visual {
         //check number of data elements and number of tr and tds to determine
         //whether to enter(), update() or exit()
         if (data == null) {
-            console.log('LOG: populateActivityTable called with a null VisualUpdateOptions.');
+            if (this.verbose) {
+                console.log('LOG: populateActivityTable called with a null VisualUpdateOptions.');
+            }
         }
         //https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
         //https://www.dashingd3js.com/d3-tutorial/use-d3-js-to-bind-data-to-dom-elements
         //BEWARE: I had to change the types of all these following to var and not Selection<T,T,T,T>. the second function (d)
         //call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
-        console.log('LOG: populateActivityTable called with some number of rows.');
+        if (this.verbose) {
+            console.log('LOG: populateActivityTable called with some number of rows.');
+        }
         //create the number of trs required.
         var tr = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#' + tableID) //select the table
             .selectAll('tr') //select all tr elements (which there are none)
@@ -956,177 +975,6 @@ class Visual {
         return [0];
     }
 }
-
-
-/***/ }),
-
-/***/ 6748:
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "T": () => (/* binding */ allTests)
-/* harmony export */ });
-/* harmony import */ var _tests_test_time__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1473);
-//all unit tests
-
-function allTests() {
-    _tests_test_time__WEBPACK_IMPORTED_MODULE_0__/* .runUnitTests */ .RS(true);
-}
-
-
-/***/ }),
-
-/***/ 1473:
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "RS": () => (/* binding */ runUnitTests)
-/* harmony export */ });
-/* unused harmony exports test_isLeapYear, test_totalDaysPerYear, test_spanMonths */
-/* harmony import */ var _src_time__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4734);
-//Unit tests for time.ts
-
-/**
- * Runs unit tests for the file src/time.ts.
- * @param verbose Console shows verbose output if true
- * @returns The proportion of successful tests to failed tests
- */
-function runUnitTests(verbose) {
-    let total = 0;
-    let passed = 0;
-    ////////////////////////////////////////////////////////////////
-    //total++;
-    //passed += test_totalDaysPerYear();
-    console.log('UNIT TEST: Time.isLeapYear()');
-    total++;
-    if (test_isLeapYear(false) == 1) {
-        passed++;
-    }
-    ;
-    console.log('UNIT TEST: Time.totalDaysPerYear()');
-    total++;
-    if (test_totalDaysPerYear(false) == 1) {
-        passed++;
-    }
-    ;
-    console.log('UNIT TEST: Time.spanMonths()');
-    total++;
-    if (test_spanMonths(true) == 1) {
-        passed++;
-    }
-    ;
-    ////////////////////////////////////////////////////////////////
-    console.log('LOG: The file /src/time.ts passed ' +
-        passed.toString() +
-        ' unit tests out of ' +
-        total.toString() +
-        ' unit tests. Pass rate: ' +
-        (100 * passed / total).toString() + '%');
-    return passed / total;
-}
-////////////////////////////////////////////////////////////////
-// TESTS
-////////////////////////////////////////////////////////////////
-function test_isLeapYear(verbose) {
-    let total = 0;
-    let passed = 0;
-    let testArgs = [0, 1, 4, 1900, 2000, 2100, 2022, 2024, -1, -4, -400, -100, -69];
-    let testAns = [true, false, true, false, true, false, false, true, false, true, true, false, false];
-    for (let i = 0; i < testArgs.length; i++) {
-        console.log('TESTCASE: year = ' + testArgs[i].toString());
-        if (verbose) {
-            console.log('RESULT: ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .isLeapYear */ .Eg(testArgs[i]));
-        }
-        total++;
-        if (_src_time__WEBPACK_IMPORTED_MODULE_0__/* .isLeapYear */ .Eg(testArgs[i]) == testAns[i]) {
-            passed++;
-            console.log("PASSED");
-        }
-        else {
-            console.log("FAILED");
-        }
-    }
-    return passed / total;
-}
-////////////////////////////////////////////////////////////////
-function test_totalDaysPerYear(verbose) {
-    let total = 0;
-    let passed = 0;
-    let testArgs = [2, 4, 2000, 2001, -1, -4];
-    let testAns = [365, 366, 366, 365, 365, 366];
-    for (let i = 0; i < testArgs.length; i++) {
-        console.log('TESTCASE: year = ' + testArgs[i].toString());
-        if (verbose) {
-            console.log('RESULT: ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(testArgs[i]));
-        }
-        total++;
-        if (_src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(testArgs[i]) == testAns[i]) {
-            passed++;
-            console.log("PASSED");
-        }
-        else {
-            console.log("FAILED");
-        }
-    }
-    return passed / total;
-}
-////////////////////////////////////////////////////////////////
-function test_spanMonths(verbose) {
-    var dayjs = __webpack_require__(9665);
-    var utc = __webpack_require__(149);
-    dayjs.extend(utc);
-    let total = 0;
-    let passed = 0;
-    let testArgs = [
-        [dayjs(new Date(2000, 0, 1)), dayjs(new Date(2000, 0, 1))],
-        [dayjs(new Date(2000, 0, 1)), dayjs(new Date(2001, 0, 1))],
-        [dayjs(new Date(2000, 0, 1)), dayjs(new Date(2000, 5, 1))],
-        [dayjs(new Date(2040, 4, 12)), dayjs(new Date(2040, 10, 7))],
-        [dayjs(new Date(2000, 10, 1)), dayjs(new Date(2001, 1, 1))],
-        [dayjs(new Date(2000, 10, 30)), dayjs(new Date(2001, 1, 1))],
-        [dayjs(new Date(2000, 9, 27)), dayjs(new Date(2001, 1, 3))],
-        [dayjs(new Date(1999, 1, 1)), dayjs(new Date(2003, 1, 1))],
-        [dayjs(new Date(1998, 5, 2)), dayjs(new Date(2004, 7, 19))],
-        [dayjs(new Date(2040, 9, 7)), dayjs(new Date(2040, 4, 12))],
-        [dayjs(new Date(2001, 1, 3)), dayjs(new Date(2000, 9, 27))],
-        [dayjs(new Date(2004, 7, 19)), dayjs(new Date(1998, 5, 2))], //12 //reversed args, more than 1 year apart && arbitrary dates
-    ];
-    let testAns = [
-        1,
-        13,
-        6,
-        7,
-        4,
-        4,
-        5,
-        49,
-        75,
-        6,
-        5,
-        75 //12
-    ];
-    for (let i = 0; i < testArgs.length; i++) {
-        let a = testArgs[i][0];
-        let b = testArgs[i][1];
-        dayjs.utc().format();
-        console.log('TESTCASE: date = ' + a.format() + ',' + b.format());
-        if (verbose) {
-            console.log('RESULT: ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .spanMonths */ .V7(testArgs[i][0], testArgs[i][1]));
-        }
-        total++;
-        if (_src_time__WEBPACK_IMPORTED_MODULE_0__/* .spanMonths */ .V7(testArgs[i][0], testArgs[i][1]) == testAns[i]) {
-            passed++;
-            console.log("PASSED");
-        }
-        else {
-            console.log("FAILED");
-        }
-    }
-    return passed / total;
-}
-////////////////////////////////////////////////////////////////
 
 
 /***/ }),
@@ -10728,13 +10576,6 @@ var dependencies = {"d3-array":"1","d3-axis":"1","d3-brush":"1","d3-chord":"1","
 /***/ (function(module) {
 
 !function(e,t){ true?module.exports=t():0}(this,(function(){"use strict";return function(e,t){t.prototype.isLeapYear=function(){return this.$y%4==0&&this.$y%100!=0||this.$y%400==0}}}));
-
-/***/ }),
-
-/***/ 149:
-/***/ (function(module) {
-
-!function(t,i){ true?module.exports=i():0}(this,(function(){"use strict";var t="minute",i=/[+-]\d\d(?::?\d\d)?/g,e=/([+-]|\d\d)/g;return function(s,f,n){var u=f.prototype;n.utc=function(t){var i={date:t,utc:!0,args:arguments};return new f(i)},u.utc=function(i){var e=n(this.toDate(),{locale:this.$L,utc:!0});return i?e.add(this.utcOffset(),t):e},u.local=function(){return n(this.toDate(),{locale:this.$L,utc:!1})};var o=u.parse;u.parse=function(t){t.utc&&(this.$u=!0),this.$utils().u(t.$offset)||(this.$offset=t.$offset),o.call(this,t)};var r=u.init;u.init=function(){if(this.$u){var t=this.$d;this.$y=t.getUTCFullYear(),this.$M=t.getUTCMonth(),this.$D=t.getUTCDate(),this.$W=t.getUTCDay(),this.$H=t.getUTCHours(),this.$m=t.getUTCMinutes(),this.$s=t.getUTCSeconds(),this.$ms=t.getUTCMilliseconds()}else r.call(this)};var a=u.utcOffset;u.utcOffset=function(s,f){var n=this.$utils().u;if(n(s))return this.$u?0:n(this.$offset)?a.call(this):this.$offset;if("string"==typeof s&&(s=function(t){void 0===t&&(t="");var s=t.match(i);if(!s)return null;var f=(""+s[0]).match(e)||["-",0,0],n=f[0],u=60*+f[1]+ +f[2];return 0===u?0:"+"===n?u:-u}(s),null===s))return this;var u=Math.abs(s)<=16?60*s:s,o=this;if(f)return o.$offset=u,o.$u=0===s,o;if(0!==s){var r=this.$u?this.toDate().getTimezoneOffset():-1*this.utcOffset();(o=this.local().add(u+r,t)).$offset=u,o.$x.$localOffset=r}else o=this.utc();return o};var h=u.format;u.format=function(t){var i=t||(this.$u?"YYYY-MM-DDTHH:mm:ss[Z]":"");return h.call(this,i)},u.valueOf=function(){var t=this.$utils().u(this.$offset)?0:this.$offset+(this.$x.$localOffset||this.$d.getTimezoneOffset());return this.$d.valueOf()-6e4*t},u.isUTC=function(){return!!this.$u},u.toISOString=function(){return this.toDate().toISOString()},u.toString=function(){return this.toDate().toUTCString()};var l=u.toDate;u.toDate=function(t){return"s"===t&&this.$offset?n(this.format("YYYY-MM-DD HH:mm:ss:SSS")).toDate():l.call(this)};var c=u.diff;u.diff=function(t,i,e){if(t&&this.$u===t.$u)return c.call(this,t,i,e);var s=this.local(),f=n(t).local();return c.call(s,f,i,e)}}}));
 
 /***/ }),
 

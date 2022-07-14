@@ -9,14 +9,15 @@ export declare const monthsPerYear: number;
  * The number of days in a non-leap year.
  */
 export declare const daysPerYear: number;
-export declare const mmm: string[];
-export declare const m: string[];
+export declare const mmmArray: string[];
+export declare const mArray: string[];
 /**
  * Returns the month name given a month index.
  * @param month the month index (0 is Jan, 11 is Dec)
  * @returns the month string eg. 'January'
  */
 export declare function month(month: number): string;
+export declare function m(month: number): string;
 /**
  * Returns the number of days in the specified year accounting for leap years.
  * @param year the year to count the days.
@@ -25,9 +26,10 @@ export declare function daysInYear(year: number): number;
 /**
  * Returns the number of days in the specified month.
  * @param month the month index (0 is Jan, 11 is Dec)
+ * @param year the year to consider for leap year purposes
  * @returns the number of days in the month
  */
-export declare function daysInMonth(month: number): number;
+export declare function daysInMonth(month: number, year: number): number;
 export declare function remainingDaysInYear(d: dayjs.Dayjs): number;
 export declare function daysElapsedInYear(d: dayjs.Dayjs): number;
 export declare function remainingDaysInMonth(d: dayjs.Dayjs): number;

@@ -31,7 +31,7 @@ const monthArray: string[] = [
     'December'
 ];
 
-export const mmm: string[] = [
+export const mmmArray: string[] = [
     'Jan',
     'Feb',
     'Mar',
@@ -46,7 +46,7 @@ export const mmm: string[] = [
     'Dec'
 ];
 
-export const m: string[] = [
+export const mArray: string[] = [
     'J',
     'F',
     'M',
@@ -82,7 +82,11 @@ const daysPerMonth: number[] = [
  * @returns the month string eg. 'January'
  */
 export function month(month: number): string {
-    return monthArray[(Math.floor(month)) % 11];
+    return monthArray[(Math.floor(month)) % 12];
+}
+
+export function m(month: number): string {
+    return mArray[(Math.floor(month)) % 12];
 }
 
 ////////////////////////////////////////////////////////////////
@@ -100,10 +104,16 @@ export function daysInYear(year: number): number {
 /**
  * Returns the number of days in the specified month.
  * @param month the month index (0 is Jan, 11 is Dec)
+ * @param year the year to consider for leap year purposes
  * @returns the number of days in the month
  */
-export function daysInMonth(month: number): number {
-    return daysPerMonth[(Math.floor(month)) % 11]
+export function daysInMonth(month: number, year: number): number {
+    if ((isLeapYear(year)) && (month == 1)) {//check leap Feb
+        return 29;
+    } else {
+        return daysPerMonth[(Math.floor(month)) % 12];
+    }
+
 }
 
 ////////////////////////////////////////////////////////////////
@@ -170,10 +180,9 @@ export function spanMonths(start: dayjs.Dayjs, end: dayjs.Dayjs): number {
     if (d2.year() == d1.year()) {           //if they are in the same year, just do an index comparison
         return d2.month() - d1.month() + 1;
 
-    } else if (d2.year() - d1.year() ==1) {     //if they are in consecutive years
+    } else if (d2.year() - d1.year() == 1) {     //if they are in consecutive years
         return (monthsPerYear - d1.month()) + (d2.month() + 1);
     } else {
-        console.log('n>=2');
         //the number of months in the first year + 
         // the number of months in the middle year(s) + 
         // the number of months in the last year

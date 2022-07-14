@@ -1,6 +1,6 @@
 import * as dayjs from 'dayjs';
 export declare class Timeline {
-    private verbose;
+    verbose: boolean;
     private d1;
     private d2;
     private n_days;
