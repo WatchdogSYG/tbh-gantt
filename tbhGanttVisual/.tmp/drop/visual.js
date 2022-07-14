@@ -64,20 +64,30 @@ function roundOptions(x, round) {
 "use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Eg": () => (/* binding */ isLeapYear),
+/* harmony export */   "Km": () => (/* binding */ daysInMonth),
+/* harmony export */   "LP": () => (/* binding */ spanYears),
+/* harmony export */   "dT": () => (/* binding */ daysInYear),
 /* harmony export */   "jl": () => (/* binding */ remainingDaysInYear),
-/* harmony export */   "qj": () => (/* binding */ daysPerMonth),
-/* harmony export */   "rD": () => (/* binding */ totalDaysPerYear),
 /* harmony export */   "ti": () => (/* binding */ daysElapsedInYear)
 /* harmony export */ });
-/* unused harmony exports monthArray, mmm, m, millisPerSecond, secondsPerMinute, minutesPerHour, hoursPerDay, daysPerWeek, monthsPerYear, daysPerYear, remainingDaysInMonth, daysElapsedInMonth, epoch0, daysBetween, monthsBetween, yearsBetween */
+/* unused harmony exports millisPerSecond, secondsPerMinute, minutesPerHour, hoursPerDay, daysPerWeek, monthsPerYear, daysPerYear, mmm, m, month, remainingDaysInMonth, daysElapsedInMonth, spanMonths, epoch0 */
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9665);
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_0__);
 //A header lib for date and time fns
 
-
 ////////////////////////////////////////////////////////////////
 //  CONSTANTS
 ////////////////////////////////////////////////////////////////
+const millisPerSecond = 1000;
+const secondsPerMinute = 60;
+const minutesPerHour = 60;
+const hoursPerDay = 24;
+const daysPerWeek = 7;
+const monthsPerYear = 12;
+/**
+ * The number of days in a non-leap year.
+ */
+const daysPerYear = 365;
 const monthArray = (/* unused pure expression or super */ null && ([
     'January',
     'February',
@@ -134,32 +144,40 @@ const daysPerMonth = [
     30,
     31
 ];
-const millisPerSecond = 1000;
-const secondsPerMinute = 60;
-const minutesPerHour = 60;
-const hoursPerDay = 24;
-const daysPerWeek = 7;
-const monthsPerYear = 12;
 /**
- * The number of days in a non-leap year.
+ * Returns the month name given a month index.
+ * @param month the month index (0 is Jan, 11 is Dec)
+ * @returns the month string eg. 'January'
  */
-const daysPerYear = 365;
+function month(month) {
+    return monthArray[(Math.floor(month)) % 11];
+}
 ////////////////////////////////////////////////////////////////
-//  YEAR TO DAYS
+//  CONVERSIONS
 ////////////////////////////////////////////////////////////////
 /**
  * Returns the number of days in the specified year accounting for leap years.
  * @param year the year to count the days.
  */
-function totalDaysPerYear(year) {
-    let y = Math.floor(year); //convert to whole number
-    if (isLeapYear(y)) {
+function daysInYear(year) {
+    if (isLeapYear(Math.floor(year))) {
         return 366;
     }
     else {
         return 365;
     }
 }
+/**
+ * Returns the number of days in the specified month.
+ * @param month the month index (0 is Jan, 11 is Dec)
+ * @returns the number of days in the month
+ */
+function daysInMonth(month) {
+    return daysPerMonth[(Math.floor(month)) % 11];
+}
+////////////////////////////////////////////////////////////////
+//  ELAPSED AND REMAINING TIME UNITS
+////////////////////////////////////////////////////////////////
 function remainingDaysInYear(d) {
     return dayjs__WEBPACK_IMPORTED_MODULE_0__(new Date(d.year() + 1, 0, 1)).diff(d, 'd', true);
 }
@@ -173,111 +191,158 @@ function daysElapsedInMonth(d) {
     return d.diff(dayjs(new Date(d.year(), d.month(), 1)), 'd', true);
 }
 ////////////////////////////////////////////////////////////////
+//  DURATIONS AND SPANS
+////////////////////////////////////////////////////////////////
+/**
+ * The number of different years the duration between start and end spans.
+ * @param start the start date
+ * @param end the end date
+ */
+function spanYears(start, end) {
+    if (start > end) {
+        return start.year() - end.year() + 1;
+    }
+    else {
+        return end.year() - start.year() + 1;
+    }
+}
+/**
+ * The number of different months the duration between start and end spans.
+ * @param start the start date
+ * @param end the end date
+ */
+function spanMonths(start, end) {
+    //if they are in the same year, just do an index comparison
+    if (start.year() == end.year()) {
+        if (start > end) {
+            return start.year() - end.year() + 1;
+        }
+        else {
+            return end.year() - start.year() + 1;
+        }
+    }
+    else {
+    }
+}
+////////////////////////////////////////////////////////////////
 //  SUPPORT FUNCTIONS
 ////////////////////////////////////////////////////////////////
+/**
+ * Returns a Date at an epoch (POSIX) time of 0;
+ * @returns a Date corresponding to midnight 1 January 1970;
+ */
 function epoch0() {
     return new Date(1970, 1, 1);
 }
 /**
- * Is the year a leap year?
+ * Is the year an ISO leap year?
  * @param year Gregorian and prolaptic Gregorian BCE calendar with defined 0 year.
  * @returns If the year is a leap year.
  */
 function isLeapYear(year) {
     return (Math.abs(year) % 4 == 0 && Math.abs(year) % 100 !== 0) || (Math.abs(year) % 400 == 0);
 }
-/**
- * Returns the number of days in the epoch timeline between two dates.
- * @param start The start date.
- * @param end The end date.
- * @param round Rounds the number of days to the nearest integer. Rounds up if >0, does not round if == 0, rounds down otherwise.
- * @returns the number of days between the two dates rounded down.
- */
-function daysBetween(start, end, round) {
-    if (round > 0) {
-        return Math.ceil((end.valueOf() - start.valueOf()) / (millisPerSecond *
-            secondsPerMinute *
-            minutesPerHour *
-            hoursPerDay));
-    }
-    else if ((round == 0) || (round == undefined)) {
-        return (end.valueOf() - start.valueOf()) / (millisPerSecond *
-            secondsPerMinute *
-            minutesPerHour *
-            hoursPerDay);
-    }
-    else {
-        return Math.floor((end.valueOf() - start.valueOf()) / (millisPerSecond *
-            secondsPerMinute *
-            minutesPerHour *
-            hoursPerDay));
-    }
-}
-/**
- * Returns the number of months between two dates. TODO ROUND OPTIONS
- * @param start The start date.
- * @param end The end date.
- * @param round Rounds the number of months to the nearest integer. Rounds up if >0, does not round if == 0, rounds down otherwise.
- * @returns the number of days between the two dates rounded down.
- */
-function monthsBetween(start, end, round) {
-    //let t: number = end.valueOf() - start.valueOf();
-    let m = [start.getMonth(), end.getMonth()];
-    //if they are in the same month
-    if (m[0] == m[1]) {
-        if (isLeapYear(start.getFullYear()) && m[0] == 1) { //we are in a leap february
-            return roundOptions((daysPerMonth[m[0]] + 1) *
-                ((end.valueOf() - start.valueOf()) /
-                    (millisPerSecond * secondsPerMinute * minutesPerHour * hoursPerDay)), round);
-        }
-        else {
-            return roundOptions(daysPerMonth[m[0]] *
-                ((end.valueOf() - start.valueOf()) /
-                    (millisPerSecond * secondsPerMinute * minutesPerHour * hoursPerDay)), round);
-        }
-    }
-    //if they are in the same year
-    if (yearsBetween(start, end, 0) < 1) {
-        //proportion of first month
-        let t = monthsBetween(start, new Date(start.getFullYear(), start.getMonth() + 1, 1, 0, 0, 0, 0), 0);
-        //guard clause check that our for loop will run more then once
-        if (m[1] - m[0] == 1) { //we only have one more month left, add the proportion of the second month
-            return roundOptions(t + monthsBetween(end, new Date(end.getFullYear(), end.getMonth() + 1, 1, 0, 0, 0, 0), 0), round);
-        }
-        //there are more than 2 months left
-        //sum from the second month onwards to the second to last month
-        for (let i = m[0] + 1; i < m[1] - 1; i++) {
-            t += daysPerMonth[i];
-        }
-        //return and add the last proportion of the last month
-        return roundOptions(t + monthsBetween(new Date(end.getFullYear(), end.getMonth() + 1, 1, 0, 0, 0, 0), end, 0), round);
-    }
-    //they are not in the same year
-    //get the year number difference and proceed like with the above if statement
-    //the months between now and the end of the year
-    let t = monthsBetween(start, new Date(start.getFullYear() + 1, 0, 1, 0, 0, 0, 0));
-    let y = [end.getFullYear(), start.getFullYear()];
-    //if there are only 2 years spanned
-    if (y[1] - y[0] == 1) {
-        //add the time between the start of the last year and the end date
-        return roundOptions(t + monthsBetween(new Date(end.getFullYear(), 0, 1, 0, 0, 0, 0), end, 0), round);
-    }
-    //there are more than 2 years left
-    t += ((m[1] - m[0]) - 2) * 12; //ignore the start and end years
-    //return and add the proportion of the last year
-    return roundOptions(t + monthsBetween(new Date(end.getFullYear(), 0, 1, 0, 0, 0, 0), end, 0), round);
-}
-/**
- * Returns the number of years between two dates. NOT FULLY IMPLEMENTED
- * @param start The start date.
- * @param end The end date.
- * @param round Rounds the number of years to the nearest integer. Rounds up if >0, does not round if == 0, rounds down otherwise.
- * @returns the number of days between the two dates rounded down.
- */
-function yearsBetween(start, end, round) {
-    //TODO get partial years
-    return roundOptions(end.getFullYear() - start.getFullYear(), round);
-}
+//unused functions
+// /**
+//  * Returns the number of days in the epoch timeline between two dates.
+//  * @param start The start date.
+//  * @param end The end date.
+//  * @param round Rounds the number of days to the nearest integer. Rounds up if >0, does not round if == 0, rounds down otherwise.
+//  * @returns the number of days between the two dates rounded down.
+//  */
+// export function daysBetween(start: Date, end: Date, round?: number): number {
+//     if (round > 0) {
+//         return Math.ceil((end.valueOf() - start.valueOf()) / (
+//             millisPerSecond *
+//             secondsPerMinute *
+//             minutesPerHour *
+//             hoursPerDay));
+//     } else if ((round == 0) || (round == undefined)) {
+//         return (end.valueOf() - start.valueOf()) / (
+//             millisPerSecond *
+//             secondsPerMinute *
+//             minutesPerHour *
+//             hoursPerDay);
+//     } else {
+//         return Math.floor((end.valueOf() - start.valueOf()) / (
+//             millisPerSecond *
+//             secondsPerMinute *
+//             minutesPerHour *
+//             hoursPerDay));
+//     }
+// }
+// /**
+//  * Returns the number of months between two dates. TODO ROUND OPTIONS
+//  * @param start The start date.
+//  * @param end The end date.
+//  * @param round Rounds the number of months to the nearest integer. Rounds up if >0, does not round if == 0, rounds down otherwise.
+//  * @returns the number of days between the two dates rounded down.
+//  */
+// export function monthsBetween(start: Date, end: Date, round?: number): number {
+//     //let t: number = end.valueOf() - start.valueOf();
+//     let m: number[] = [start.getMonth(), end.getMonth()];
+//     //if they are in the same month
+//     if (m[0] == m[1]) {
+//         if (isLeapYear(start.getFullYear()) && m[0] == 1) { //we are in a leap february
+//             return roundOptions(
+//                 (daysPerMonth[m[0]] + 1) *
+//                 ((end.valueOf() - start.valueOf()) /
+//                     (millisPerSecond * secondsPerMinute * minutesPerHour * hoursPerDay))
+//                 , round);
+//         } else {
+//             return roundOptions(daysPerMonth[m[0]] *
+//                 ((end.valueOf() - start.valueOf()) /
+//                     (millisPerSecond * secondsPerMinute * minutesPerHour * hoursPerDay))
+//                 , round);
+//         }
+//     }
+//     //if they are in the same year
+//     if (yearsBetween(start, end, 0) < 1) {
+//         //proportion of first month
+//         let t: number = monthsBetween(start, new Date(start.getFullYear(),
+//             start.getMonth() + 1, 1, 0, 0, 0, 0), 0);
+//         //guard clause check that our for loop will run more then once
+//         if (m[1] - m[0] == 1) {//we only have one more month left, add the proportion of the second month
+//             return roundOptions(t + monthsBetween(end, new Date(end.getFullYear(),
+//                 end.getMonth() + 1, 1, 0, 0, 0, 0), 0), round);
+//         }
+//         //there are more than 2 months left
+//         //sum from the second month onwards to the second to last month
+//         for (let i = m[0] + 1; i < m[1] - 1; i++) {
+//             t += daysPerMonth[i];
+//         }
+//         //return and add the last proportion of the last month
+//         return roundOptions(t + monthsBetween(new Date(end.getFullYear(),
+//             end.getMonth() + 1, 1, 0, 0, 0, 0), end, 0), round);
+//     }
+//     //they are not in the same year
+//     //get the year number difference and proceed like with the above if statement
+//     //the months between now and the end of the year
+//     let t: number = monthsBetween(start, new Date(start.getFullYear() + 1, 0, 1, 0, 0, 0, 0));
+//     let y: number[] = [end.getFullYear(), start.getFullYear()]
+//     //if there are only 2 years spanned
+//     if (y[1] - y[0] == 1) {
+//         //add the time between the start of the last year and the end date
+//         return roundOptions(t + monthsBetween(new Date(end.getFullYear(), 0, 1, 0, 0, 0, 0), end, 0)
+//             , round);
+//     }
+//     //there are more than 2 years left
+//     t += ((m[1] - m[0]) - 2) * 12; //ignore the start and end years
+//     //return and add the proportion of the last year
+//     return roundOptions(t + monthsBetween(new Date(end.getFullYear(), 0, 1, 0, 0, 0, 0), end, 0)
+//         , round);
+// }
+// /**
+//  * Returns the number of years between two dates. NOT FULLY IMPLEMENTED
+//  * @param start The start date.
+//  * @param end The end date.
+//  * @param round Rounds the number of years to the nearest integer. Rounds up if >0, does not round if == 0, rounds down otherwise.
+//  * @returns the number of days between the two dates rounded down.
+//  */
+// export function yearsBetween(start: Date, end: Date, round?: number): number {
+//     //TODO get partial years
+//     return roundOptions(end.getFullYear() - start.getFullYear(), round);
+// }
 // export function numberOfLeapYearsBetween(startDay: number, endDay: number): number {
 //     //todo
 //     return 0;
@@ -331,12 +396,12 @@ class Timeline {
             this.d1 = start.startOf('d');
             this.d2 = end.endOf('d');
         }
-        this.n_days = this.d2.diff(this.d1, 'd', true);
-        this.n_months = this.d2.diff(this.d1, 'M', true);
         this.n_years = this.d2.diff(this.d1, 'y', true);
+        this.n_months = this.d2.diff(this.d1, 'M', true);
+        this.n_days = this.d2.diff(this.d1, 'd', true);
         // this.span_days;
         // this.span_months;
-        this.span_years = this.d2.year() - this.d1.year() + 1;
+        this.span_years = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .spanYears */ .LP(start, end);
         this.padding = 5;
         this.dayScale = 1;
         if (this.verbose) {
@@ -399,16 +464,16 @@ class Timeline {
                 //check if we are considering the first or last year and calc the proportion of the section we want
                 if (i == 0) { //this is the first year, take the portion of that year and create the offset. TODO check if the text will overlap
                     proportion = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .remainingDaysInYear */ .jl(this.d1);
-                    proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d1.year());
+                    proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d1.year());
                     if (this.verbose) {
-                        console.log('LOG: proportion = ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .remainingDaysInYear */ .jl(this.d1) + '/' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d1.year()) + ' = ' + proportion);
+                        console.log('LOG: proportion = ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .remainingDaysInYear */ .jl(this.d1) + '/' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d1.year()) + ' = ' + proportion);
                     }
                 }
                 else if (i == (this.span_years - 1)) { //this is the last year, take the last proportion to the beginning of the year. Same todo as above
                     proportion = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInYear */ .ti(this.d2);
-                    proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d2.year());
+                    proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d2.year());
                     if (this.verbose) {
-                        console.log('LOG: proportion = ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInYear */ .ti(this.d2) + '/' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d2.year()) + ' = ' + proportion);
+                        console.log('LOG: proportion = ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInYear */ .ti(this.d2) + '/' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d2.year()) + ' = ' + proportion);
                     }
                 }
                 else { //somewhere in the middle
@@ -421,7 +486,7 @@ class Timeline {
                 if (this.verbose) {
                     console.log('LOG: created new YearSeparator(' + (this.d1.year() + i) + ', ' + cumulativeOffset + ') at this.ts.yearScale[' + i + ']');
                 }
-                cumulativeOffset += _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d1.year()) * this.dayScale * proportion;
+                cumulativeOffset += _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d1.year()) * this.dayScale * proportion;
             }
         }
         console.log(result);
@@ -429,11 +494,53 @@ class Timeline {
         return result;
     }
     generateMonths() {
+        console.log('LOG: Generating MonthSeparator array for timeline.');
+        let result;
         let cumulativeOffset = 0;
-        for (let i = 0; i < Math.ceil(this.getYears()); i++) {
-            cumulativeOffset += _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d1.year()) * this.dayScale;
-            this.ts.yearScale[i] = new YearSeparator((this.d1.year() + i).toString(), cumulativeOffset);
+        let proportion;
+        //If the dates are in the same year, the loop will not return the correct value. Handle it here.      
+        if (this.span_months == 0) { //same year, return year
+            result = [new MonthSeparator(this.d1.year().toString(), 0)];
+            console.log(result);
+            console.log('LOG: MonthSeparator array generation complete.');
+            return result;
         }
+        result = [];
+        //the dates are not in the same year, run this loop
+        for (let i = 0; i < this.span_years; i++) {
+            if (this.verbose) {
+                console.log('LOG: year index = ' + i);
+                //check if we are considering the first or last year and calc the proportion of the section we want
+                if (i == 0) { //this is the first year, take the portion of that year and create the offset. TODO check if the text will overlap
+                    proportion = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .remainingDaysInYear */ .jl(this.d1);
+                    proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d1.year());
+                    if (this.verbose) {
+                        console.log('LOG: proportion = ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .remainingDaysInYear */ .jl(this.d1) + '/' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d1.year()) + ' = ' + proportion);
+                    }
+                }
+                else if (i == (this.span_years - 1)) { //this is the last year, take the last proportion to the beginning of the year. Same todo as above
+                    proportion = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInYear */ .ti(this.d2);
+                    proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d2.year());
+                    if (this.verbose) {
+                        console.log('LOG: proportion = ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInYear */ .ti(this.d2) + '/' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d2.year()) + ' = ' + proportion);
+                    }
+                }
+                else { //somewhere in the middle
+                    proportion = 1;
+                    if (this.verbose) {
+                        console.log('LOG: proportion = ' + proportion);
+                    }
+                }
+                result[i] = new MonthSeparator((this.d1.year() + i).toString(), cumulativeOffset);
+                if (this.verbose) {
+                    console.log('LOG: created new MonthSeparator(' + (this.d1.year() + i) + ', ' + cumulativeOffset + ') at this.ts.monthScale[' + i + ']');
+                }
+                cumulativeOffset += _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d1.year()) * this.dayScale * proportion;
+            }
+        }
+        console.log(result);
+        console.log('LOG: MonthSeparator array generation complete.');
+        return result;
     }
     ////////////////////////////////////////////////////////////////
     //  Support Functions
@@ -442,7 +549,7 @@ class Timeline {
         this.weekScale = this.dayScale * 7;
         this.yearScale = this.dayScale * 365;
         for (let i = 0; i < 12; i++) {
-            this.monthScale[i] = this.dayScale[i] * _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysPerMonth */ .qj[i];
+            this.monthScale[i] = this.dayScale[i] * _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km[i];
         }
         this.quarterScale[0] = this.monthScale[0] + this.monthScale[1] + this.monthScale[2];
         this.quarterScale[1] = this.monthScale[3] + this.monthScale[4] + this.monthScale[5];
@@ -552,7 +659,7 @@ class Visual {
             .append('div')
             .attr('id', 'div-header')
             .append('h4')
-            .text('Header (include space for title, legend & logos');
+            .text('TBH Gantt Chart Visual (WIP)');
         //structure of the content below the header
         this.statusAndContent = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys(options.element)
             .append('div')
@@ -925,10 +1032,10 @@ function test_totalDaysPeryear(verbose) {
     for (let i = 0; i < testArgs.length; i++) {
         console.log('TESTCASE: year = ' + testArgs[i].toString());
         if (verbose) {
-            console.log('RESULT: ' + Time.totalDaysPerYear(testArgs[i]));
+            console.log('RESULT: ' + Time.daysInYear(testArgs[i]));
         }
         total++;
-        if (Time.totalDaysPerYear(testArgs[i]) == testAns[i]) {
+        if (Time.daysInYear(testArgs[i]) == testAns[i]) {
             passed++;
             console.log("PASSED");
         }

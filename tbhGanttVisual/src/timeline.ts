@@ -75,12 +75,12 @@ export class Timeline {
             this.d2 = end.endOf('d');
         }
 
-        this.n_days = this.d2.diff(this.d1, 'd', true);
-        this.n_months = this.d2.diff(this.d1, 'M', true);
         this.n_years = this.d2.diff(this.d1, 'y', true);
+        this.n_months = this.d2.diff(this.d1, 'M', true);
+        this.n_days = this.d2.diff(this.d1, 'd', true);
         // this.span_days;
         // this.span_months;
-        this.span_years = this.d2.year() - this.d1.year() + 1;
+        this.span_years = Time.spanYears(start,end);
 
         this.padding = 5;
         this.dayScale = 1;
@@ -148,14 +148,14 @@ export class Timeline {
                 if (i == 0) {//this is the first year, take the portion of that year and create the offset. TODO check if the text will overlap
 
                     proportion = Time.remainingDaysInYear(this.d1);
-                    proportion = proportion / Time.totalDaysPerYear(this.d1.year());
-                    if (this.verbose) { console.log('LOG: proportion = ' + Time.remainingDaysInYear(this.d1) + '/' + Time.totalDaysPerYear(this.d1.year()) + ' = ' + proportion); }
+                    proportion = proportion / Time.daysInYear(this.d1.year());
+                    if (this.verbose) { console.log('LOG: proportion = ' + Time.remainingDaysInYear(this.d1) + '/' + Time.daysInYear(this.d1.year()) + ' = ' + proportion); }
 
                 } else if (i == (this.span_years - 1)) { //this is the last year, take the last proportion to the beginning of the year. Same todo as above
 
                     proportion = Time.daysElapsedInYear(this.d2);
-                    proportion = proportion / Time.totalDaysPerYear(this.d2.year());
-                    if (this.verbose) { console.log('LOG: proportion = ' + Time.daysElapsedInYear(this.d2) + '/' + Time.totalDaysPerYear(this.d2.year()) + ' = ' + proportion); }
+                    proportion = proportion / Time.daysInYear(this.d2.year());
+                    if (this.verbose) { console.log('LOG: proportion = ' + Time.daysElapsedInYear(this.d2) + '/' + Time.daysInYear(this.d2.year()) + ' = ' + proportion); }
 
                 } else { //somewhere in the middle
 
@@ -170,7 +170,7 @@ export class Timeline {
                 );
                 if (this.verbose) { console.log('LOG: created new YearSeparator(' + (this.d1.year() + i) + ', ' + cumulativeOffset + ') at this.ts.yearScale[' + i + ']'); }
 
-                cumulativeOffset += Time.totalDaysPerYear(this.d1.year()) * this.dayScale * proportion;
+                cumulativeOffset += Time.daysInYear(this.d1.year()) * this.dayScale * proportion;
             }
 
 
@@ -181,16 +181,60 @@ export class Timeline {
     }
 
     private generateMonths() {
+        console.log('LOG: Generating MonthSeparator array for timeline.');
+
+        let result: MonthSeparator[];
         let cumulativeOffset: number = 0;
+        let proportion: number;
 
-        for (let i = 0; i < Math.ceil(this.getYears()); i++) {
-            cumulativeOffset += Time.totalDaysPerYear(this.d1.year()) * this.dayScale;
-
-            this.ts.yearScale[i] = new YearSeparator((
-                this.d1.year() + i).toString(),
-                cumulativeOffset
-            );
+        //If the dates are in the same year, the loop will not return the correct value. Handle it here.      
+        if (this.span_months == 0) { //same year, return year
+            result = [new MonthSeparator(this.d1.year().toString(), 0)];
+            console.log(result);
+            console.log('LOG: MonthSeparator array generation complete.');
+            return result;
         }
+
+        result = [];
+        //the dates are not in the same year, run this loop
+        for (let i = 0; i < this.span_years; i++) {
+            if (this.verbose) {
+                console.log('LOG: year index = ' + i);
+
+                //check if we are considering the first or last year and calc the proportion of the section we want
+                if (i == 0) {//this is the first year, take the portion of that year and create the offset. TODO check if the text will overlap
+
+                    proportion = Time.remainingDaysInYear(this.d1);
+                    proportion = proportion / Time.daysInYear(this.d1.year());
+                    if (this.verbose) { console.log('LOG: proportion = ' + Time.remainingDaysInYear(this.d1) + '/' + Time.daysInYear(this.d1.year()) + ' = ' + proportion); }
+
+                } else if (i == (this.span_years - 1)) { //this is the last year, take the last proportion to the beginning of the year. Same todo as above
+
+                    proportion = Time.daysElapsedInYear(this.d2);
+                    proportion = proportion / Time.daysInYear(this.d2.year());
+                    if (this.verbose) { console.log('LOG: proportion = ' + Time.daysElapsedInYear(this.d2) + '/' + Time.daysInYear(this.d2.year()) + ' = ' + proportion); }
+
+                } else { //somewhere in the middle
+
+                    proportion = 1;
+                    if (this.verbose) { console.log('LOG: proportion = ' + proportion); }
+
+                }
+
+                result[i] = new MonthSeparator((
+                    this.d1.year() + i).toString(),
+                    cumulativeOffset
+                );
+                if (this.verbose) { console.log('LOG: created new MonthSeparator(' + (this.d1.year() + i) + ', ' + cumulativeOffset + ') at this.ts.monthScale[' + i + ']'); }
+
+                cumulativeOffset += Time.daysInYear(this.d1.year()) * this.dayScale * proportion;
+            }
+
+
+        }
+        console.log(result);
+        console.log('LOG: MonthSeparator array generation complete.');
+        return result;
     }
 
     ////////////////////////////////////////////////////////////////
@@ -200,7 +244,7 @@ export class Timeline {
     private updateScaleFactors() {
         this.weekScale = this.dayScale * 7;
         this.yearScale = this.dayScale * 365;
-        for (let i = 0; i < 12; i++) { this.monthScale[i] = this.dayScale[i] * Time.daysPerMonth[i]; }
+        for (let i = 0; i < 12; i++) { this.monthScale[i] = this.dayScale[i] * Time.daysInMonth[i]; }
         this.quarterScale[0] = this.monthScale[0] + this.monthScale[1] + this.monthScale[2];
         this.quarterScale[1] = this.monthScale[3] + this.monthScale[4] + this.monthScale[5];
         this.quarterScale[2] = this.monthScale[6] + this.monthScale[7] + this.monthScale[8];

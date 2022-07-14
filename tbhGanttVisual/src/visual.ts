@@ -151,7 +151,7 @@ export class Visual implements IVisual {
             .append('div')
             .attr('id', 'div-header')
             .append('h4')
-            .text('Header (include space for title, legend & logos');
+            .text('TBH Gantt Chart Visual (WIP)');
 
         //structure of the content below the header
         this.statusAndContent = d3.select(options.element)

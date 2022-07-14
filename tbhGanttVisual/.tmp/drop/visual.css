@@ -4,10 +4,14 @@
   --timelineHeight: 80px;
   --chartPortionPct: 75%;
   --chartPortionFr: 75fr;
+  --tbh-blue-background: #232d40;
+  --tbh-blue1: #19808f;
+  --tbh-blue2: #09343f;
 }
 /*begin css reset*/
 body {
   line-height: 1;
+  font-family: Helvetica, Arial, sans-serif;
 }
 ol,
 ul {
@@ -32,17 +36,28 @@ table {
 body {
   margin: 0px;
 }
+h4 {
+  font-size: larger;
+  font-weight: 500;
+  margin: 0px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
 /* -------- DIV -------- */
 div {
   padding: 0px;
   margin: 0px;
-  width: 100%;
 }
 #div-header {
-  min-height: 30px;
+  min-height: 50px;
   border-style: none none solid none;
   border-width: 1px;
   border-color: black;
+  background: var(--tbh-blue-background);
+  color: white;
+  position: relative;
+  padding: 10px;
 }
 #div-statusAndContent {
   height: fit-content;

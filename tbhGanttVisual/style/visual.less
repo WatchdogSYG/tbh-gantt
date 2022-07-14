@@ -7,12 +7,17 @@
     //taken up by the gantt chart
     --chartPortionPct: 75%; //for flex
     --chartPortionFr: 75fr; //for grid
+
+    --tbh-blue-background: rgb(35, 45, 64);
+    --tbh-blue1: rgb(25, 128, 143);
+    --tbh-blue2: rgb(9, 52, 63);
 }
 
 /*begin css reset*/
 
 body {
     line-height: 1;
+    font-family: Helvetica, Arial, sans-serif;
 }
 
 ol,
@@ -45,23 +50,38 @@ body {
     // font-family: 'Segoe UI Semibold',wf_segoe-ui_semibold,helvetica,arial,sans-serif;
 }
 
+h4 {
+    font-size: larger;
+    font-weight: 500;
+    margin: 0px;
+
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 /* -------- DIV -------- */
 
 div {
     padding: 0px;
     margin: 0px;
-    width: 100%;
 
     //border: 1px dashed black;
 }
 
 //div for the header of the graph: title, logo etc.
 #div-header {
-    min-height: 30px;
+    min-height: 50px;
 
     border-style: none none solid none;
     border-width: 1px;
     border-color: black;
+
+    background: var(--tbh-blue-background);
+    color: white;
+
+    position: relative;
+    padding: 10px;
 }
 
 //div that handles the overlapping of the content and status line. Grid.
@@ -229,7 +249,7 @@ td {
     stroke-width: 2px;
 }
 
-.g-tl{
+.g-tl {
     border: 1px solid black;
     //color:#00ff00;
 }
@@ -250,10 +270,10 @@ td {
     border: 1px solid #00ff00;
 }
 
-.style1{
+.style1 {
     padding-left: 0px;
 }
 
-.style2{
+.style2 {
     padding-left: 5px;
 }

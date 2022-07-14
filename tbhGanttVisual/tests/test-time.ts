@@ -80,11 +80,11 @@ export function test_totalDaysPeryear(verbose: boolean): number {
     for (let i = 0; i < testArgs.length; i++) {
         console.log('TESTCASE: year = ' + testArgs[i].toString())
         if (verbose) {
-            console.log('RESULT: ' + Time.totalDaysPerYear(testArgs[i]))
+            console.log('RESULT: ' + Time.daysInYear(testArgs[i]))
         }
 
         total++;
-        if (Time.totalDaysPerYear(testArgs[i]) == testAns[i]) {
+        if (Time.daysInYear(testArgs[i]) == testAns[i]) {
             passed++;
             console.log("PASSED");
         } else {
