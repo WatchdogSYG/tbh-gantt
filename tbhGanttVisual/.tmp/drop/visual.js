@@ -354,8 +354,7 @@ class Timeline {
         }
         this.ts = new TimeScale();
         console.log('Created TimeScale ts');
-        this.generateYears();
-        //console.log(this.ts.yearText);
+        this.ts.yearScale = this.generateYears();
     }
     ////////////////////////////////////////////////////////////////
     //  Get/Set
@@ -381,37 +380,53 @@ class Timeline {
         this.updateScaleFactors();
     }
     generateYears() {
+        console.log('LOG: Generating YearSeparator array for timeline.');
+        let result;
         let cumulativeOffset = 0;
         let proportion;
-        console.log(this.span_years.toString());
+        //If the dates are in the same year, the loop will not return the correct value. Handle it here.      
         if (this.span_years == 0) { //same year, return year
-            return [new YearSeparator(this.d1.year().toString(), 0)];
+            result = [new YearSeparator(this.d1.year().toString(), 0)];
+            console.log(result);
+            console.log('LOG: YearScale generation complete.');
+            return result;
         }
+        result = [];
+        //the dates are not in the same year, run this loop
         for (let i = 0; i < this.span_years; i++) {
-            console.log('i = ' + i);
-            //check if we are considering the first or last year and calc the pproportion of the section we want
-            if (i == 0) { //this is the first year, take the portion of that year and create the offset. TODO check if the text will overlap
-                //console.log(this.d1.format());
-                //console.log(dayjs(new Date(this.d1.year() + 1, 0, 1)));
-                proportion = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .remainingDaysInYear */ .jl(this.d1);
-                proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d1.year());
-                console.log(proportion);
+            if (this.verbose) {
+                console.log('LOG: year index = ' + i);
+                //check if we are considering the first or last year and calc the proportion of the section we want
+                if (i == 0) { //this is the first year, take the portion of that year and create the offset. TODO check if the text will overlap
+                    proportion = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .remainingDaysInYear */ .jl(this.d1);
+                    proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d1.year());
+                    if (this.verbose) {
+                        console.log('LOG: proportion = ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .remainingDaysInYear */ .jl(this.d1) + '/' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d1.year()) + ' = ' + proportion);
+                    }
+                }
+                else if (i == (this.span_years - 1)) { //this is the last year, take the last proportion to the beginning of the year. Same todo as above
+                    proportion = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInYear */ .ti(this.d2);
+                    proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d2.year());
+                    if (this.verbose) {
+                        console.log('LOG: proportion = ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInYear */ .ti(this.d2) + '/' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d2.year()) + ' = ' + proportion);
+                    }
+                }
+                else { //somewhere in the middle
+                    proportion = 1;
+                    if (this.verbose) {
+                        console.log('LOG: proportion = ' + proportion);
+                    }
+                }
+                result[i] = new YearSeparator((this.d1.year() + i).toString(), cumulativeOffset);
+                if (this.verbose) {
+                    console.log('LOG: created new YearSeparator(' + (this.d1.year() + i) + ', ' + cumulativeOffset + ') at this.ts.yearScale[' + i + ']');
+                }
+                cumulativeOffset += _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d1.year()) * this.dayScale * proportion;
             }
-            else if (i == (this.span_years - 1)) { //this is the last year, take the last proportion to the beginning of the year. Same todo as above
-                console.log(this.d2.format());
-                console.log(_src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInYear */ .ti(this.d2).toString());
-                proportion = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInYear */ .ti(this.d2);
-                proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d2.year());
-                console.log(proportion);
-            }
-            else {
-                proportion = 1;
-                console.log(proportion);
-            }
-            this.ts.yearScale[i] = new YearSeparator((this.d1.year() + i).toString(), cumulativeOffset);
-            cumulativeOffset += _src_time__WEBPACK_IMPORTED_MODULE_0__/* .totalDaysPerYear */ .rD(this.d1.year()) * this.dayScale * proportion;
         }
-        console.log(this.ts.yearScale);
+        console.log(result);
+        console.log('LOG: YearScale generation complete.');
+        return result;
     }
     generateMonths() {
         let cumulativeOffset = 0;
