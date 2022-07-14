@@ -11,3 +11,6 @@ There is actually no reason for div timeline to be in div content.
 
 This series of tutorials will be useful.
 https://shetland.azurewebsites.net/2021/02/17/power-bi-custom-visual-part-2-svg-blend-lines-between-elements/
+
+
+There is still misalignment in yearseparator!!!

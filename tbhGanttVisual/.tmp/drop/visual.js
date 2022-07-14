@@ -759,7 +759,7 @@ class Visual {
         //temp vars to be calcd later
         // let d1: dayjs.Dayjs = dayjs(new Date(2020, 4, 6));
         // let d2: dayjs.Dayjs = dayjs(new Date(2023, 9, 12));
-        let d1 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2020, 0, 1));
+        let d1 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2020, 3, 16));
         let d2 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2023, 5, 30));
         this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_1__/* .Timeline */ .TY(d1, d2);
         let padding = 0; //this.timeline.getPadding();
@@ -804,7 +804,7 @@ class Visual {
             .enter()
             .append('text')
             .attr('x', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.monthOffset + padding);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.monthOffset + padding + 2);
         })
             .attr('y', _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(tlHeight / 2))
             .text(function (d) { return d.monthText; })

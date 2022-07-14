@@ -221,7 +221,7 @@ export class Visual implements IVisual {
         // let d1: dayjs.Dayjs = dayjs(new Date(2020, 4, 6));
         // let d2: dayjs.Dayjs = dayjs(new Date(2023, 9, 12));
 
-         let d1: dayjs.Dayjs = dayjs(new Date(2020, 0, 1));
+         let d1: dayjs.Dayjs = dayjs(new Date(2020, 3, 16));
         let d2: dayjs.Dayjs = dayjs(new Date(2023, 5, 30));
 
         this.timeline = new Timeline(d1, d2);
@@ -276,7 +276,7 @@ export class Visual implements IVisual {
             .enter()
             .append('text')
             .attr('x', function (d) {
-                return Lib.px(d.monthOffset + padding);
+                return Lib.px(d.monthOffset + padding+2);
             })
             .attr('y', Lib.px(tlHeight/2))
             .text(function (d) { return d.monthText; })

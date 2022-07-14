@@ -67,8 +67,13 @@ SVGs are now rendered in the visual using dummy data. An initial setup has been 
 ![Dummy SVG bars in PBI viual](readme-assets/010-dummysvgbars.jpg)
 
 
-We use `Day.js` for time manipulation.
+We use `Day.js` for time manipulation and working with days.
 
+`YearSeparator` and `MonthSeparator`s are generated from a `Timeline`.
+
+Note: there is a 1px misalignment in YearSeparator right now. Still need to debug.
+
+![Separators in Scrollable Timeline](readme-assets/011-yearAndMonths.jpg)
 
 ## Requirements Definition
 
