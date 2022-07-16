@@ -9,14 +9,8 @@ export declare class Visual implements IVisual {
     private divHeader;
     private divContent;
     private statusAndContent;
-    private divTimelineAndActivitiesH;
-    private divStatusLine;
     private divActivities;
     private divChartContainer;
-    private divStructureLayer;
-    private divSvgLayer;
-    private divTimeline;
-    private divChart;
     private activityTable;
     private timelineTable;
     private ganttGridTable;
@@ -32,9 +26,9 @@ export declare class Visual implements IVisual {
      */
     private checkConfiguration;
     /**
-     * Synchronises the left scrolling of the div-timeline and div-chartContainer depending on which one was scrolled.
+     * Synchronises the left scrolling of the div-timeline and div-chart depending on which one was scrolled.
      *
-     * KNOWN ISSUE: since the event listener that fires this callback is on both div-timeline and div-chartContainer,
+     * KNOWN ISSUE: since the event listener that fires this callback is on both div-timeline and div-chart,
      * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
      * @param div the div that was scrolled by the user.
      */

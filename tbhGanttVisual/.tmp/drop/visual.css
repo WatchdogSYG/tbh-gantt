@@ -60,7 +60,7 @@ div {
   position: relative;
   padding: 10px;
 }
-#div-statusAndContent {
+#div-content {
   height: fit-content;
 }
 #div-content {
@@ -73,7 +73,7 @@ div {
   z-index: 1;
   pointer-events: none;
 }
-#div-chartContainer {
+#div-chart {
   width: var(--chartPortionPct);
   border-style: none none none solid;
   border-width: 2px;
@@ -87,23 +87,8 @@ div {
   overflow-y: scroll;
   height: 100%;
 }
-#div-chartContainer::-webkit-scrollbar {
+#div-chart::-webkit-scrollbar {
   height: 20px;
-}
-.gridStack {
-  grid-column-start: 1;
-  grid-column-end: 2;
-  grid-row-start: 1;
-  grid-row-end: 2;
-}
-#div-structureLayer {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-#div-svgLayer {
-  height: 100%;
-  z-index: 1;
 }
 #div-timeline {
   height: 100%;
@@ -114,12 +99,6 @@ div {
 }
 #div-timeline::-webkit-scrollbar {
   height: 0px;
-}
-#div-chart {
-  height: fit-content;
-  min-height: 150px;
-  flex-grow: 1;
-  position: relative;
 }
 /* ------- TABLE ------- */
 table {

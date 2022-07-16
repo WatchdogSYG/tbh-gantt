@@ -79,14 +79,8 @@ export class Visual implements IVisual {
     private divHeader: Selection<HTMLDivElement>;
     private divContent: Selection<HTMLDivElement>;
     private statusAndContent: Selection<HTMLDivElement>;
-    private divTimelineAndActivitiesH: Selection<HTMLDivElement>;
-    private divStatusLine: Selection<HTMLDivElement>;
     private divActivities: Selection<HTMLDivElement>;
     private divChartContainer: Selection<HTMLDivElement>;
-    private divStructureLayer: Selection<HTMLDivElement>;
-    private divSvgLayer: Selection<HTMLDivElement>;
-    private divTimeline: Selection<HTMLDivElement>;
-    private divChart: Selection<HTMLDivElement>;
 
     //tables
 
@@ -145,7 +139,6 @@ export class Visual implements IVisual {
 
         let ts: TimeScale = this.timeline.getTimeScale();
 
-
         ////////////////////////////////////////////////////////////////
         //  Create body level child elements
         ////////////////////////////////////////////////////////////////
@@ -161,23 +154,16 @@ export class Visual implements IVisual {
         //structure of the content below the header
         this.statusAndContent = d3.select(options.element)
             .append('div')
-            .attr('id', 'div-statusAndContent');
+            .attr('id', 'div-content');
 
         ////////////////////////////////////////////////////////////////
         //  Create elements under the header
         ////////////////////////////////////////////////////////////////
 
-        // //"header of the gantt chart" containing the activity field headers and timeline
-        // this.divTimelineAndActivitiesH = this.statusAndContent
-        //     .append('div')
-        //     .attr('id', 'div-timelineAndActivitiesHeader');
-
         //div to contain the act table and chart
         this.divContent = this.statusAndContent
             .append('div')
             .attr('id', 'div-content');
-
-
 
         ////////////////////////////////////////////////////////////////
         //  Create content elements (must set timeline width using selection.style())...
@@ -191,57 +177,11 @@ export class Visual implements IVisual {
         //div to hold the chart elements including background, bars, text, controls
         this.divChartContainer = this.divContent
             .append('div')
-            .attr('id', 'div-chartContainer');
+            .attr('id', 'div-chart');
             
-        // //overlapping div to contain the status line
-        // this.divChartContainer
-        //     .append('div')
-        //     .attr('id', 'div-statusLine')
-        //     .classed('gridStack', true);
-
-        // this.divTimeline
-        //     .append('div')
-        //     .attr('id', 'div-statusLine')
-        //     .classed('gridStack', true);
-
-        // this.divStatusLine = d3.selectAll('#div-statusLine');
-
-        // //the structure layer of the chart (grid, shading)
-        // this.divStructureLayer = this.divChartContainer
-        //     .append('div')
-        //     .classed('gridStack', true)
-        //     .attr('id', 'div-structureLayer')
-        //     .style('width', Lib.px(tlWidth));
-
-        // //the svg layer  of the chart (bars, links)
-        // this.divSvgLayer = this.divChartContainer
-        //     .append('div')
-        //     .classed('gridStack', true)
-        //     .attr('id', 'div-svgLayer')
-        //     .style('width', Lib.px(tlWidth));
-
-        // //div in the header that contains the timeline and table header (separate for scrolling purposes)
-        // this.divTimelineAndActivitiesH.append('table')
-        //     .attr('id', 'table-activityHeader')
-        //     .append('th')
-        //     .text("Activity Header");
-
-        // //the div containing the timeline svgs
-        // this.divTimeline = this.divTimelineAndActivitiesH
-        //     .append('div')
-        //     .attr('id', 'div-timeline')
-        //     .on('scroll', function () { _this.syncScrollTimeline(_this.divTimeline) });
-
-        // //the div that needs more justification for its existence.
-        // this.divChart = this.divStructureLayer
-        //     .append('div')
-        //     .attr('id', 'div-chart');
-
-
         ////////////////////////////////////////////////////////////////
         //  Create svg timeline
         ////////////////////////////////////////////////////////////////
-
 
         let gantt: Selection<SVGSVGElement> = this.divChartContainer
             .append('svg')
@@ -353,15 +293,6 @@ export class Visual implements IVisual {
         //  Prepare for chart drawing
         ////////////////////////////////////////////////////////////////
 
-        //find the dimensions of the containers. Specifically the timeline and svg area.
-    
-        
-        // let timelineWidth: number = (this.divSvgLayer.node() as HTMLDivElement).getBoundingClientRect().width;
-        // let timelineHeight: number = (this.divSvgLayer.node() as HTMLDivElement).getBoundingClientRect().height;
-
-        // let chartWidth: number = (this.divChart.node() as HTMLDivElement).getBoundingClientRect().width;
-        // let chartHeight: number = (this.divChart.node() as HTMLDivElement).getBoundingClientRect().height;
-
         let rowHeight: string = this.style.getPropertyValue('--rowHeight');
      
         
@@ -398,7 +329,6 @@ export class Visual implements IVisual {
             .attr('rx', '3px')
             .attr('ry', '3px');
 
-
         ////////////////////////////////////////////////////////////////
         //  Draw chart
         ////////////////////////////////////////////////////////////////
@@ -413,7 +343,7 @@ export class Visual implements IVisual {
             .attr('x1', '0px')
             .attr('y1', '0px')
             .attr('x2', '0px')
-            .attr('y2', (d3.select('#div-chartContainer').node() as HTMLDivElement)
+            .attr('y2', (d3.select('#div-chart').node() as HTMLDivElement)
                 .getBoundingClientRect()
                 .height
                 .toString()
@@ -512,9 +442,9 @@ export class Visual implements IVisual {
     }
 
     /**
-     * Synchronises the left scrolling of the div-timeline and div-chartContainer depending on which one was scrolled.
+     * Synchronises the left scrolling of the div-timeline and div-chart depending on which one was scrolled.
      * 
-     * KNOWN ISSUE: since the event listener that fires this callback is on both div-timeline and div-chartContainer, 
+     * KNOWN ISSUE: since the event listener that fires this callback is on both div-timeline and div-chart, 
      * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
      * @param div the div that was scrolled by the user.
      */
@@ -530,7 +460,7 @@ export class Visual implements IVisual {
         if (this.verbose) { console.log('Synchronising scroll...'); }
 
         let id: string = div.attr('id');//d3.select(d3.event.currentTarget)
-        let chartID: string = 'div-chartContainer';
+        let chartID: string = 'div-chart';
         let timelineID: string = 'div-timeline';
 
         switch (id) {

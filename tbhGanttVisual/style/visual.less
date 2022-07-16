@@ -87,27 +87,10 @@ div {
 }
 
 //div that handles the overlapping of the content and status line. Grid.
-#div-statusAndContent {
+#div-content {
     height: fit-content;
-
-    // display: grid;
-    // grid-template-columns: 25fr 75fr; //calc(100fr - var(--chartPortionFr)) var(--chartPortionFr);
-    //why doesnt the above commented code work?
-    //grid-template-rows: 1fr 1fr;
 }
 
-// //div for the activity headers and timeline
-// #div-timelineAndActivitiesHeader {
-//     height: var(--timelineHeight);
-
-//     grid-row-start: 1;
-//     grid-row-end: span 1;
-//     grid-column-start: 1;
-//     grid-column-end: span 2;
-
-//     display: flex;
-//     justify-content: flex-end;
-// }
 
 //the div below the above div that contains the activitys table and gantt
 #div-content {
@@ -125,7 +108,7 @@ div {
     pointer-events: none;
 }
 
-#div-chartContainer {
+#div-chart {
     width: var(--chartPortionPct);
     border-style: none none none solid;
     border-width: 2px;
@@ -143,46 +126,9 @@ div {
     height: 100%;
 }
 
-
-#div-chartContainer::-webkit-scrollbar {
+#div-chart::-webkit-scrollbar {
     height: 20px;
 }
-
-//https://ishadeed.com/article/less-absolute-positioning-modern-css/
-//use grids, not absolutes!
-//stacks the element on row 1 col 1 of the grid
-.gridStack {
-    //grid-area: 1 / 2; //can '2' be dynamic? Will fail if  2 =/= no. of grid items.
-    //didnt get the above syntax to work...longhand it is.
-    grid-column-start: 1;
-    grid-column-end: 2;
-    grid-row-start: 1;
-    grid-row-end: 2;
-}
-
-#div-structureLayer {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-#div-svgLayer {
-    height: 100%;
-    z-index: 1;
-}
-
-// #overlay {
-//     position: absolute;
-//     display: block;
-//     width: 100%;
-//     height: 100%;
-//     top: 0;
-//     left: 0;
-//     right: 0;
-//     bottom: 0;
-//     background-color: rgba(0, 0, 0, 0.0);
-//     z-index: 2;
-// }
 
 #div-timeline {
     height: 100%;
@@ -197,13 +143,6 @@ div {
     height: 0px;
 }
 
-#div-chart {
-    height: fit-content;
-    min-height: 150px;
-
-    flex-grow: 1;
-    position: relative;
-}
 
 /* ------- TABLE ------- */
 

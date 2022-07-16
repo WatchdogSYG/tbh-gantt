@@ -767,14 +767,10 @@ class Visual {
         //structure of the content below the header
         this.statusAndContent = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys(options.element)
             .append('div')
-            .attr('id', 'div-statusAndContent');
+            .attr('id', 'div-content');
         ////////////////////////////////////////////////////////////////
         //  Create elements under the header
         ////////////////////////////////////////////////////////////////
-        // //"header of the gantt chart" containing the activity field headers and timeline
-        // this.divTimelineAndActivitiesH = this.statusAndContent
-        //     .append('div')
-        //     .attr('id', 'div-timelineAndActivitiesHeader');
         //div to contain the act table and chart
         this.divContent = this.statusAndContent
             .append('div')
@@ -789,43 +785,7 @@ class Visual {
         //div to hold the chart elements including background, bars, text, controls
         this.divChartContainer = this.divContent
             .append('div')
-            .attr('id', 'div-chartContainer');
-        // //overlapping div to contain the status line
-        // this.divChartContainer
-        //     .append('div')
-        //     .attr('id', 'div-statusLine')
-        //     .classed('gridStack', true);
-        // this.divTimeline
-        //     .append('div')
-        //     .attr('id', 'div-statusLine')
-        //     .classed('gridStack', true);
-        // this.divStatusLine = d3.selectAll('#div-statusLine');
-        // //the structure layer of the chart (grid, shading)
-        // this.divStructureLayer = this.divChartContainer
-        //     .append('div')
-        //     .classed('gridStack', true)
-        //     .attr('id', 'div-structureLayer')
-        //     .style('width', Lib.px(tlWidth));
-        // //the svg layer  of the chart (bars, links)
-        // this.divSvgLayer = this.divChartContainer
-        //     .append('div')
-        //     .classed('gridStack', true)
-        //     .attr('id', 'div-svgLayer')
-        //     .style('width', Lib.px(tlWidth));
-        // //div in the header that contains the timeline and table header (separate for scrolling purposes)
-        // this.divTimelineAndActivitiesH.append('table')
-        //     .attr('id', 'table-activityHeader')
-        //     .append('th')
-        //     .text("Activity Header");
-        // //the div containing the timeline svgs
-        // this.divTimeline = this.divTimelineAndActivitiesH
-        //     .append('div')
-        //     .attr('id', 'div-timeline')
-        //     .on('scroll', function () { _this.syncScrollTimeline(_this.divTimeline) });
-        // //the div that needs more justification for its existence.
-        // this.divChart = this.divStructureLayer
-        //     .append('div')
-        //     .attr('id', 'div-chart');
+            .attr('id', 'div-chart');
         ////////////////////////////////////////////////////////////////
         //  Create svg timeline
         ////////////////////////////////////////////////////////////////
@@ -926,11 +886,6 @@ class Visual {
         ////////////////////////////////////////////////////////////////
         //  Prepare for chart drawing
         ////////////////////////////////////////////////////////////////
-        //find the dimensions of the containers. Specifically the timeline and svg area.
-        // let timelineWidth: number = (this.divSvgLayer.node() as HTMLDivElement).getBoundingClientRect().width;
-        // let timelineHeight: number = (this.divSvgLayer.node() as HTMLDivElement).getBoundingClientRect().height;
-        // let chartWidth: number = (this.divChart.node() as HTMLDivElement).getBoundingClientRect().width;
-        // let chartHeight: number = (this.divChart.node() as HTMLDivElement).getBoundingClientRect().height;
         let rowHeight = this.style.getPropertyValue('--rowHeight');
         let bars = gantt
             .append('g')
@@ -973,7 +928,7 @@ class Visual {
             .attr('x1', '0px')
             .attr('y1', '0px')
             .attr('x2', '0px')
-            .attr('y2', d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#div-chartContainer').node()
+            .attr('y2', d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#div-chart').node()
             .getBoundingClientRect()
             .height
             .toString()
@@ -1063,9 +1018,9 @@ class Visual {
     checkConfiguration(dataView) {
     }
     /**
-     * Synchronises the left scrolling of the div-timeline and div-chartContainer depending on which one was scrolled.
+     * Synchronises the left scrolling of the div-timeline and div-chart depending on which one was scrolled.
      *
-     * KNOWN ISSUE: since the event listener that fires this callback is on both div-timeline and div-chartContainer,
+     * KNOWN ISSUE: since the event listener that fires this callback is on both div-timeline and div-chart,
      * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
      * @param div the div that was scrolled by the user.
      */
@@ -1081,7 +1036,7 @@ class Visual {
             console.log('Synchronising scroll...');
         }
         let id = div.attr('id'); //d3.select(d3.event.currentTarget)
-        let chartID = 'div-chartContainer';
+        let chartID = 'div-chart';
         let timelineID = 'div-timeline';
         switch (id) {
             case chartID:
