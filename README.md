@@ -75,9 +75,13 @@ Note: there is a 1px misalignment in YearSeparator right now. Still need to debu
 
 ![Separators in Scrollable Timeline](readme-assets/011-yearAndMonths.jpg)
 
-Timeline and chart now scroll synchronously. Added support for converting dates into positions on the timeline. It now seems that we need some css and div restructuring before continuing. We need to simplify the statusline-timeline-chart interactions, fix scrollbars, and account for an arbitrary number of activities in the activity table. Also we need to eventually refactor the word "tasks" out and replace it with "activity"
+Timeline and chart now scroll synchronously. Added support for converting dates into positions on the timeline. It now seems that we need some css and div restructuring before continuing. We need to simplify the statusline-timeline-chart interactions, fix scrollbars, and account for an arbitrary number of activities in the activity table. Also we need to eventually refactor the word "tasks" out and replace it with "activity".
 
 ![Need to restructure divs and css.](readme-assets/012-needsDivRedo.jpg)
+
+New div layout:
+
+![New div layout](readme-assets/013-blockout2.jpg)
 
 ## Requirements Definition
 

@@ -90,36 +90,30 @@ div {
 #div-statusAndContent {
     height: fit-content;
 
-    display: grid;
-    grid-template-columns: 25fr 75fr; //calc(100fr - var(--chartPortionFr)) var(--chartPortionFr);
+    // display: grid;
+    // grid-template-columns: 25fr 75fr; //calc(100fr - var(--chartPortionFr)) var(--chartPortionFr);
     //why doesnt the above commented code work?
     //grid-template-rows: 1fr 1fr;
 }
 
-//div for the task headers and timeline
-#div-timelineAndActivitiesHeader {
-    height: var(--timelineHeight);
+// //div for the activity headers and timeline
+// #div-timelineAndActivitiesHeader {
+//     height: var(--timelineHeight);
 
-    grid-row-start: 1;
-    grid-row-end: span 1;
-    grid-column-start: 1;
-    grid-column-end: span 2;
+//     grid-row-start: 1;
+//     grid-row-end: span 1;
+//     grid-column-start: 1;
+//     grid-column-end: span 2;
 
-    display: flex;
-    justify-content: flex-end;
-}
+//     display: flex;
+//     justify-content: flex-end;
+// }
 
-//the div below the above div that contains the tasks table and gantt
+//the div below the above div that contains the activitys table and gantt
 #div-content {
     height: fit-content;
-
-    grid-row-start: 2;
-    grid-row-end: span 1;
-    grid-column-start: 1;
-    grid-column-end: span 2;
-
+    width:100%;
     display: flex;
-    justify-content: flex-end;
 }
 
 //div that contains the status line and accompanying text.
@@ -131,6 +125,15 @@ div {
     pointer-events: none;
 }
 
+#div-chartContainer {
+    width: var(--chartPortionPct);
+    border-style: none none none solid;
+    border-width: 2px;
+    border-color: black;
+
+    overflow: scroll;
+}
+
 //div that contains the activities table
 #div-activities {
     width: 25%;
@@ -140,18 +143,6 @@ div {
     height: 100%;
 }
 
-#div-chartContainer {
-    width: var(--chartPortionPct);
-    height: fit-content;
-    border-style: none none none solid;
-    border-width: 2px;
-    border-color: black;
-
-    display: grid;
-    grid-template-columns: 1fr;
-
-    overflow: scroll;
-}
 
 #div-chartContainer::-webkit-scrollbar {
     height: 20px;

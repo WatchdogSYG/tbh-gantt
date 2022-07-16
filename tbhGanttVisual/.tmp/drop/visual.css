@@ -62,31 +62,23 @@ div {
 }
 #div-statusAndContent {
   height: fit-content;
-  display: grid;
-  grid-template-columns: 25fr 75fr;
-}
-#div-timelineAndActivitiesHeader {
-  height: var(--timelineHeight);
-  grid-row-start: 1;
-  grid-row-end: span 1;
-  grid-column-start: 1;
-  grid-column-end: span 2;
-  display: flex;
-  justify-content: flex-end;
 }
 #div-content {
   height: fit-content;
-  grid-row-start: 2;
-  grid-row-end: span 1;
-  grid-column-start: 1;
-  grid-column-end: span 2;
+  width: 100%;
   display: flex;
-  justify-content: flex-end;
 }
 #div-statusLine {
   height: 100%;
   z-index: 1;
   pointer-events: none;
+}
+#div-chartContainer {
+  width: var(--chartPortionPct);
+  border-style: none none none solid;
+  border-width: 2px;
+  border-color: black;
+  overflow: scroll;
 }
 #div-activities {
   width: 25%;
@@ -94,16 +86,6 @@ div {
   overflow-x: scroll;
   overflow-y: scroll;
   height: 100%;
-}
-#div-chartContainer {
-  width: var(--chartPortionPct);
-  height: fit-content;
-  border-style: none none none solid;
-  border-width: 2px;
-  border-color: black;
-  display: grid;
-  grid-template-columns: 1fr;
-  overflow: scroll;
 }
 #div-chartContainer::-webkit-scrollbar {
   height: 20px;

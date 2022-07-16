@@ -771,10 +771,10 @@ class Visual {
         ////////////////////////////////////////////////////////////////
         //  Create elements under the header
         ////////////////////////////////////////////////////////////////
-        //"header of the gantt chart" containing the activity field headers and timeline
-        this.divTimelineAndActivitiesH = this.statusAndContent
-            .append('div')
-            .attr('id', 'div-timelineAndActivitiesHeader');
+        // //"header of the gantt chart" containing the activity field headers and timeline
+        // this.divTimelineAndActivitiesH = this.statusAndContent
+        //     .append('div')
+        //     .attr('id', 'div-timelineAndActivitiesHeader');
         //div to contain the act table and chart
         this.divContent = this.statusAndContent
             .append('div')
@@ -789,55 +789,54 @@ class Visual {
         //div to hold the chart elements including background, bars, text, controls
         this.divChartContainer = this.divContent
             .append('div')
-            .attr('id', 'div-chartContainer')
-            .on('scroll', function () { _this.syncScrollTimeline(_this.divChartContainer); }); //_this.syncScrollTimeline(d.attr('id')) });
-        //overlapping div to contain the status line
-        this.divChartContainer
-            .append('div')
-            .attr('id', 'div-statusLine')
-            .classed('gridStack', true);
+            .attr('id', 'div-chartContainer');
+        // //overlapping div to contain the status line
+        // this.divChartContainer
+        //     .append('div')
+        //     .attr('id', 'div-statusLine')
+        //     .classed('gridStack', true);
         // this.divTimeline
         //     .append('div')
         //     .attr('id', 'div-statusLine')
         //     .classed('gridStack', true);
-        this.divStatusLine = d3__WEBPACK_IMPORTED_MODULE_0__/* .selectAll */ .td_('#div-statusLine');
-        //the structure layer of the chart (grid, shading)
-        this.divStructureLayer = this.divChartContainer
-            .append('div')
-            .classed('gridStack', true)
-            .attr('id', 'div-structureLayer')
-            .style('width', _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(tlWidth));
-        //the svg layer  of the chart (bars, links)
-        this.divSvgLayer = this.divChartContainer
-            .append('div')
-            .classed('gridStack', true)
-            .attr('id', 'div-svgLayer')
-            .style('width', _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(tlWidth));
-        //div in the header that contains the timeline and table header (separate for scrolling purposes)
-        this.divTimelineAndActivitiesH.append('table')
-            .attr('id', 'table-activityHeader')
-            .append('th')
-            .text("Activity Header");
-        //the div containing the timeline svgs
-        this.divTimeline = this.divTimelineAndActivitiesH
-            .append('div')
-            .attr('id', 'div-timeline')
-            .on('scroll', function () { _this.syncScrollTimeline(_this.divTimeline); });
-        //the div that needs more justification for its existence.
-        this.divChart = this.divStructureLayer
-            .append('div')
-            .attr('id', 'div-chart');
+        // this.divStatusLine = d3.selectAll('#div-statusLine');
+        // //the structure layer of the chart (grid, shading)
+        // this.divStructureLayer = this.divChartContainer
+        //     .append('div')
+        //     .classed('gridStack', true)
+        //     .attr('id', 'div-structureLayer')
+        //     .style('width', Lib.px(tlWidth));
+        // //the svg layer  of the chart (bars, links)
+        // this.divSvgLayer = this.divChartContainer
+        //     .append('div')
+        //     .classed('gridStack', true)
+        //     .attr('id', 'div-svgLayer')
+        //     .style('width', Lib.px(tlWidth));
+        // //div in the header that contains the timeline and table header (separate for scrolling purposes)
+        // this.divTimelineAndActivitiesH.append('table')
+        //     .attr('id', 'table-activityHeader')
+        //     .append('th')
+        //     .text("Activity Header");
+        // //the div containing the timeline svgs
+        // this.divTimeline = this.divTimelineAndActivitiesH
+        //     .append('div')
+        //     .attr('id', 'div-timeline')
+        //     .on('scroll', function () { _this.syncScrollTimeline(_this.divTimeline) });
+        // //the div that needs more justification for its existence.
+        // this.divChart = this.divStructureLayer
+        //     .append('div')
+        //     .attr('id', 'div-chart');
         ////////////////////////////////////////////////////////////////
         //  Create svg timeline
         ////////////////////////////////////////////////////////////////
-        let tl = this.divTimeline
+        let gantt = this.divChartContainer
             .append('svg')
             .attr('id', 'tl-top')
             .attr('height', '100%')
             .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(tlWidth));
-        let gBottom = tl.append('g')
+        let gBottom = gantt.append('g')
             .classed('g-tl', true);
-        let gTop = tl.append('g')
+        let gTop = gantt.append('g')
             .classed('g-tl', true);
         //////////////////////////////////////////////////////////////// YearText
         gTop.selectAll('text')
@@ -928,12 +927,12 @@ class Visual {
         //  Prepare for chart drawing
         ////////////////////////////////////////////////////////////////
         //find the dimensions of the containers. Specifically the timeline and svg area.
-        let timelineWidth = this.divSvgLayer.node().getBoundingClientRect().width;
-        let timelineHeight = this.divSvgLayer.node().getBoundingClientRect().height;
-        let chartWidth = this.divChart.node().getBoundingClientRect().width;
-        let chartHeight = this.divChart.node().getBoundingClientRect().height;
+        // let timelineWidth: number = (this.divSvgLayer.node() as HTMLDivElement).getBoundingClientRect().width;
+        // let timelineHeight: number = (this.divSvgLayer.node() as HTMLDivElement).getBoundingClientRect().height;
+        // let chartWidth: number = (this.divChart.node() as HTMLDivElement).getBoundingClientRect().width;
+        // let chartHeight: number = (this.divChart.node() as HTMLDivElement).getBoundingClientRect().height;
         let rowHeight = this.style.getPropertyValue('--rowHeight');
-        let bars = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#div-chart')
+        let bars = gantt
             .append('g')
             .append('svg')
             .attr('id', 'svg-bars');
@@ -968,13 +967,13 @@ class Visual {
         // getBBox() help here:
         // https://stackoverflow.com/questions/45792692/property-getbbox-does-not-exist-on-type-svgelement
         // https://stackoverflow.com/questions/24534988/d3-get-the-bounding-box-of-a-selected-element
-        this.divStatusLine.append('svg')
+        gantt.append('g')
             .attr('id', 'statusLine').attr('width', '100%').attr('height', '100%')
             .append('line')
             .attr('x1', '0px')
             .attr('y1', '0px')
             .attr('x2', '0px')
-            .attr('y2', d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#div-statusLine').node()
+            .attr('y2', d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#div-chartContainer').node()
             .getBoundingClientRect()
             .height
             .toString()
@@ -6137,11 +6136,9 @@ function creatorFixed(fullname) {
 
 "use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Ys": () => (/* reexport safe */ _select__WEBPACK_IMPORTED_MODULE_0__.Z),
-/* harmony export */   "td": () => (/* reexport safe */ _selectAll__WEBPACK_IMPORTED_MODULE_1__.Z)
+/* harmony export */   "Ys": () => (/* reexport safe */ _select__WEBPACK_IMPORTED_MODULE_0__.Z)
 /* harmony export */ });
 /* harmony import */ var _select__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4017);
-/* harmony import */ var _selectAll__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(628);
 
 
 
@@ -6234,25 +6231,6 @@ var xhtml = "http://www.w3.org/1999/xhtml";
   return typeof selector === "string"
       ? new _selection_index__WEBPACK_IMPORTED_MODULE_0__/* .Selection */ .Y1([[document.querySelector(selector)]], [document.documentElement])
       : new _selection_index__WEBPACK_IMPORTED_MODULE_0__/* .Selection */ .Y1([[selector]], _selection_index__WEBPACK_IMPORTED_MODULE_0__/* .root */ .Jz);
-}
-
-
-/***/ }),
-
-/***/ 628:
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _selection_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3933);
-
-
-/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(selector) {
-  return typeof selector === "string"
-      ? new _selection_index__WEBPACK_IMPORTED_MODULE_0__/* .Selection */ .Y1([document.querySelectorAll(selector)], [document.documentElement])
-      : new _selection_index__WEBPACK_IMPORTED_MODULE_0__/* .Selection */ .Y1([selector == null ? [] : selector], _selection_index__WEBPACK_IMPORTED_MODULE_0__/* .root */ .Jz);
 }
 
 
@@ -10659,8 +10637,7 @@ var dependencies = {"d3-array":"1","d3-axis":"1","d3-brush":"1","d3-chord":"1","
 
 "use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Ys": () => (/* reexport safe */ d3_selection__WEBPACK_IMPORTED_MODULE_10__.Ys),
-/* harmony export */   "td_": () => (/* reexport safe */ d3_selection__WEBPACK_IMPORTED_MODULE_10__.td)
+/* harmony export */   "Ys": () => (/* reexport safe */ d3_selection__WEBPACK_IMPORTED_MODULE_10__.Ys)
 /* harmony export */ });
 /* harmony import */ var _dist_package_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2156);
 /* harmony import */ var d3_array__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(91);

@@ -167,10 +167,10 @@ export class Visual implements IVisual {
         //  Create elements under the header
         ////////////////////////////////////////////////////////////////
 
-        //"header of the gantt chart" containing the activity field headers and timeline
-        this.divTimelineAndActivitiesH = this.statusAndContent
-            .append('div')
-            .attr('id', 'div-timelineAndActivitiesHeader');
+        // //"header of the gantt chart" containing the activity field headers and timeline
+        // this.divTimelineAndActivitiesH = this.statusAndContent
+        //     .append('div')
+        //     .attr('id', 'div-timelineAndActivitiesHeader');
 
         //div to contain the act table and chart
         this.divContent = this.statusAndContent
@@ -191,52 +191,51 @@ export class Visual implements IVisual {
         //div to hold the chart elements including background, bars, text, controls
         this.divChartContainer = this.divContent
             .append('div')
-            .attr('id', 'div-chartContainer')
-            .on('scroll', function () { _this.syncScrollTimeline(_this.divChartContainer) }); //_this.syncScrollTimeline(d.attr('id')) });
-
-        //overlapping div to contain the status line
-        this.divChartContainer
-            .append('div')
-            .attr('id', 'div-statusLine')
-            .classed('gridStack', true);
+            .attr('id', 'div-chartContainer');
+            
+        // //overlapping div to contain the status line
+        // this.divChartContainer
+        //     .append('div')
+        //     .attr('id', 'div-statusLine')
+        //     .classed('gridStack', true);
 
         // this.divTimeline
         //     .append('div')
         //     .attr('id', 'div-statusLine')
         //     .classed('gridStack', true);
 
-        this.divStatusLine = d3.selectAll('#div-statusLine');
+        // this.divStatusLine = d3.selectAll('#div-statusLine');
 
-        //the structure layer of the chart (grid, shading)
-        this.divStructureLayer = this.divChartContainer
-            .append('div')
-            .classed('gridStack', true)
-            .attr('id', 'div-structureLayer')
-            .style('width', Lib.px(tlWidth));
+        // //the structure layer of the chart (grid, shading)
+        // this.divStructureLayer = this.divChartContainer
+        //     .append('div')
+        //     .classed('gridStack', true)
+        //     .attr('id', 'div-structureLayer')
+        //     .style('width', Lib.px(tlWidth));
 
-        //the svg layer  of the chart (bars, links)
-        this.divSvgLayer = this.divChartContainer
-            .append('div')
-            .classed('gridStack', true)
-            .attr('id', 'div-svgLayer')
-            .style('width', Lib.px(tlWidth));
+        // //the svg layer  of the chart (bars, links)
+        // this.divSvgLayer = this.divChartContainer
+        //     .append('div')
+        //     .classed('gridStack', true)
+        //     .attr('id', 'div-svgLayer')
+        //     .style('width', Lib.px(tlWidth));
 
-        //div in the header that contains the timeline and table header (separate for scrolling purposes)
-        this.divTimelineAndActivitiesH.append('table')
-            .attr('id', 'table-activityHeader')
-            .append('th')
-            .text("Activity Header");
+        // //div in the header that contains the timeline and table header (separate for scrolling purposes)
+        // this.divTimelineAndActivitiesH.append('table')
+        //     .attr('id', 'table-activityHeader')
+        //     .append('th')
+        //     .text("Activity Header");
 
-        //the div containing the timeline svgs
-        this.divTimeline = this.divTimelineAndActivitiesH
-            .append('div')
-            .attr('id', 'div-timeline')
-            .on('scroll', function () { _this.syncScrollTimeline(_this.divTimeline) });
+        // //the div containing the timeline svgs
+        // this.divTimeline = this.divTimelineAndActivitiesH
+        //     .append('div')
+        //     .attr('id', 'div-timeline')
+        //     .on('scroll', function () { _this.syncScrollTimeline(_this.divTimeline) });
 
-        //the div that needs more justification for its existence.
-        this.divChart = this.divStructureLayer
-            .append('div')
-            .attr('id', 'div-chart');
+        // //the div that needs more justification for its existence.
+        // this.divChart = this.divStructureLayer
+        //     .append('div')
+        //     .attr('id', 'div-chart');
 
 
         ////////////////////////////////////////////////////////////////
@@ -244,16 +243,16 @@ export class Visual implements IVisual {
         ////////////////////////////////////////////////////////////////
 
 
-        let tl: Selection<SVGSVGElement> = this.divTimeline
+        let gantt: Selection<SVGSVGElement> = this.divChartContainer
             .append('svg')
             .attr('id', 'tl-top')
             .attr('height', '100%')
             .attr('width', Lib.px(tlWidth));
 
-        let gBottom: Selection<SVGGElement> = tl.append('g')
+        let gBottom: Selection<SVGGElement> = gantt.append('g')
             .classed('g-tl', true);
 
-        let gTop: Selection<SVGGElement> = tl.append('g')
+        let gTop: Selection<SVGGElement> = gantt.append('g')
             .classed('g-tl', true);
 
         //////////////////////////////////////////////////////////////// YearText
@@ -349,26 +348,29 @@ export class Visual implements IVisual {
         ];
 
         this.populateActivityTable(myData, null, 'table-activities');
-
+    
         ////////////////////////////////////////////////////////////////
         //  Prepare for chart drawing
         ////////////////////////////////////////////////////////////////
 
         //find the dimensions of the containers. Specifically the timeline and svg area.
+    
+        
+        // let timelineWidth: number = (this.divSvgLayer.node() as HTMLDivElement).getBoundingClientRect().width;
+        // let timelineHeight: number = (this.divSvgLayer.node() as HTMLDivElement).getBoundingClientRect().height;
 
-        let timelineWidth: number = (this.divSvgLayer.node() as HTMLDivElement).getBoundingClientRect().width;
-        let timelineHeight: number = (this.divSvgLayer.node() as HTMLDivElement).getBoundingClientRect().height;
-
-        let chartWidth: number = (this.divChart.node() as HTMLDivElement).getBoundingClientRect().width;
-        let chartHeight: number = (this.divChart.node() as HTMLDivElement).getBoundingClientRect().height;
+        // let chartWidth: number = (this.divChart.node() as HTMLDivElement).getBoundingClientRect().width;
+        // let chartHeight: number = (this.divChart.node() as HTMLDivElement).getBoundingClientRect().height;
 
         let rowHeight: string = this.style.getPropertyValue('--rowHeight');
-
-        let bars: Selection<SVGSVGElement> = d3.select('#div-chart')
+     
+        
+        let bars: Selection<SVGSVGElement> = gantt
             .append('g')
             .append('svg')
             .attr('id', 'svg-bars');
-
+       
+            
         bars.append('rect')
             .classed('activityBar', true)
             .attr('height', rowHeight)
@@ -405,13 +407,13 @@ export class Visual implements IVisual {
         // getBBox() help here:
         // https://stackoverflow.com/questions/45792692/property-getbbox-does-not-exist-on-type-svgelement
         // https://stackoverflow.com/questions/24534988/d3-get-the-bounding-box-of-a-selected-element
-        this.divStatusLine.append('svg')
+        gantt.append('g')
             .attr('id', 'statusLine').attr('width', '100%').attr('height', '100%')
             .append('line')
             .attr('x1', '0px')
             .attr('y1', '0px')
             .attr('x2', '0px')
-            .attr('y2', (d3.select('#div-statusLine').node() as HTMLDivElement)
+            .attr('y2', (d3.select('#div-chartContainer').node() as HTMLDivElement)
                 .getBoundingClientRect()
                 .height
                 .toString()
