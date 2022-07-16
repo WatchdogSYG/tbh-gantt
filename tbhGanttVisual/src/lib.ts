@@ -1,5 +1,9 @@
 //library of helper functions
 
+////////////////////////////////////////////////////////////////
+//  CSS STYLE HELPERS
+////////////////////////////////////////////////////////////////
+
 /**
  * Converts a number into a string with the units 'px' suffixed on it.
  * @param pixels the number of pixels
@@ -25,6 +29,10 @@ export function toPxNumber(numberPx: string): number {
    return null;
 }
 }
+
+////////////////////////////////////////////////////////////////
+//  UNUSED FUNCTIONS
+////////////////////////////////////////////////////////////////
 
 /**
  * Returns a number rounded up, down, or not at all, to the nearest integer.

@@ -159,25 +159,12 @@ export function spanYears(start: dayjs.Dayjs, end: dayjs.Dayjs): number {
  * @param end the end date
  */
 export function spanMonths(start: dayjs.Dayjs, end: dayjs.Dayjs): number {
-    // var dayjs = require('dayjs');
-    // var utc = require('dayjs/plugin/utc');
-    // dayjs.extend(utc);
-    // dayjs.utc();
 
-    //to simplify, order the dates
     let d1: dayjs.Dayjs; let d2: dayjs.Dayjs;
-
-    // if (start > end) {
-    //     d1 = end.subtract(end.utcOffset(), 'm');
-    //     d2 = start.subtract(start.utcOffset(), 'm');
-    // } else {
-    //     d1 = start.subtract(start.utcOffset(), 'm');
-    //     d2 = end.subtract(end.utcOffset(), 'm');
-    // }
 
     if (start > end) { d1 = end; d2 = start; } else { d1 = start; d2 = end; }
 
-    if (d2.year() == d1.year()) {           //if they are in the same year, just do an index comparison
+    if (d2.year() == d1.year()) {                //if they are in the same year, just do an index comparison
         return d2.month() - d1.month() + 1;
 
     } else if (d2.year() - d1.year() == 1) {     //if they are in consecutive years

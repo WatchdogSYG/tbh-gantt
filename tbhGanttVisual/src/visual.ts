@@ -221,7 +221,7 @@ export class Visual implements IVisual {
         // let d1: dayjs.Dayjs = dayjs(new Date(2020, 4, 6));
         // let d2: dayjs.Dayjs = dayjs(new Date(2023, 9, 12));
 
-         let d1: dayjs.Dayjs = dayjs(new Date(2020, 3, 16));
+        let d1: dayjs.Dayjs = dayjs(new Date(2020, 3, 16));
         let d2: dayjs.Dayjs = dayjs(new Date(2023, 5, 30));
 
         this.timeline = new Timeline(d1, d2);
@@ -276,9 +276,9 @@ export class Visual implements IVisual {
             .enter()
             .append('text')
             .attr('x', function (d) {
-                return Lib.px(d.monthOffset + padding+2);
+                return Lib.px(d.monthOffset + padding + 2);
             })
-            .attr('y', Lib.px(tlHeight/2))
+            .attr('y', Lib.px(tlHeight / 2))
             .text(function (d) { return d.monthText; })
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
@@ -287,7 +287,7 @@ export class Visual implements IVisual {
         //////////////////////////////////////////////////////////////// YMonthLine
         gBottom.selectAll('line').data(ts.monthScale).enter().append('line')
             .attr('x1', function (d) { return Lib.px(d.monthOffset); })
-            .attr('y1', Lib.px(tlHeight/2))
+            .attr('y1', Lib.px(tlHeight / 2))
             .attr('x2', function (d) {
                 return Lib.px(d.monthOffset);
             })
@@ -390,7 +390,10 @@ export class Visual implements IVisual {
             .attr('transform', 'translate(30)');
     }
 
-    //on update...
+    ////////////////////////////////////////////////////////////////
+    //  UPDATE VISUAL ON REFRESH
+    ////////////////////////////////////////////////////////////////
+
     public update(options: VisualUpdateOptions) {
         //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
         if (this.verbose) { console.log('Visual update', options); }
@@ -468,10 +471,15 @@ export class Visual implements IVisual {
         // .attr('class','style'+d.wbsIndex);
     }
 
-    private getYearTextSpacing(start: Date, end: Date): number[] {
+    /**
+     * Returns the configuration of the desired graph to determine which elements to render based on the data in dataView.
+     * @param dataView The DataView object to configure the visual against.
+     */
+    private checkConfiguration(dataView: DataView){
 
-        return [0];
+
     }
+
     ////////////////////////////////////////////////////////////////
     //  END OF CLASS
     ////////////////////////////////////////////////////////////////

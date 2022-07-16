@@ -64,7 +64,7 @@ export class Timeline {
 
     constructor(start: dayjs.Dayjs, end: dayjs.Dayjs) {
 
-        var isLeapYear = require('dayjs/plugin/isLeapYear');
+        console.log('LOG: Constructing Timeline Object');
 
         //check which date is larger and round to nearest day
         if (start > end) {
@@ -84,8 +84,7 @@ export class Timeline {
 
         this.padding = 5;
         this.dayScale = 1;
-
-
+        this.updateScaleFactors();
 
         if (this.verbose) {
             console.log('LOG: Timeline created from ' +
