@@ -124,7 +124,7 @@ export class Timeline {
         this.updateScaleFactors()
     }
 
-    //TODO there is a 1 px misalignment
+    //TODO there is a 1 px misalignment: FIXED
     private generateYears(): YearSeparator[] {
         console.log('LOG: Generating YearSeparator array for timeline.');
 
@@ -144,6 +144,7 @@ export class Timeline {
         result = [];
         for (let i = 0; i < this.span_years; i++) {
             if (this.verbose) { console.log('LOG: year index = ' + i); }
+    
 
             //check if we are considering the first or last year and calc the proportion of the section we want
             if (i == 0) {//this is the first year, take the portion of that year and create the offset. TODO check if the text will overlap
@@ -171,7 +172,7 @@ export class Timeline {
             );
             if (this.verbose) { console.log('LOG: created new YearSeparator(' + (this.d1.year() + i) + ', ' + cumulativeOffset + ') at this.ts.yearScale[' + i + ']'); }
 
-            cumulativeOffset += Time.daysInYear(this.d1.year()) * this.dayScale * proportion;
+            cumulativeOffset += Time.daysInYear(this.d1.year()+i) * this.dayScale * proportion;
         }
 
         console.log(result);

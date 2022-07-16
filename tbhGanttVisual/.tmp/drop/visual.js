@@ -483,7 +483,7 @@ class Timeline {
         this.dayScale = daysPerPixel;
         this.updateScaleFactors();
     }
-    //TODO there is a 1 px misalignment
+    //TODO there is a 1 px misalignment: FIXED
     generateYears() {
         console.log('LOG: Generating YearSeparator array for timeline.');
         let result;
@@ -527,7 +527,7 @@ class Timeline {
             if (this.verbose) {
                 console.log('LOG: created new YearSeparator(' + (this.d1.year() + i) + ', ' + cumulativeOffset + ') at this.ts.yearScale[' + i + ']');
             }
-            cumulativeOffset += _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d1.year()) * this.dayScale * proportion;
+            cumulativeOffset += _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d1.year() + i) * this.dayScale * proportion;
         }
         console.log(result);
         console.log('LOG: YearScale generation complete.');
