@@ -239,20 +239,20 @@ export class Visual implements IVisual {
             .enter()
             .append('text')
             .attr('x', function (d) {
-                return Lib.px(d.yearOffset + padding);
+                return Lib.px(d.offset + d.textAnchorOffset);
             })
             .attr('y', '0px')
-            .text(function (d) { return d.yearText; })
+            .text(function (d) { return d.text; })
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
             .classed('yearText', true);
 
         //////////////////////////////////////////////////////////////// YearLine
         gTop.selectAll('line').data(ts.yearScale).enter().append('line')
-            .attr('x1', function (d) { return Lib.px(d.yearOffset); })
+            .attr('x1', function (d) { return Lib.px(d.offset); })
             .attr('y1', '0px')
             .attr('x2', function (d) {
-                return Lib.px(d.yearOffset);
+                return Lib.px(d.offset);
             })
             .attr('y2', tlHeight)
             .attr('style', 'stroke:black');
@@ -263,20 +263,21 @@ export class Visual implements IVisual {
             .enter()
             .append('text')
             .attr('x', function (d) {
-                return Lib.px(d.monthOffset + padding + 2);
+                return Lib.px(d.offset + d.textAnchorOffset);
             })
             .attr('y', Lib.px(tlHeight / 2))
-            .text(function (d) { return d.monthText; })
+            .text(function (d) { return d.text; })
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
-            .classed('yearText', true);
+            .attr('text-anchor', 'middle')
+            .classed('monthText', true);
 
         //////////////////////////////////////////////////////////////// YMonthLine
         gBottom.selectAll('line').data(ts.monthScale).enter().append('line')
-            .attr('x1', function (d) { return Lib.px(d.monthOffset); })
+            .attr('x1', function (d) { return Lib.px(d.offset); })
             .attr('y1', Lib.px(tlHeight / 2))
             .attr('x2', function (d) {
-                return Lib.px(d.monthOffset);
+                return Lib.px(d.offset);
             })
             .attr('y2', tlHeight)
             .attr('style', 'stroke:blue');

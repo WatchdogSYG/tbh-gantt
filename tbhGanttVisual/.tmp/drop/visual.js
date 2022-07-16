@@ -495,6 +495,7 @@ class Timeline {
     ////////////////////////////////////////////////////////////////
     /**
      * Returns an array of YearSeparators based on the start and finish dates of the timeline.
+     * The text is currently left aligned only. (text-align: start;)
      * TODO: consider if there needs to be start and end date arguments or if it should just read the member variables.
      *
      * @returns an array of YearSeparators which determine the content and positioning of Year
@@ -507,7 +508,7 @@ class Timeline {
         let proportion;
         //If the dates are in the same year, the loop will not return the correct value. Handle it here.      
         if (this.span_years == 0) { //same year, return year
-            result = [new YearSeparator(this.d1.year().toString(), 0)];
+            result = [new YearSeparator(this.d1.year().toString(), 0, this.yearPadding)];
             console.log(result);
             console.log('LOG: YearScale generation complete.');
             return result;
@@ -539,7 +540,7 @@ class Timeline {
                     console.log('LOG: proportion = ' + proportion);
                 }
             }
-            result[i] = new YearSeparator((this.d1.year() + i).toString(), cumulativeOffset);
+            result[i] = new YearSeparator((this.d1.year() + i).toString(), cumulativeOffset, this.yearPadding);
             if (this.verbose) {
                 console.log('LOG: created new YearSeparator(' + (this.d1.year() + i) + ', ' + cumulativeOffset + ') at this.ts.yearScale[' + i + ']');
             }
@@ -551,6 +552,7 @@ class Timeline {
     }
     /**
  * Returns an array of MonthSeparators based on the start and finish dates of the timeline.
+ * The text is currently middle aligned only. (text-align: middle;)
  * TODO: consider if there needs to be start and end date arguments or if it should just read the member variables.
  *
  * @returns an array of MonthSeparators which determine the content and positioning of Month
@@ -563,7 +565,7 @@ class Timeline {
         let proportion;
         //If the dates are in the same year, the loop will not return the correct value. Handle it here.      
         if (this.span_months == 0) { //same month, return month
-            result = [new MonthSeparator(_src_time__WEBPACK_IMPORTED_MODULE_0__/* .month */ .iL(this.d1.month()), 0)];
+            result = [new MonthSeparator(_src_time__WEBPACK_IMPORTED_MODULE_0__/* .month */ .iL(this.d1.month()), 0, _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(this.d1.month(), this.d1.year()) / 2)];
             console.log(result);
             console.log('LOG: MonthSeparator array generation complete.');
             return result;
@@ -594,11 +596,15 @@ class Timeline {
                     console.log('LOG: proportion = ' + proportion);
                 }
             }
-            result[i] = new MonthSeparator(_src_time__WEBPACK_IMPORTED_MODULE_0__.m(this.d1.month() + i), cumulativeOffset);
+            result[i] = new MonthSeparator(_src_time__WEBPACK_IMPORTED_MODULE_0__.m(this.d1.month() + i), cumulativeOffset, _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(this.d1.month() + i, this.d1.year()) / 2);
             if (this.verbose) {
                 console.log('LOG: created new MonthSeparator(' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .month */ .iL(this.d1.month() + i) + ', ' + cumulativeOffset + ') at this.ts.monthScale[' + i + '] with dOffset ' + (_src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(this.d1.month() + i, this.d1.year()) * this.dayScale * proportion) + 'px');
             }
             cumulativeOffset += _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(this.d1.month() + i, this.d1.year()) * this.dayScale * proportion;
+        }
+        //check small month dimension
+        if (result[1].offset < (0.75 * this.dayScale * _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(this.d1.month() + 1, this.d1.year()))) {
+            result[0].text = '';
         }
         console.log(result);
         console.log('LOG: MonthSeparator array generation complete.');
@@ -625,15 +631,17 @@ class Timeline {
     }
 }
 class YearSeparator {
-    constructor(yearText, yearOffset) {
-        this.yearText = yearText;
-        this.yearOffset = yearOffset;
+    constructor(yearText, yearOffset, textAnchorOffset) {
+        this.text = yearText;
+        this.offset = yearOffset;
+        this.textAnchorOffset = textAnchorOffset;
     }
 }
 class MonthSeparator {
-    constructor(monthText, monthOffset) {
-        this.monthText = monthText;
-        this.monthOffset = monthOffset;
+    constructor(monthText, monthOffset, textAnchorOffset) {
+        this.text = monthText;
+        this.offset = monthOffset;
+        this.textAnchorOffset = textAnchorOffset;
     }
 }
 class TimeScale {
@@ -806,19 +814,19 @@ class Visual {
             .enter()
             .append('text')
             .attr('x', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.yearOffset + padding);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.offset + d.textAnchorOffset);
         })
             .attr('y', '0px')
-            .text(function (d) { return d.yearText; })
+            .text(function (d) { return d.text; })
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
             .classed('yearText', true);
         //////////////////////////////////////////////////////////////// YearLine
         gTop.selectAll('line').data(ts.yearScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.yearOffset); })
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.offset); })
             .attr('y1', '0px')
             .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.yearOffset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.offset);
         })
             .attr('y2', tlHeight)
             .attr('style', 'stroke:black');
@@ -828,19 +836,20 @@ class Visual {
             .enter()
             .append('text')
             .attr('x', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.monthOffset + padding + 2);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.offset + d.textAnchorOffset);
         })
             .attr('y', _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(tlHeight / 2))
-            .text(function (d) { return d.monthText; })
+            .text(function (d) { return d.text; })
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
-            .classed('yearText', true);
+            .attr('text-anchor', 'middle')
+            .classed('monthText', true);
         //////////////////////////////////////////////////////////////// YMonthLine
         gBottom.selectAll('line').data(ts.monthScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.monthOffset); })
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.offset); })
             .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(tlHeight / 2))
             .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.monthOffset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.offset);
         })
             .attr('y2', tlHeight)
             .attr('style', 'stroke:blue');

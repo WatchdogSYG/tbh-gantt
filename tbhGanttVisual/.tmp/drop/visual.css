@@ -167,6 +167,9 @@ td {
 .g-tl {
   border: 1px solid black;
 }
+monthText {
+  text-anchor: middle ;
+}
 /* ------- CHART ------- */
 .activityBar {
   fill: red;

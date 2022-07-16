@@ -37,6 +37,7 @@ export declare class Timeline {
     setDayScale(daysPerPixel: number): void;
     /**
      * Returns an array of YearSeparators based on the start and finish dates of the timeline.
+     * The text is currently left aligned only. (text-align: start;)
      * TODO: consider if there needs to be start and end date arguments or if it should just read the member variables.
      *
      * @returns an array of YearSeparators which determine the content and positioning of Year
@@ -45,6 +46,7 @@ export declare class Timeline {
     private generateYears;
     /**
  * Returns an array of MonthSeparators based on the start and finish dates of the timeline.
+ * The text is currently middle aligned only. (text-align: middle;)
  * TODO: consider if there needs to be start and end date arguments or if it should just read the member variables.
  *
  * @returns an array of MonthSeparators which determine the content and positioning of Month
@@ -56,23 +58,22 @@ export declare class Timeline {
      */
     private updateScaleFactors;
 }
-export interface IYearScale {
-    yearText: string;
-    yearOffset: number;
+export interface ISeparator {
+    text: string;
+    offset: number;
+    textAnchorOffset: number;
 }
-export interface IMonthScale {
-    monthText: string;
-    monthOffset: number;
+export declare class YearSeparator implements ISeparator {
+    text: string;
+    offset: number;
+    textAnchorOffset: number;
+    constructor(yearText: string, yearOffset: number, textAnchorOffset: number);
 }
-export declare class YearSeparator implements IYearScale {
-    yearText: string;
-    yearOffset: number;
-    constructor(yearText: string, yearOffset: number);
-}
-export declare class MonthSeparator implements IMonthScale {
-    monthText: string;
-    monthOffset: number;
-    constructor(monthText: string, monthOffset: number);
+export declare class MonthSeparator implements ISeparator {
+    text: string;
+    offset: number;
+    textAnchorOffset: number;
+    constructor(monthText: string, monthOffset: number, textAnchorOffset: number);
 }
 export declare class TimeScale {
     yearScale: YearSeparator[];

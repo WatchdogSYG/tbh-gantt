@@ -135,7 +135,8 @@ export class Timeline {
     ////////////////////////////////////////////////////////////////
 
     /**
-     * Returns an array of YearSeparators based on the start and finish dates of the timeline. 
+     * Returns an array of YearSeparators based on the start and finish dates of the timeline.
+     * The text is currently left aligned only. (text-align: start;)
      * TODO: consider if there needs to be start and end date arguments or if it should just read the member variables.
      * 
      * @returns an array of YearSeparators which determine the content and positioning of Year 
@@ -150,7 +151,7 @@ export class Timeline {
 
         //If the dates are in the same year, the loop will not return the correct value. Handle it here.      
         if (this.span_years == 0) { //same year, return year
-            result = [new YearSeparator(this.d1.year().toString(), 0)];
+            result = [new YearSeparator(this.d1.year().toString(), 0, this.yearPadding)];
             console.log(result);
             console.log('LOG: YearScale generation complete.');
             return result;
@@ -184,7 +185,8 @@ export class Timeline {
 
             result[i] = new YearSeparator((
                 this.d1.year() + i).toString(),
-                cumulativeOffset
+                cumulativeOffset,
+                this.yearPadding
             );
             if (this.verbose) { console.log('LOG: created new YearSeparator(' + (this.d1.year() + i) + ', ' + cumulativeOffset + ') at this.ts.yearScale[' + i + ']'); }
 
@@ -198,6 +200,7 @@ export class Timeline {
 
     /**
  * Returns an array of MonthSeparators based on the start and finish dates of the timeline. 
+ * The text is currently middle aligned only. (text-align: middle;)
  * TODO: consider if there needs to be start and end date arguments or if it should just read the member variables.
  * 
  * @returns an array of MonthSeparators which determine the content and positioning of Month 
@@ -212,7 +215,7 @@ export class Timeline {
 
         //If the dates are in the same year, the loop will not return the correct value. Handle it here.      
         if (this.span_months == 0) { //same month, return month
-            result = [new MonthSeparator(Time.month(this.d1.month()), 0)];
+            result = [new MonthSeparator(Time.month(this.d1.month()), 0, Time.daysInMonth(this.d1.month(), this.d1.year()) / 2)];
             console.log(result);
             console.log('LOG: MonthSeparator array generation complete.');
             return result;
@@ -246,13 +249,18 @@ export class Timeline {
 
             result[i] = new MonthSeparator(
                 Time.m(this.d1.month() + i),
-                cumulativeOffset
+                cumulativeOffset,
+                Time.daysInMonth(this.d1.month() + i, this.d1.year()) / 2
             );
             if (this.verbose) { console.log('LOG: created new MonthSeparator(' + Time.month(this.d1.month() + i) + ', ' + cumulativeOffset + ') at this.ts.monthScale[' + i + '] with dOffset ' + (Time.daysInMonth(this.d1.month() + i, this.d1.year()) * this.dayScale * proportion) + 'px'); }
 
             cumulativeOffset += Time.daysInMonth(this.d1.month() + i, this.d1.year()) * this.dayScale * proportion;
         }
 
+        //check small month dimension
+        if (result[1].offset < (0.75 * this.dayScale * Time.daysInMonth(this.d1.month() + 1, this.d1.year()))) {
+            result[0].text = '';
+        }
         console.log(result);
         console.log('LOG: MonthSeparator array generation complete.');
         return result;
@@ -282,33 +290,33 @@ export class Timeline {
 //  Support Classes and Interfaces
 ////////////////////////////////////////////////////////////////
 
-export interface IYearScale {
-    yearText: string;
-    yearOffset: number;
+export interface ISeparator {
+    text: string;
+    offset: number;
+    textAnchorOffset: number;
 }
 
-export interface IMonthScale {
-    monthText: string;
-    monthOffset: number;
-}
+export class YearSeparator implements ISeparator {
+    text: string;
+    offset: number;
+    textAnchorOffset: number;
 
-export class YearSeparator implements IYearScale {
-    yearText: string;
-    yearOffset: number;
-
-    constructor(yearText: string, yearOffset: number) {
-        this.yearText = yearText;
-        this.yearOffset = yearOffset;
+    constructor(yearText: string, yearOffset: number, textAnchorOffset: number) {
+        this.text = yearText;
+        this.offset = yearOffset;
+        this.textAnchorOffset = textAnchorOffset;
     }
 }
 
-export class MonthSeparator implements IMonthScale {
-    monthText: string;
-    monthOffset: number;
+export class MonthSeparator implements ISeparator {
+    text: string;
+    offset: number;
+    textAnchorOffset: number;
+    constructor(monthText: string, monthOffset: number, textAnchorOffset: number) {
+        this.text = monthText;
+        this.offset = monthOffset;
+        this.textAnchorOffset = textAnchorOffset;
 
-    constructor(monthText: string, monthOffset: number) {
-        this.monthText = monthText;
-        this.monthOffset = monthOffset;
     }
 }
 
