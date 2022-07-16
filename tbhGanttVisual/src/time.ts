@@ -199,6 +199,32 @@ export function isLeapYear(year: number): boolean {
     return (Math.abs(year) % 4 == 0 && Math.abs(year) % 100 !== 0) || (Math.abs(year) % 400 == 0);
 }
 
+/**
+ * Day.js MinMax wasn't working. Made my own ones in the meantime.
+ * @param d An array of Dayjs objects
+ * @returns the earliest one
+ */
+export function minDayjs(d: dayjs.Dayjs[]): dayjs.Dayjs {
+    let t: number[] = [];
+    for (let i = 0; i < d.length; i++) {
+        t.push(d[i].valueOf())
+    }
+    return dayjs(Math.min(...t));
+}
+
+/**
+ * Day.js MinMax wasn't working. Made my own ones in the meantime.
+ * @param d An array of Dayjs objects
+ * @returns the latest one
+ */
+ export function maxDayjs(d: dayjs.Dayjs[]): dayjs.Dayjs {
+    let t: number[] = [];
+    for (let i = 0; i < d.length; i++) {
+        t.push(d[i].valueOf())
+    }
+    return dayjs(Math.max(...t));
+}
+
 ////////////////////////////////////////////////////////////////
 //  UNUSED FUNCTIONS
 ////////////////////////////////////////////////////////////////

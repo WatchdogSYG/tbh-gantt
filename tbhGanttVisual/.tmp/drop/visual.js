@@ -2,6 +2,27 @@ var tbhGanttVisual02814EA99E75457B80AA513BCFD5A299_DEBUG;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 944:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "c": () => (/* binding */ Activity)
+/* harmony export */ });
+class Activity {
+    constructor(start, end, name) {
+        this.name = name;
+        this.start = start;
+        this.end = end;
+    }
+    getName() { return this.name; }
+    getStart() { return this.start; }
+    getEnd() { return this.end; }
+}
+
+
+/***/ }),
+
 /***/ 809:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -69,6 +90,7 @@ function roundOptions(x, round) {
 
 "use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "AY": () => (/* binding */ maxDayjs),
 /* harmony export */   "DO": () => (/* binding */ remainingDaysInMonth),
 /* harmony export */   "Km": () => (/* binding */ daysInMonth),
 /* harmony export */   "LP": () => (/* binding */ spanYears),
@@ -77,6 +99,7 @@ function roundOptions(x, round) {
 /* harmony export */   "iL": () => (/* binding */ month),
 /* harmony export */   "jl": () => (/* binding */ remainingDaysInYear),
 /* harmony export */   "m": () => (/* binding */ m),
+/* harmony export */   "rA": () => (/* binding */ minDayjs),
 /* harmony export */   "ti": () => (/* binding */ daysElapsedInYear),
 /* harmony export */   "tp": () => (/* binding */ daysElapsedInMonth)
 /* harmony export */ });
@@ -272,6 +295,30 @@ function epoch0() {
 function isLeapYear(year) {
     return (Math.abs(year) % 4 == 0 && Math.abs(year) % 100 !== 0) || (Math.abs(year) % 400 == 0);
 }
+/**
+ * Day.js MinMax wasn't working. Made my own ones in the meantime.
+ * @param d An array of Dayjs objects
+ * @returns the earliest one
+ */
+function minDayjs(d) {
+    let t = [];
+    for (let i = 0; i < d.length; i++) {
+        t.push(d[i].valueOf());
+    }
+    return dayjs__WEBPACK_IMPORTED_MODULE_0__(Math.min(...t));
+}
+/**
+ * Day.js MinMax wasn't working. Made my own ones in the meantime.
+ * @param d An array of Dayjs objects
+ * @returns the latest one
+ */
+function maxDayjs(d) {
+    let t = [];
+    for (let i = 0; i < d.length; i++) {
+        t.push(d[i].valueOf());
+    }
+    return dayjs__WEBPACK_IMPORTED_MODULE_0__(Math.max(...t));
+}
 ////////////////////////////////////////////////////////////////
 //  UNUSED FUNCTIONS
 ////////////////////////////////////////////////////////////////
@@ -422,7 +469,7 @@ class Timeline {
         //  Define members
         ////////////////////////////////////////////////////////////////
         //--------DEV--------//
-        this.verbose = true;
+        this.verbose = false;
         console.log('LOG: Constructing Timeline Object');
         //check which date is larger and round to nearest day
         if (start > end) {
@@ -679,10 +726,12 @@ class TimeScale {
 /* harmony export */   "u": () => (/* binding */ Visual)
 /* harmony export */ });
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(662);
-/* harmony import */ var _src_lib__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(809);
-/* harmony import */ var _src_timeline__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(1092);
-/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(9665);
-/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _src_lib__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(809);
+/* harmony import */ var _src_time__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4734);
+/* harmony import */ var _src_timeline__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(1092);
+/* harmony import */ var _src_activity__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(944);
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(9665);
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_3__);
 /*
 *  Power BI Visual CLI
 *
@@ -717,6 +766,8 @@ class TimeScale {
 
 
 
+
+
 ////////////////////////////////////////////////////////////////
 //  Begin class definition
 ////////////////////////////////////////////////////////////////
@@ -746,13 +797,61 @@ class Visual {
         ////////////////////////////////////////////////////////////////
         //  Generate Timeline object from data (put in function later)
         ////////////////////////////////////////////////////////////////
-        let d1 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2020, 3, 16));
-        let d2 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2023, 5, 30));
-        let status = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2022, 6, 16));
-        this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_1__/* .Timeline */ .TY(d1, d2, status);
+        let myData = [
+            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2022, 3, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)), 'Activity A'),
+            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2025, 5, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)), 'Activity B'),
+            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2023, 7, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)), 'Activity C'),
+            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2023, 8, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)), 'Activity D'),
+            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2023, 9, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)), 'Activity E'),
+            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2022, 9, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)), 'Activity F'),
+            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2023, 2, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)), 'Activity G'),
+            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2028, 6, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)), 'Activity B'),
+            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2029, 3, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)), 'Activity C'),
+            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2022, 7, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)), 'Activity D'),
+            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2021, 3, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)), 'Activity E'),
+            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2021, 8, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)), 'Activity F'),
+            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2022, 3, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)), 'Activity G')
+        ];
+        console.log('a');
+        // console.log(dayjs.min(dayjs(new Date(2000,1,1)),dayjs(new Date(2001,1,1))));
+        let d1 = _src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA([
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2022, 3, 2)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2025, 5, 2)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2023, 7, 2)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2023, 8, 2)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2023, 9, 2)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2022, 9, 2)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2023, 2, 2)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2028, 6, 2)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2029, 3, 2)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2022, 7, 2)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2021, 3, 2)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2021, 8, 2)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2022, 3, 2))
+        ]);
+        let d2 = _src_time__WEBPACK_IMPORTED_MODULE_1__/* .maxDayjs */ .AY([
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)),
+            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4))
+        ]);
+        console.log('a');
+        let status = dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2022, 6, 16));
+        console.log('a');
+        this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_2__/* .Timeline */ .TY(d1, d2, status);
         let padding = 0; //this.timeline.getPadding();
         let tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale()); //cannot be less than div width!
-        let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_3__/* .pxToNumber */ .F(this.style.getPropertyValue('--timelineHeight'));
+        let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_5__/* .pxToNumber */ .F(this.style.getPropertyValue('--timelineHeight'));
+        let rowHeight = _src_lib__WEBPACK_IMPORTED_MODULE_5__/* .pxToNumber */ .F(this.style.getPropertyValue('--rowHeight'));
         let ts = this.timeline.getTimeScale();
         ////////////////////////////////////////////////////////////////
         //  Create body level child elements
@@ -792,8 +891,8 @@ class Visual {
         let gantt = this.divChartContainer
             .append('svg')
             .attr('id', 'tl-top')
-            .attr('height', '100%')
-            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(tlWidth));
+            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(tlHeight + (myData.length * rowHeight)))
+            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(tlWidth));
         let gBottom = gantt.append('g')
             .classed('g-tl', true);
         let gTop = gantt.append('g')
@@ -804,7 +903,7 @@ class Visual {
             .enter()
             .append('text')
             .attr('x', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.offset + d.textAnchorOffset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset + d.textAnchorOffset);
         })
             .attr('y', '0px')
             .text(function (d) { return d.text; })
@@ -813,10 +912,10 @@ class Visual {
             .classed('yearText', true);
         //////////////////////////////////////////////////////////////// YearLine
         gTop.selectAll('line').data(ts.yearScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.offset); })
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
             .attr('y1', '0px')
             .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.offset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
         })
             .attr('y2', tlHeight)
             .attr('stroke-width', '2px')
@@ -827,9 +926,9 @@ class Visual {
             .enter()
             .append('text')
             .attr('x', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.offset + d.textAnchorOffset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset + d.textAnchorOffset);
         })
-            .attr('y', _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(tlHeight / 2))
+            .attr('y', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(tlHeight / 2))
             .text(function (d) { return d.text; })
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
@@ -837,10 +936,10 @@ class Visual {
             .classed('monthText', true);
         //////////////////////////////////////////////////////////////// YMonthLine
         gBottom.selectAll('line').data(ts.monthScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.offset); })
-            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(tlHeight / 2))
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
+            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(tlHeight / 2))
             .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.offset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
         })
             .attr('y2', tlHeight)
             .attr('style', 'stroke:red');
@@ -855,66 +954,30 @@ class Visual {
         this.activityTable = this.divActivities
             .append('table')
             .attr('id', 'table-activities');
-        let keys = ['Activity A', '01/03/22', '25/06/22'];
-        let values1 = ['Activity B', '01/03/22', '25/06/22'];
-        let values2 = ['Activity C', '01/03/22', '25/06/22'];
-        let values3 = ['Activity D', '01/03/22', '25/06/22'];
-        let values4 = ['Activity E', '01/03/22', '25/06/22'];
-        let values5 = ['Activity F', '01/03/22', '25/06/22'];
-        let values6 = ['Activity G', '01/03/22', '25/06/22'];
-        let values7 = ['Activity B', '01/03/22', '25/06/22'];
-        let values8 = ['Activity C', '01/03/22', '25/06/22'];
-        let values9 = ['Activity D', '01/03/22', '25/06/22'];
-        let values0 = ['Activity E', '01/03/22', '25/06/22'];
-        let valuesa = ['Activity F', '01/03/22', '25/06/22'];
-        let valuesb = ['Activity G', '01/03/22', '25/06/22'];
-        let myData = [keys,
-            values1,
-            values2,
-            values3,
-            values4,
-            values5,
-            values6,
-            values7,
-            values8,
-            values9,
-            values0,
-            valuesa,
-            valuesb,
-        ];
-        this.populateActivityTable(myData, null, 'table-activities');
+        //this.populateActivityTable(myData, null, 'table-activities');
         ////////////////////////////////////////////////////////////////
         //  Prepare for chart drawing
         ////////////////////////////////////////////////////////////////
-        let rowHeight = this.style.getPropertyValue('--rowHeight');
         let bars = gantt
             .append('g')
             .append('svg')
             .attr('id', 'svg-bars');
-        bars.append('rect')
-            .classed('activityBar', true)
+        console.log('a');
+        bars.selectAll('rect')
+            .data(myData)
+            .enter()
+            .append('rect')
+            .attr('x', function (d) {
+            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(_this.timeline.dateLocation(d.getStart()));
+        })
             .attr('height', rowHeight)
-            .attr('width', '90px')
-            .attr('x', '0px')
-            .attr('y', '0px')
+            .attr('width', function (d) {
+            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(_this.timeline.dateLocation(d.getEnd()) - _this.timeline.dateLocation(d.getStart()));
+        })
+            .attr('y', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(tlHeight + (rowHeight * i)); })
             .attr('rx', '3px')
-            .attr('ry', '3px');
-        bars.append('rect')
-            .classed('activityBar', true)
-            .attr('height', rowHeight)
-            .attr('width', '50px')
-            .attr('x', '100px')
-            .attr('y', rowHeight)
-            .attr('rx', '3px')
-            .attr('ry', '3px');
-        bars.append('rect')
-            .classed('activityBar', true)
-            .attr('height', rowHeight)
-            .attr('width', '50px')
-            .attr('x', '80px')
-            .attr('y', '80px')
-            .attr('rx', '3px')
-            .attr('ry', '3px');
+            .attr('ry', '3px')
+            .classed('activityBar', true);
         ////////////////////////////////////////////////////////////////
         //  Draw chart
         ////////////////////////////////////////////////////////////////
@@ -947,7 +1010,8 @@ class Visual {
         //     this.textNode.textContent = (this.updateCount++).toString();
         // }
         let dataView = options.dataViews[0];
-        options.dataViews[0].metadata.columns.entries;
+        //options.dataViews[0].metadata.columns.entries
+        this.checkConfiguration(dataView);
         // let width: number = options.viewport.width;
         // let height: number = options.viewport.height;
         // this.svg.attr('width', width);
@@ -983,39 +1047,38 @@ class Visual {
     * Returns an empty table if options is null.
     * TODO change this to a d3 arg
     */
-    populateActivityTable(data, headerID, tableID) {
-        //check number of data elements and number of tr and tds to determine
-        //whether to enter(), update() or exit()
-        if (data == null) {
-            if (this.verbose) {
-                console.log('LOG: populateActivityTable called with a null VisualUpdateOptions.');
-            }
-        }
-        //https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
-        //https://www.dashingd3js.com/d3-tutorial/use-d3-js-to-bind-data-to-dom-elements
-        //BEWARE: I had to change the types of all these following to var and not Selection<T,T,T,T>. the second function (d)
-        //call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
-        if (this.verbose) {
-            console.log('LOG: populateActivityTable called with some number of rows.');
-        }
-        //create the number of trs required.
-        var tr = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#' + tableID) //select the table
-            .selectAll('tr') //select all tr elements (which there are none)
-            .data(data) //select every array element of array myData (there are 7). DATA IS NOW BOUND TO TRs
-            .enter() //since we have 0 trs and 7 elements in myData, we stage 7 references
-            .append('tr'); //append a tr to each reference
-        var v = tr.selectAll('td') //select all tds, there are 0
-            .data(function (d) { return d; }) //THIS DATA COMES FROM THE TR's _data_ PROPERTY
-            .enter()
-            .append('td')
-            .text(function (d) { return d; }); //we are taking d from the bound data from the trs
-        // .attr('class','style'+d.wbsIndex);
-    }
+    // private populateActivityTable(data, headerID: string, tableID: string) {
+    //     //check number of data elements and number of tr and tds to determine
+    //     //whether to enter(), update() or exit()
+    //     if (data == null) {
+    //         if (this.verbose) { console.log('LOG: populateActivityTable called with a null VisualUpdateOptions.'); }
+    //     }
+    //     //https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
+    //     //https://www.dashingd3js.com/d3-tutorial/use-d3-js-to-bind-data-to-dom-elements
+    //     //BEWARE: I had to change the types of all these following to var and not Selection<T,T,T,T>. the second function (d)
+    //     //call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
+    //     if (this.verbose) { console.log('LOG: populateActivityTable called with some number of rows.'); }
+    //     //create the number of trs required.
+    //     var tr = d3.select('#' + tableID)//select the table
+    //         .selectAll('tr')//select all tr elements (which there are none)
+    //         .data(data)//select every array element of array myData (there are 7). DATA IS NOW BOUND TO TRs
+    //         .enter()//since we have 0 trs and 7 elements in myData, we stage 7 references
+    //         .append('tr');//append a tr to each reference
+    //     var v = tr.selectAll('td')//select all tds, there are 0
+    //         .data(function (d) { return d; })//THIS DATA COMES FROM THE TR's _data_ PROPERTY
+    //         .enter()
+    //         .append('td')
+    //         .text(function (d) { return d; });//we are taking d from the bound data from the trs
+    //     // .attr('class','style'+d.wbsIndex);
+    // }
     /**
      * Returns the configuration of the desired graph to determine which elements to render based on the data in dataView.
      * @param dataView The DataView object to configure the visual against.
      */
     checkConfiguration(dataView) {
+        console.log('LOG: DATAVIEW CONFIGURATION');
+        console.log('LOG: number of heirachy levels' + dataView.matrix.rows.levels.length);
+        console.log(dataView.matrix.rows.root);
     }
     /**
      * Synchronises the left scrolling of the div-timeline and div-chart depending on which one was scrolled.

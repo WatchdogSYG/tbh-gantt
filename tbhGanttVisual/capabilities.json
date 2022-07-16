@@ -1,21 +1,46 @@
 {
     "dataRoles": [
         {
-            "displayName": "Measure",
-            "name": "measure",
+            "name": "Rows",
+            "displayName": "Rows",
+            "displayNameKey": "Visual_Rows",
+            "kind": "Grouping"
+        },
+        {
+            "name": "Columns",
+            "displayName": "Columns",
+            "displayNameKey": "Visual_Columns",
+            "kind": "Grouping"
+        },
+        {
+            "name": "Value",
+            "displayName": "Value",
+            "displayNameKey": "Visual_Values",
             "kind": "Measure"
         }
     ],
-
     "dataViewMappings": [
         {
-            "conditions": [
-                {
-                    "measure": { "max":1}
+            "matrix": {
+                "rows": {
+                    "for": {
+                        "in": "Rows"
+                    }
+                },
+                "columns": {
+                    "for": {
+                        "in": "Columns"
+                    }
+                },
+                "values": {
+                    "select": [
+                        {
+                            "for": {
+                                "in": "Value"
+                            }
+                        }
+                    ]
                 }
-            ],
-            "single": {
-                "role": "measure"
             }
         }
     ]

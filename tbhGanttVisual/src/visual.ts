@@ -51,8 +51,10 @@ type Selection<T extends d3.BaseType> = d3.Selection<T, any, any, any>;
 import * as Lib from './../src/lib';
 import * as Time from './../src/time';
 import { Timeline, TimeScale } from './../src/timeline';
+import { Activity } from './../src/activity';
 
 import * as dayjs from 'dayjs';
+import * as MinMax from 'dayjs/plugin/minMax';
 
 //UNIT TESTS
 import * as jsUnit from './../tests/globalTests';
@@ -126,16 +128,68 @@ export class Visual implements IVisual {
         //  Generate Timeline object from data (put in function later)
         ////////////////////////////////////////////////////////////////
 
-        let d1: dayjs.Dayjs = dayjs(new Date(2020, 3, 16));
-        let d2: dayjs.Dayjs = dayjs(new Date(2023, 5, 30));
-        let status: dayjs.Dayjs = dayjs(new Date(2022, 6, 16));
+        let myData: Activity[] = [
 
+            new Activity(dayjs(new Date(2022, 3, 2)), dayjs(new Date(2030, 3, 4)), 'Activity A'),
+            new Activity(dayjs(new Date(2025, 5, 2)), dayjs(new Date(2024, 3, 4)), 'Activity B'),
+            new Activity(dayjs(new Date(2023, 7, 2)), dayjs(new Date(2024, 3, 4)), 'Activity C'),
+            new Activity(dayjs(new Date(2023, 8, 2)), dayjs(new Date(2024, 3, 4)), 'Activity D'),
+            new Activity(dayjs(new Date(2023, 9, 2)), dayjs(new Date(2024, 3, 4)), 'Activity E'),
+            new Activity(dayjs(new Date(2022, 9, 2)), dayjs(new Date(2024, 3, 4)), 'Activity F'),
+            new Activity(dayjs(new Date(2023, 2, 2)), dayjs(new Date(2024, 3, 4)), 'Activity G'),
+            new Activity(dayjs(new Date(2028, 6, 2)), dayjs(new Date(2030, 3, 4)), 'Activity B'),
+            new Activity(dayjs(new Date(2029, 3, 2)), dayjs(new Date(2030, 3, 4)), 'Activity C'),
+            new Activity(dayjs(new Date(2022, 7, 2)), dayjs(new Date(2030, 3, 4)), 'Activity D'),
+            new Activity(dayjs(new Date(2021, 3, 2)), dayjs(new Date(2030, 3, 4)), 'Activity E'),
+            new Activity(dayjs(new Date(2021, 8, 2)), dayjs(new Date(2030, 3, 4)), 'Activity F'),
+            new Activity(dayjs(new Date(2022, 3, 2)), dayjs(new Date(2030, 3, 4)), 'Activity G')
+        ];
+
+        console.log('a');
+        // console.log(dayjs.min(dayjs(new Date(2000,1,1)),dayjs(new Date(2001,1,1))));
+
+        let d1: dayjs.Dayjs = Time.minDayjs([
+            dayjs(new Date(2022, 3, 2)),
+            dayjs(new Date(2025, 5, 2)),
+            dayjs(new Date(2023, 7, 2)),
+            dayjs(new Date(2023, 8, 2)),
+            dayjs(new Date(2023, 9, 2)),
+            dayjs(new Date(2022, 9, 2)),
+            dayjs(new Date(2023, 2, 2)),
+            dayjs(new Date(2028, 6, 2)),
+            dayjs(new Date(2029, 3, 2)),
+            dayjs(new Date(2022, 7, 2)),
+            dayjs(new Date(2021, 3, 2)),
+            dayjs(new Date(2021, 8, 2)),
+            dayjs(new Date(2022, 3, 2))]);
+
+        let d2: dayjs.Dayjs = Time.maxDayjs([
+            dayjs(new Date(2024, 3, 4)),
+            dayjs(new Date(2024, 3, 4)),
+            dayjs(new Date(2024, 3, 4)),
+            dayjs(new Date(2024, 3, 4)),
+            dayjs(new Date(2024, 3, 4)),
+            dayjs(new Date(2024, 3, 4)),
+            dayjs(new Date(2024, 3, 4)),
+            dayjs(new Date(2030, 3, 4)),
+            dayjs(new Date(2030, 3, 4)),
+            dayjs(new Date(2030, 3, 4)),
+            dayjs(new Date(2030, 3, 4)),
+            dayjs(new Date(2030, 3, 4)),
+            dayjs(new Date(2030, 3, 4))]);
+
+        console.log('a');
+        let status: dayjs.Dayjs = dayjs(new Date(2022, 6, 16));
+        console.log('a');
         this.timeline = new Timeline(d1, d2, status);
         let padding: number = 0;//this.timeline.getPadding();
 
         let tlWidth: number = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale());//cannot be less than div width!
 
         let tlHeight: number = Lib.pxToNumber(this.style.getPropertyValue('--timelineHeight'));
+
+
+        let rowHeight: number = Lib.pxToNumber(this.style.getPropertyValue('--rowHeight'));
 
         let ts: TimeScale = this.timeline.getTimeScale();
 
@@ -178,7 +232,7 @@ export class Visual implements IVisual {
         this.divChartContainer = this.divContent
             .append('div')
             .attr('id', 'div-chart');
-            
+
         ////////////////////////////////////////////////////////////////
         //  Create svg timeline
         ////////////////////////////////////////////////////////////////
@@ -186,7 +240,7 @@ export class Visual implements IVisual {
         let gantt: Selection<SVGSVGElement> = this.divChartContainer
             .append('svg')
             .attr('id', 'tl-top')
-            .attr('height', '100%')
+            .attr('height', Lib.px(tlHeight + (myData.length * rowHeight)))
             .attr('width', Lib.px(tlWidth));
 
         let gBottom: Selection<SVGGElement> = gantt.append('g')
@@ -259,75 +313,40 @@ export class Visual implements IVisual {
             .append('table')
             .attr('id', 'table-activities');
 
-        let keys: string[] = ['Activity A', '01/03/22', '25/06/22'];
-        let values1: string[] = ['Activity B', '01/03/22', '25/06/22'];
-        let values2: string[] = ['Activity C', '01/03/22', '25/06/22'];
-        let values3: string[] = ['Activity D', '01/03/22', '25/06/22'];
-        let values4: string[] = ['Activity E', '01/03/22', '25/06/22'];
-        let values5: string[] = ['Activity F', '01/03/22', '25/06/22'];
-        let values6: string[] = ['Activity G', '01/03/22', '25/06/22'];
-        let values7: string[] = ['Activity B', '01/03/22', '25/06/22'];
-        let values8: string[] = ['Activity C', '01/03/22', '25/06/22'];
-        let values9: string[] = ['Activity D', '01/03/22', '25/06/22'];
-        let values0: string[] = ['Activity E', '01/03/22', '25/06/22'];
-        let valuesa: string[] = ['Activity F', '01/03/22', '25/06/22'];
-        let valuesb: string[] = ['Activity G', '01/03/22', '25/06/22'];
-        let myData: string[][] = [keys,
-            values1,
-            values2,
-            values3,
-            values4,
-            values5,
-            values6,
-            values7,
-            values8,
-            values9,
-            values0,
-            valuesa,
-            valuesb,
-        ];
 
-        this.populateActivityTable(myData, null, 'table-activities');
-    
+
+
+
+
+        //this.populateActivityTable(myData, null, 'table-activities');
+
         ////////////////////////////////////////////////////////////////
         //  Prepare for chart drawing
         ////////////////////////////////////////////////////////////////
 
-        let rowHeight: string = this.style.getPropertyValue('--rowHeight');
-     
-        
+
+
         let bars: Selection<SVGSVGElement> = gantt
             .append('g')
             .append('svg')
             .attr('id', 'svg-bars');
-       
-            
-        bars.append('rect')
-            .classed('activityBar', true)
-            .attr('height', rowHeight)
-            .attr('width', '90px')
-            .attr('x', '0px')
-            .attr('y', '0px')
-            .attr('rx', '3px')
-            .attr('ry', '3px');
 
-        bars.append('rect')
-            .classed('activityBar', true)
+        console.log('a');
+        bars.selectAll('rect')
+            .data(myData)
+            .enter()
+            .append('rect')
+            .attr('x', function (d) {
+                return Lib.px(_this.timeline.dateLocation(d.getStart()));
+            })
             .attr('height', rowHeight)
-            .attr('width', '50px')
-            .attr('x', '100px')
-            .attr('y', rowHeight)
+            .attr('width', function (d) {
+                return Lib.px(_this.timeline.dateLocation(d.getEnd()) - _this.timeline.dateLocation(d.getStart()));
+            })
+            .attr('y', function (d, i) { return Lib.px(tlHeight + (rowHeight * i)) })
             .attr('rx', '3px')
-            .attr('ry', '3px');
-
-        bars.append('rect')
-            .classed('activityBar', true)
-            .attr('height', rowHeight)
-            .attr('width', '50px')
-            .attr('x', '80px')
-            .attr('y', '80px')
-            .attr('rx', '3px')
-            .attr('ry', '3px');
+            .attr('ry', '3px')
+            .classed('activityBar', true);
 
         ////////////////////////////////////////////////////////////////
         //  Draw chart
@@ -349,6 +368,7 @@ export class Visual implements IVisual {
                 .toString()
                 .concat('px'))
             .attr('transform', 'translate(' + this.timeline.statusDateLocation() + ')');
+
     }
 
     ////////////////////////////////////////////////////////////////
@@ -363,7 +383,9 @@ export class Visual implements IVisual {
         // }
 
         let dataView: DataView = options.dataViews[0];
-        options.dataViews[0].metadata.columns.entries
+        //options.dataViews[0].metadata.columns.entries
+
+        this.checkConfiguration(dataView);
         // let width: number = options.viewport.width;
         // let height: number = options.viewport.height;
         // this.svg.attr('width', width);
@@ -401,44 +423,45 @@ export class Visual implements IVisual {
     * Returns an empty table if options is null.
     * TODO change this to a d3 arg
     */
-    private populateActivityTable(data: string[][], headerID: string, tableID: string) {
-        //check number of data elements and number of tr and tds to determine
-        //whether to enter(), update() or exit()
+    // private populateActivityTable(data, headerID: string, tableID: string) {
+    //     //check number of data elements and number of tr and tds to determine
+    //     //whether to enter(), update() or exit()
 
-        if (data == null) {
-            if (this.verbose) { console.log('LOG: populateActivityTable called with a null VisualUpdateOptions.'); }
+    //     if (data == null) {
+    //         if (this.verbose) { console.log('LOG: populateActivityTable called with a null VisualUpdateOptions.'); }
 
-        }
+    //     }
 
-        //https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
-        //https://www.dashingd3js.com/d3-tutorial/use-d3-js-to-bind-data-to-dom-elements
-        //BEWARE: I had to change the types of all these following to var and not Selection<T,T,T,T>. the second function (d)
-        //call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
+    //     //https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
+    //     //https://www.dashingd3js.com/d3-tutorial/use-d3-js-to-bind-data-to-dom-elements
+    //     //BEWARE: I had to change the types of all these following to var and not Selection<T,T,T,T>. the second function (d)
+    //     //call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
 
-        if (this.verbose) { console.log('LOG: populateActivityTable called with some number of rows.'); }
+    //     if (this.verbose) { console.log('LOG: populateActivityTable called with some number of rows.'); }
 
-        //create the number of trs required.
-        var tr = d3.select('#' + tableID)//select the table
-            .selectAll('tr')//select all tr elements (which there are none)
-            .data(data)//select every array element of array myData (there are 7). DATA IS NOW BOUND TO TRs
-            .enter()//since we have 0 trs and 7 elements in myData, we stage 7 references
-            .append('tr');//append a tr to each reference
+    //     //create the number of trs required.
+    //     var tr = d3.select('#' + tableID)//select the table
+    //         .selectAll('tr')//select all tr elements (which there are none)
+    //         .data(data)//select every array element of array myData (there are 7). DATA IS NOW BOUND TO TRs
+    //         .enter()//since we have 0 trs and 7 elements in myData, we stage 7 references
+    //         .append('tr');//append a tr to each reference
 
-        var v = tr.selectAll('td')//select all tds, there are 0
-            .data(function (d) { return d; })//THIS DATA COMES FROM THE TR's _data_ PROPERTY
-            .enter()
-            .append('td')
-            .text(function (d) { return d; });//we are taking d from the bound data from the trs
-        // .attr('class','style'+d.wbsIndex);
-    }
+    //     var v = tr.selectAll('td')//select all tds, there are 0
+    //         .data(function (d) { return d; })//THIS DATA COMES FROM THE TR's _data_ PROPERTY
+    //         .enter()
+    //         .append('td')
+    //         .text(function (d) { return d; });//we are taking d from the bound data from the trs
+    //     // .attr('class','style'+d.wbsIndex);
+    // }
 
     /**
      * Returns the configuration of the desired graph to determine which elements to render based on the data in dataView.
      * @param dataView The DataView object to configure the visual against.
      */
     private checkConfiguration(dataView: DataView) {
-
-
+        console.log('LOG: DATAVIEW CONFIGURATION');
+        console.log('LOG: number of heirachy levels' + dataView.matrix.rows.levels.length);
+        console.log(dataView.matrix.rows.root);
     }
 
     /**

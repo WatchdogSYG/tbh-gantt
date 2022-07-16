@@ -19,7 +19,6 @@ export declare class Visual implements IVisual {
     private verbose;
     constructor(options: VisualConstructorOptions);
     update(options: VisualUpdateOptions): void;
-    private populateActivityTable;
     /**
      * Returns the configuration of the desired graph to determine which elements to render based on the data in dataView.
      * @param dataView The DataView object to configure the visual against.

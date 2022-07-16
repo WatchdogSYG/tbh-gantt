@@ -57,3 +57,15 @@ export declare function epoch0(): Date;
  * @returns If the year is a leap year.
  */
 export declare function isLeapYear(year: number): boolean;
+/**
+ * Day.js MinMax wasn't working. Made my own ones in the meantime.
+ * @param d An array of Dayjs objects
+ * @returns the earliest one
+ */
+export declare function minDayjs(d: dayjs.Dayjs[]): dayjs.Dayjs;
+/**
+ * Day.js MinMax wasn't working. Made my own ones in the meantime.
+ * @param d An array of Dayjs objects
+ * @returns the latest one
+ */
+export declare function maxDayjs(d: dayjs.Dayjs[]): dayjs.Dayjs;
