@@ -1,4 +1,7 @@
 //Class that contains properties and functions that deal with timeline and Offset
+//FUNCTIONALITY
+// Year support
+// Month support
 
 import * as dayjs from 'dayjs';
 import * as Lib from './../src/lib';
@@ -21,6 +24,7 @@ export class Timeline {
     private span_days: number;
     private span_months: number;
     private span_years: number;
+    
     //--------SCALE--------//
     private dayScale: number;
     private weekScale: number;
@@ -37,6 +41,7 @@ export class Timeline {
     //  Get/Set
     ////////////////////////////////////////////////////////////////
 
+    //simple getters and setters
     public getStart(): dayjs.Dayjs { return this.d1; }
     public getEnd(): dayjs.Dayjs { return this.d2; }
     public getDays(): number { return this.n_days; }
@@ -44,19 +49,20 @@ export class Timeline {
     public getMonths(): number { return this.n_months; }
     public getYears(): number { return this.n_years; }
     public getTimeScale(): TimeScale { return this.ts; }
-    public getPadding(): number { return this.padding; }
+    public getYearPadding(): number { return this.yearPadding; }
+    public getMonthPadding(): number { return this.monthPadding; }
+
+    //getters and setters with updates
+    public setYearPadding(padding: number) {
+
+    }
 
     ////////////////////////////////////////////////////////////////
     //  SVG Style
     ////////////////////////////////////////////////////////////////
 
-    private padding: number;
-
-    ////////////////////////////////////////////////////////////////
-    //  Day.js
-    ////////////////////////////////////////////////////////////////
-
-    private isLeapYear: NodeRequire;
+    private yearPadding: number;
+    private monthPadding: number;
 
     ////////////////////////////////////////////////////////////////
     //  Constructor
@@ -82,7 +88,7 @@ export class Timeline {
         this.span_months = Time.spanMonths(start, end);
         this.span_years = Time.spanYears(start, end);
 
-        this.padding = 5;
+        this.yearPadding = 5;
         this.dayScale = 1;
         this.updateScaleFactors();
 
@@ -123,7 +129,19 @@ export class Timeline {
         this.updateScaleFactors()
     }
 
-    //TODO there is a 1 px misalignment: FIXED
+
+
+    ////////////////////////////////////////////////////////////////
+    //  Timeline Style Functions
+    ////////////////////////////////////////////////////////////////
+
+    /**
+     * Returns an array of YearSeparators based on the start and finish dates of the timeline. 
+     * TODO: consider if there needs to be start and end date arguments or if it should just read the member variables.
+     * 
+     * @returns an array of YearSeparators which determine the content and positioning of Year 
+     * display elements in the timeline based on the start and finish dates.
+     */
     private generateYears(): YearSeparator[] {
         console.log('LOG: Generating YearSeparator array for timeline.');
 
@@ -143,7 +161,7 @@ export class Timeline {
         result = [];
         for (let i = 0; i < this.span_years; i++) {
             if (this.verbose) { console.log('LOG: year index = ' + i); }
-    
+
 
             //check if we are considering the first or last year and calc the proportion of the section we want
             if (i == 0) {//this is the first year, take the portion of that year and create the offset. TODO check if the text will overlap
@@ -171,7 +189,7 @@ export class Timeline {
             );
             if (this.verbose) { console.log('LOG: created new YearSeparator(' + (this.d1.year() + i) + ', ' + cumulativeOffset + ') at this.ts.yearScale[' + i + ']'); }
 
-            cumulativeOffset += Time.daysInYear(this.d1.year()+i) * this.dayScale * proportion;
+            cumulativeOffset += Time.daysInYear(this.d1.year() + i) * this.dayScale * proportion;
         }
 
         console.log(result);
@@ -179,6 +197,13 @@ export class Timeline {
         return result;
     }
 
+    /**
+ * Returns an array of MonthSeparators based on the start and finish dates of the timeline. 
+ * TODO: consider if there needs to be start and end date arguments or if it should just read the member variables.
+ * 
+ * @returns an array of MonthSeparators which determine the content and positioning of Month 
+ * display elements in the timeline based on the start and finish dates.
+ */
     private generateMonths(): MonthSeparator[] {
         console.log('LOG: Generating MonthSeparator array for timeline.');
 
@@ -224,9 +249,9 @@ export class Timeline {
                 Time.m(this.d1.month() + i),
                 cumulativeOffset
             );
-            if (this.verbose) { console.log('LOG: created new MonthSeparator(' + Time.month(this.d1.month() + i) + ', ' + cumulativeOffset + ') at this.ts.monthScale[' + i + '] with dOffset '+(Time.daysInMonth(this.d1.month() +i, this.d1.year()) * this.dayScale * proportion)+'px'); }
+            if (this.verbose) { console.log('LOG: created new MonthSeparator(' + Time.month(this.d1.month() + i) + ', ' + cumulativeOffset + ') at this.ts.monthScale[' + i + '] with dOffset ' + (Time.daysInMonth(this.d1.month() + i, this.d1.year()) * this.dayScale * proportion) + 'px'); }
 
-            cumulativeOffset += Time.daysInMonth(this.d1.month() +i, this.d1.year()) * this.dayScale * proportion;
+            cumulativeOffset += Time.daysInMonth(this.d1.month() + i, this.d1.year()) * this.dayScale * proportion;
         }
 
         console.log(result);
@@ -238,6 +263,9 @@ export class Timeline {
     //  Support Functions
     ////////////////////////////////////////////////////////////////
 
+    /**
+     * Updates the weekScale, quarterScale, and yearScale member variables based on the dayScale member variable.
+     */
     private updateScaleFactors() {
         this.weekScale = this.dayScale * 7;
         this.yearScale = this.dayScale * 365;

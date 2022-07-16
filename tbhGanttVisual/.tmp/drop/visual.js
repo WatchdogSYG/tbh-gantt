@@ -272,7 +272,10 @@ function epoch0() {
 function isLeapYear(year) {
     return (Math.abs(year) % 4 == 0 && Math.abs(year) % 100 !== 0) || (Math.abs(year) % 400 == 0);
 }
-//unused functions
+////////////////////////////////////////////////////////////////
+//  UNUSED FUNCTIONS
+////////////////////////////////////////////////////////////////
+//dssdfsdf
 // /**
 //  * Returns the number of days in the epoch timeline between two dates.
 //  * @param start The start date.
@@ -391,6 +394,7 @@ function isLeapYear(year) {
 // export function day(dayIndex: number): string {
 //     return '0000-00-00T00:00:00';
 // }
+//
 
 
 /***/ }),
@@ -405,6 +409,9 @@ function isLeapYear(year) {
 /* unused harmony exports YearSeparator, MonthSeparator, TimeScale */
 /* harmony import */ var _src_time__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4734);
 //Class that contains properties and functions that deal with timeline and Offset
+//FUNCTIONALITY
+// Year support
+// Month support
 
 class Timeline {
     ////////////////////////////////////////////////////////////////
@@ -432,7 +439,7 @@ class Timeline {
         // this.span_days;
         this.span_months = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .spanMonths */ .V7(start, end);
         this.span_years = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .spanYears */ .LP(start, end);
-        this.padding = 5;
+        this.yearPadding = 5;
         this.dayScale = 1;
         this.updateScaleFactors();
         if (this.verbose) {
@@ -458,6 +465,7 @@ class Timeline {
     ////////////////////////////////////////////////////////////////
     //  Get/Set
     ////////////////////////////////////////////////////////////////
+    //simple getters and setters
     getStart() { return this.d1; }
     getEnd() { return this.d2; }
     getDays() { return this.n_days; }
@@ -465,7 +473,11 @@ class Timeline {
     getMonths() { return this.n_months; }
     getYears() { return this.n_years; }
     getTimeScale() { return this.ts; }
-    getPadding() { return this.padding; }
+    getYearPadding() { return this.yearPadding; }
+    getMonthPadding() { return this.monthPadding; }
+    //getters and setters with updates
+    setYearPadding(padding) {
+    }
     ////////////////////////////////////////////////////////////////
     //  Timeline Manipulation Functions
     ////////////////////////////////////////////////////////////////
@@ -478,7 +490,16 @@ class Timeline {
         this.dayScale = daysPerPixel;
         this.updateScaleFactors();
     }
-    //TODO there is a 1 px misalignment: FIXED
+    ////////////////////////////////////////////////////////////////
+    //  Timeline Style Functions
+    ////////////////////////////////////////////////////////////////
+    /**
+     * Returns an array of YearSeparators based on the start and finish dates of the timeline.
+     * TODO: consider if there needs to be start and end date arguments or if it should just read the member variables.
+     *
+     * @returns an array of YearSeparators which determine the content and positioning of Year
+     * display elements in the timeline based on the start and finish dates.
+     */
     generateYears() {
         console.log('LOG: Generating YearSeparator array for timeline.');
         let result;
@@ -528,6 +549,13 @@ class Timeline {
         console.log('LOG: YearScale generation complete.');
         return result;
     }
+    /**
+ * Returns an array of MonthSeparators based on the start and finish dates of the timeline.
+ * TODO: consider if there needs to be start and end date arguments or if it should just read the member variables.
+ *
+ * @returns an array of MonthSeparators which determine the content and positioning of Month
+ * display elements in the timeline based on the start and finish dates.
+ */
     generateMonths() {
         console.log('LOG: Generating MonthSeparator array for timeline.');
         let result;
@@ -579,6 +607,9 @@ class Timeline {
     ////////////////////////////////////////////////////////////////
     //  Support Functions
     ////////////////////////////////////////////////////////////////
+    /**
+     * Updates the weekScale, quarterScale, and yearScale member variables based on the dayScale member variable.
+     */
     updateScaleFactors() {
         this.weekScale = this.dayScale * 7;
         this.yearScale = this.dayScale * 365;
@@ -667,11 +698,11 @@ class Visual {
     //  Constructor
     ////////////////////////////////////////////////////////////////
     constructor(options) {
-        //jsUnit.allTests();
-        this.verbose = false;
+        this.verbose = false; //verbose logging?
         if (this.verbose) {
-            console.log('Visual constructor', options);
+            console.log('LOG: Constructing Visual Object', options);
         }
+        //jsUnit.allTests();
         this.style = getComputedStyle(document.querySelector(':root'));
         //     this.target = options.element;
         //     this.updateCount = 0;
@@ -751,14 +782,10 @@ class Visual {
         ////////////////////////////////////////////////////////////////
         //  Create svg timeline
         ////////////////////////////////////////////////////////////////
-        //temp vars to be calcd later
-        // let d1: dayjs.Dayjs = dayjs(new Date(2020, 4, 6));
-        // let d2: dayjs.Dayjs = dayjs(new Date(2023, 9, 12));
         let d1 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2020, 3, 16));
         let d2 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2023, 5, 30));
         this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_1__/* .Timeline */ .TY(d1, d2);
         let padding = 0; //this.timeline.getPadding();
-        // let yearWidth: number = this.timeline.getDayScale() * this.timeline.getDays();
         let tlWidth = this.timeline.getDays() * this.timeline.getDayScale(); //cannot be less than div width!
         let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_3__/* .toPxNumber */ .U(this.style.getPropertyValue('--timelineHeight'));
         let tl = this.divTimeline

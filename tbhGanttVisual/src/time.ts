@@ -113,7 +113,6 @@ export function daysInMonth(month: number, year: number): number {
     } else {
         return daysPerMonth[(Math.floor(month)) % 12];
     }
-
 }
 
 ////////////////////////////////////////////////////////////////
@@ -200,12 +199,12 @@ export function isLeapYear(year: number): boolean {
     return (Math.abs(year) % 4 == 0 && Math.abs(year) % 100 !== 0) || (Math.abs(year) % 400 == 0);
 }
 
+////////////////////////////////////////////////////////////////
+//  UNUSED FUNCTIONS
+////////////////////////////////////////////////////////////////
 
+//dssdfsdf
 
-
-
-
-//unused functions
 // /**
 //  * Returns the number of days in the epoch timeline between two dates.
 //  * @param start The start date.
@@ -344,3 +343,4 @@ export function isLeapYear(year: number): boolean {
 // export function day(dayIndex: number): string {
 //     return '0000-00-00T00:00:00';
 // }
+//

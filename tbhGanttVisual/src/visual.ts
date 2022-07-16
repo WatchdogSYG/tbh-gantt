@@ -87,7 +87,6 @@ export class Visual implements IVisual {
     private divSvgLayer: Selection<HTMLDivElement>;
     private divTimeline: Selection<HTMLDivElement>;
     private divChart: Selection<HTMLDivElement>;
-    private divOverlay: Selection<HTMLDivElement>;
 
     //tables
 
@@ -101,20 +100,17 @@ export class Visual implements IVisual {
 
     ////////////////DEV VARS\\\\\\\\\\\\\\\\
     private style;//should be a CSSStyleDeclaration
-
     private timeline: Timeline;
-
-    private verbose: boolean = false;
+    private verbose: boolean = false; //verbose logging?
 
     ////////////////////////////////////////////////////////////////
     //  Constructor
     ////////////////////////////////////////////////////////////////
 
     constructor(options: VisualConstructorOptions) {
+    if (this.verbose) { console.log('LOG: Constructing Visual Object', options); }
 
         //jsUnit.allTests();
-
-        if (this.verbose) { console.log('Visual constructor', options); }
 
         this.style = getComputedStyle(document.querySelector(':root'));
 
@@ -132,7 +128,6 @@ export class Visual implements IVisual {
 
         // help from lines 377 onwards at https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
 
-
         ////////////////////////////////////////////////////////////////
         //  Create body level child elements
         ////////////////////////////////////////////////////////////////
@@ -148,7 +143,6 @@ export class Visual implements IVisual {
         this.statusAndContent = d3.select(options.element)
             .append('div')
             .attr('id', 'div-statusAndContent');
-
 
         ////////////////////////////////////////////////////////////////
         //  Create elements under the header
@@ -216,18 +210,11 @@ export class Visual implements IVisual {
         //  Create svg timeline
         ////////////////////////////////////////////////////////////////
 
-        //temp vars to be calcd later
-
-        // let d1: dayjs.Dayjs = dayjs(new Date(2020, 4, 6));
-        // let d2: dayjs.Dayjs = dayjs(new Date(2023, 9, 12));
-
         let d1: dayjs.Dayjs = dayjs(new Date(2020, 3, 16));
         let d2: dayjs.Dayjs = dayjs(new Date(2023, 5, 30));
 
         this.timeline = new Timeline(d1, d2);
         let padding: number = 0;//this.timeline.getPadding();
-
-        // let yearWidth: number = this.timeline.getDayScale() * this.timeline.getDays();
 
         let tlWidth: number = this.timeline.getDays() * this.timeline.getDayScale();//cannot be less than div width!
         let tlHeight: number = Lib.toPxNumber(this.style.getPropertyValue('--timelineHeight'));

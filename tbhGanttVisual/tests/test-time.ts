@@ -9,11 +9,11 @@ import * as Time from './../src/time'
  * @returns The proportion of successful tests to failed tests
  */
 export function runUnitTests(verbose: boolean): number {
+    console.log('UNTI TEST: Running tests for file \'test-time.ts\'')
+
     let total: number = 0;
     let passed: number = 0;
     ////////////////////////////////////////////////////////////////
-    //total++;
-    //passed += test_totalDaysPerYear();
 
     console.log('UNIT TEST: Time.isLeapYear()');
     total++;
@@ -28,6 +28,7 @@ export function runUnitTests(verbose: boolean): number {
     if (test_spanMonths(true) == 1) { passed++; };
 
     ////////////////////////////////////////////////////////////////
+
     console.log('LOG: The file /src/time.ts passed ' +
         passed.toString() +
         ' unit tests out of ' +
@@ -37,7 +38,6 @@ export function runUnitTests(verbose: boolean): number {
 
     return passed / total;
 }
-
 
 ////////////////////////////////////////////////////////////////
 // TESTS
@@ -96,6 +96,7 @@ export function test_totalDaysPerYear(verbose: boolean): number {
 }
 
 ////////////////////////////////////////////////////////////////
+
 export function test_spanMonths(verbose: boolean): number {
     var dayjs = require('dayjs');
     var utc = require('dayjs/plugin/utc');
@@ -135,7 +136,6 @@ export function test_spanMonths(verbose: boolean): number {
         5,  //11
         75  //12
     ];
-
 
     for (let i = 0; i < testArgs.length; i++) {
         

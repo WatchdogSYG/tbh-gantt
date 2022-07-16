@@ -24,17 +24,36 @@ export declare class Timeline {
     getMonths(): number;
     getYears(): number;
     getTimeScale(): TimeScale;
-    getPadding(): number;
-    private padding;
-    private isLeapYear;
+    getYearPadding(): number;
+    getMonthPadding(): number;
+    setYearPadding(padding: number): void;
+    private yearPadding;
+    private monthPadding;
     constructor(start: dayjs.Dayjs, end: dayjs.Dayjs);
     /**
      * Not yet implemented
      * @param daysPerPixel the desired scale factor
      */
     setDayScale(daysPerPixel: number): void;
+    /**
+     * Returns an array of YearSeparators based on the start and finish dates of the timeline.
+     * TODO: consider if there needs to be start and end date arguments or if it should just read the member variables.
+     *
+     * @returns an array of YearSeparators which determine the content and positioning of Year
+     * display elements in the timeline based on the start and finish dates.
+     */
     private generateYears;
+    /**
+ * Returns an array of MonthSeparators based on the start and finish dates of the timeline.
+ * TODO: consider if there needs to be start and end date arguments or if it should just read the member variables.
+ *
+ * @returns an array of MonthSeparators which determine the content and positioning of Month
+ * display elements in the timeline based on the start and finish dates.
+ */
     private generateMonths;
+    /**
+     * Updates the weekScale, quarterScale, and yearScale member variables based on the dayScale member variable.
+     */
     private updateScaleFactors;
 }
 export interface IYearScale {

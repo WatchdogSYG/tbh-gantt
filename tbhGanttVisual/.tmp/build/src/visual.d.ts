@@ -17,7 +17,6 @@ export declare class Visual implements IVisual {
     private divSvgLayer;
     private divTimeline;
     private divChart;
-    private divOverlay;
     private activityTable;
     private timelineTable;
     private ganttGridTable;
