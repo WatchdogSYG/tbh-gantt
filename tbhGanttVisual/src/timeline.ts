@@ -24,7 +24,7 @@ export class Timeline {
     private span_days: number;
     private span_months: number;
     private span_years: number;
-    
+
     //--------SCALE--------//
     private dayScale: number;
     private weekScale: number;
@@ -91,7 +91,6 @@ export class Timeline {
         this.yearPadding = 5;
         this.dayScale = 1;
         this.updateScaleFactors();
-
         if (this.verbose) {
             console.log('LOG: Timeline created from ' +
                 this.d1.toISOString() + ' to ' +
@@ -269,7 +268,9 @@ export class Timeline {
     private updateScaleFactors() {
         this.weekScale = this.dayScale * 7;
         this.yearScale = this.dayScale * 365;
+        this.monthScale = [];
         for (let i = 0; i < 12; i++) { this.monthScale[i] = this.dayScale[i] * Time.daysInMonth[i]; }
+        this.quarterScale = [];
         this.quarterScale[0] = this.monthScale[0] + this.monthScale[1] + this.monthScale[2];
         this.quarterScale[1] = this.monthScale[3] + this.monthScale[4] + this.monthScale[5];
         this.quarterScale[2] = this.monthScale[6] + this.monthScale[7] + this.monthScale[8];
