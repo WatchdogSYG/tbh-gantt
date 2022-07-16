@@ -108,7 +108,7 @@ export class Visual implements IVisual {
     ////////////////////////////////////////////////////////////////
 
     constructor(options: VisualConstructorOptions) {
-    if (this.verbose) { console.log('LOG: Constructing Visual Object', options); }
+        if (this.verbose) { console.log('LOG: Constructing Visual Object', options); }
 
         //jsUnit.allTests();
 
@@ -225,11 +225,13 @@ export class Visual implements IVisual {
             .attr('height', '100%')
             .attr('width', Lib.px(tlWidth));
 
-        let gTop: Selection<SVGGElement> = tl.append('g')
-            .classed('g-tl', true);
-
         let gBottom: Selection<SVGGElement> = tl.append('g')
             .classed('g-tl', true);
+            
+            let gTop: Selection<SVGGElement> = tl.append('g')
+            .classed('g-tl', true);
+
+        
 
         let ts: TimeScale = this.timeline.getTimeScale();
 
@@ -255,6 +257,7 @@ export class Visual implements IVisual {
                 return Lib.px(d.offset);
             })
             .attr('y2', tlHeight)
+            .attr('stroke-width', '2px')
             .attr('style', 'stroke:black');
 
         //////////////////////////////////////////////////////////////// MonthText
@@ -280,7 +283,7 @@ export class Visual implements IVisual {
                 return Lib.px(d.offset);
             })
             .attr('y2', tlHeight)
-            .attr('style', 'stroke:blue');
+            .attr('style', 'stroke:red');
 
 
 
@@ -463,7 +466,7 @@ export class Visual implements IVisual {
      * Returns the configuration of the desired graph to determine which elements to render based on the data in dataView.
      * @param dataView The DataView object to configure the visual against.
      */
-    private checkConfiguration(dataView: DataView){
+    private checkConfiguration(dataView: DataView) {
 
 
     }

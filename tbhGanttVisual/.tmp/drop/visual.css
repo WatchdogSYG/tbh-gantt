@@ -1,7 +1,7 @@
 /* -------- VAR -------- */
 :root {
   --rowHeight: 20px;
-  --timelineHeight: 80px;
+  --timelineHeight: 60px;
   --chartPortionPct: 75%;
   --chartPortionFr: 75fr;
   --tbh-blue-background: #232d40;
@@ -167,14 +167,29 @@ td {
 .g-tl {
   border: 1px solid black;
 }
+.yearText {
+  font-size: 26px;
+}
 monthText {
-  text-anchor: middle ;
+  text-anchor: middle;
 }
 /* ------- CHART ------- */
 .activityBar {
   fill: red;
   stroke: black;
   stroke-width: 1px;
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--tbh-blue-background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--tbh-blue1);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c8c8c8;
 }
 /* ------- DEBUG ------- */
 .highlight {

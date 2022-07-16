@@ -803,9 +803,9 @@ class Visual {
             .attr('id', 'tl-top')
             .attr('height', '100%')
             .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(tlWidth));
-        let gTop = tl.append('g')
-            .classed('g-tl', true);
         let gBottom = tl.append('g')
+            .classed('g-tl', true);
+        let gTop = tl.append('g')
             .classed('g-tl', true);
         let ts = this.timeline.getTimeScale();
         //////////////////////////////////////////////////////////////// YearText
@@ -829,6 +829,7 @@ class Visual {
             return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.offset);
         })
             .attr('y2', tlHeight)
+            .attr('stroke-width', '2px')
             .attr('style', 'stroke:black');
         //////////////////////////////////////////////////////////////// MonthText
         gBottom.selectAll('text')
@@ -852,7 +853,7 @@ class Visual {
             return _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(d.offset);
         })
             .attr('y2', tlHeight)
-            .attr('style', 'stroke:blue');
+            .attr('style', 'stroke:red');
         ////////////////////////////////////////////////////////////////
         //  Create #table-activities
         ////////////////////////////////////////////////////////////////

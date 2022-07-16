@@ -1,7 +1,7 @@
 /* -------- VAR -------- */
 :root {
     --rowHeight: 20px;
-    --timelineHeight: 80px;
+    --timelineHeight: 60px;
 
     //the horizontal portion of the container that should be 
     //taken up by the gantt chart
@@ -254,12 +254,13 @@ td {
     //color:#00ff00;
 }
 
-.yearText{
+.yearText {
+    font-size: 26px;
     //height: 1em;
 }
 
-monthText{
-    text-anchor:middle ;
+monthText {
+    text-anchor: middle;
 }
 
 /* ------- CHART ------- */
@@ -269,6 +270,24 @@ monthText{
     fill: red;
     stroke: black;
     stroke-width: 1px;
+}
+
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--tbh-blue-background);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--tbh-blue1);
+
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(200, 200, 200);
 }
 
 /* ------- DEBUG ------- */
