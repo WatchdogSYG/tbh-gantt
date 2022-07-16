@@ -42,7 +42,7 @@ CircleCard visual tutorial complete (with sample Power BI data).
 
 https://docs.microsoft.com/en-us/power-bi/developer/visuals/dataview-mappings
 
-### Prototype of the front end DOM
+### Prototype of the front end DOM (blog)
 
 Initial positionings of elements in a web page and in ts.
 
@@ -74,6 +74,10 @@ We use `Day.js` for time manipulation and working with days.
 Note: there is a 1px misalignment in YearSeparator right now. Still need to debug.
 
 ![Separators in Scrollable Timeline](readme-assets/011-yearAndMonths.jpg)
+
+Timeline and chart now scroll synchronously. Added support for converting dates into positions on the timeline. It now seems that we need some css and div restructuring before continuing. We need to simplify the statusline-timeline-chart interactions, fix scrollbars, and account for an arbitrary number of activities in the activity table. Also we need to eventually refactor the word "tasks" out and replace it with "activity"
+
+![Need to restructure divs and css.](readme-assets/012-needsDivRedo.jpg)
 
 ## Requirements Definition
 
