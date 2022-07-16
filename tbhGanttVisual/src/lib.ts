@@ -19,7 +19,7 @@ export function px(pixels: number): string {
  * @param numberPx the string containing the number of pixels to extract eg. '40.2px'
  * @returns the number of pixels specified
  */
-export function toPxNumber(numberPx: string): number {
+export function pxToNumber(numberPx: string): number {
    //if there is only one instance of 'px' and its at the end
    if ((numberPx.lastIndexOf('px') == numberPx.indexOf('px'))
    && (numberPx.length - numberPx.lastIndexOf('px') == 2)) {

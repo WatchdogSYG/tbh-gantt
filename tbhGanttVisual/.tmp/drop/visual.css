@@ -2,6 +2,7 @@
 :root {
   --rowHeight: 20px;
   --timelineHeight: 60px;
+  --timelineWidth: 1000px;
   --chartPortionPct: 75%;
   --chartPortionFr: 75fr;
   --tbh-blue-background: #232d40;
@@ -104,6 +105,10 @@ div {
   border-color: black;
   display: grid;
   grid-template-columns: 1fr;
+  overflow: scroll;
+}
+#div-chartContainer::-webkit-scrollbar {
+  height: 20px;
 }
 .gridStack {
   grid-column-start: 1;
@@ -125,6 +130,9 @@ div {
   width: 75%;
   overflow-x: scroll;
   overflow-y: clip;
+}
+#div-timeline::-webkit-scrollbar {
+  height: 0px;
 }
 #div-chart {
   height: fit-content;
@@ -170,7 +178,7 @@ td {
 .yearText {
   font-size: 26px;
 }
-monthText {
+.monthText {
   text-anchor: middle;
 }
 /* ------- CHART ------- */
@@ -181,6 +189,7 @@ monthText {
 }
 ::-webkit-scrollbar {
   width: 10px;
+  height: 10px;
 }
 ::-webkit-scrollbar-track {
   background: var(--tbh-blue-background);

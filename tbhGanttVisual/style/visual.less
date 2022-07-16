@@ -3,6 +3,8 @@
     --rowHeight: 20px;
     --timelineHeight: 60px;
 
+    --timelineWidth: 1000px;
+
     //the horizontal portion of the container that should be 
     //taken up by the gantt chart
     --chartPortionPct: 75%; //for flex
@@ -150,6 +152,12 @@ div {
 
     display: grid;
     grid-template-columns: 1fr;
+
+    overflow: scroll;
+}
+
+#div-chartContainer::-webkit-scrollbar {
+    height: 20px;
 }
 
 //https://ishadeed.com/article/less-absolute-positioning-modern-css/
@@ -194,6 +202,10 @@ div {
     width: 75%;
     overflow-x: scroll;
     overflow-y: clip;
+}
+
+#div-timeline::-webkit-scrollbar {
+    height: 0px;
 }
 
 #div-chart {
@@ -259,7 +271,7 @@ td {
     //height: 1em;
 }
 
-monthText {
+.monthText {
     text-anchor: middle;
 }
 
@@ -275,6 +287,7 @@ monthText {
 
 ::-webkit-scrollbar {
     width: 10px;
+    height: 10px;
 }
 
 ::-webkit-scrollbar-track {

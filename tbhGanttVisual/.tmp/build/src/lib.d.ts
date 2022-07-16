@@ -10,7 +10,7 @@ export declare function px(pixels: number): string;
  * @param numberPx the string containing the number of pixels to extract eg. '40.2px'
  * @returns the number of pixels specified
  */
-export declare function toPxNumber(numberPx: string): number;
+export declare function pxToNumber(numberPx: string): number;
 /**
  * Returns a number rounded up, down, or not at all, to the nearest integer.
  * @param x The number to round.

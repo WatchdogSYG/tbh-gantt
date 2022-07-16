@@ -7,7 +7,7 @@ var tbhGanttVisual02814EA99E75457B80AA513BCFD5A299_DEBUG;
 
 "use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "U": () => (/* binding */ toPxNumber),
+/* harmony export */   "F": () => (/* binding */ pxToNumber),
 /* harmony export */   "px": () => (/* binding */ px)
 /* harmony export */ });
 /* unused harmony export roundOptions */
@@ -29,7 +29,7 @@ function px(pixels) {
  * @param numberPx the string containing the number of pixels to extract eg. '40.2px'
  * @returns the number of pixels specified
  */
-function toPxNumber(numberPx) {
+function pxToNumber(numberPx) {
     //if there is only one instance of 'px' and its at the end
     if ((numberPx.lastIndexOf('px') == numberPx.indexOf('px'))
         && (numberPx.length - numberPx.lastIndexOf('px') == 2)) {
@@ -712,6 +712,7 @@ class Visual {
         if (this.verbose) {
             console.log('LOG: Constructing Visual Object', options);
         }
+        var _this = this; //get a reference to self so that d3's anonymous callbacks can access member functions
         //jsUnit.allTests();
         this.style = getComputedStyle(document.querySelector(':root'));
         //     this.target = options.element;
@@ -725,10 +726,20 @@ class Visual {
         //         new_p.appendChild(new_em);
         //         this.target.appendChild(new_p);
         //      }
-        // help from lines 377 onwards at https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
+        ////////////////////////////////////////////////////////////////
+        //  Generate Timeline object from data (put in function later)
+        ////////////////////////////////////////////////////////////////
+        let d1 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2020, 3, 16));
+        let d2 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2023, 5, 30));
+        this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_1__/* .Timeline */ .TY(d1, d2);
+        let padding = 0; //this.timeline.getPadding();
+        let tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale()); //cannot be less than div width!
+        let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_3__/* .pxToNumber */ .F(this.style.getPropertyValue('--timelineHeight'));
+        let ts = this.timeline.getTimeScale();
         ////////////////////////////////////////////////////////////////
         //  Create body level child elements
         ////////////////////////////////////////////////////////////////
+        // help from lines 377 onwards at https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
         //the header including title, logos etc
         this.divHeader = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys(options.element)
             .append('div')
@@ -755,7 +766,7 @@ class Visual {
             .append('div')
             .attr('id', 'div-statusLine');
         ////////////////////////////////////////////////////////////////
-        //  Create content elements
+        //  Create content elements (must set timeline width using selection.style())...
         ////////////////////////////////////////////////////////////////
         //div to hold the activity data in a table
         this.divActivities = this.divContent
@@ -764,17 +775,20 @@ class Visual {
         //div to hold the chart elements including background, bars, text, controls
         this.divChartContainer = this.divContent
             .append('div')
-            .attr('id', 'div-chartContainer');
+            .attr('id', 'div-chartContainer')
+            .on('scroll', function () { _this.syncScrollTimeline(_this.divChartContainer); }); //_this.syncScrollTimeline(d.attr('id')) });
         //the structure layer of the chart (grid, shading)
         this.divStructureLayer = this.divChartContainer
             .append('div')
             .attr('class', 'gridStack')
-            .attr('id', 'div-structureLayer');
+            .attr('id', 'div-structureLayer')
+            .style('width', _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(tlWidth));
         //the svg layer  of the chart (bars, links)
         this.divSvgLayer = this.divChartContainer
             .append('div')
             .attr('class', 'gridStack')
-            .attr('id', 'div-svgLayer');
+            .attr('id', 'div-svgLayer')
+            .style('width', _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(tlWidth));
         //div in the header that contains the timeline and table header (separate for scrolling purposes)
         this.divTimelineAndActivitiesH.append('table')
             .attr('id', 'table-activityHeader')
@@ -783,7 +797,8 @@ class Visual {
         //the div containing the timeline svgs
         this.divTimeline = this.divTimelineAndActivitiesH
             .append('div')
-            .attr('id', 'div-timeline');
+            .attr('id', 'div-timeline')
+            .on('scroll', function () { _this.syncScrollTimeline(_this.divTimeline); });
         //the div that needs more justification for its existence.
         this.divChart = this.divStructureLayer
             .append('div')
@@ -792,12 +807,6 @@ class Visual {
         ////////////////////////////////////////////////////////////////
         //  Create svg timeline
         ////////////////////////////////////////////////////////////////
-        let d1 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2020, 3, 16));
-        let d2 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2023, 5, 30));
-        this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_1__/* .Timeline */ .TY(d1, d2);
-        let padding = 0; //this.timeline.getPadding();
-        let tlWidth = this.timeline.getDays() * this.timeline.getDayScale(); //cannot be less than div width!
-        let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_3__/* .toPxNumber */ .U(this.style.getPropertyValue('--timelineHeight'));
         let tl = this.divTimeline
             .append('svg')
             .attr('id', 'tl-top')
@@ -807,7 +816,6 @@ class Visual {
             .classed('g-tl', true);
         let gTop = tl.append('g')
             .classed('g-tl', true);
-        let ts = this.timeline.getTimeScale();
         //////////////////////////////////////////////////////////////// YearText
         gTop.selectAll('text')
             .data(ts.yearScale)
@@ -1012,6 +1020,42 @@ class Visual {
      * @param dataView The DataView object to configure the visual against.
      */
     checkConfiguration(dataView) {
+    }
+    /**
+     * Synchronises the left scrolling of the div-timeline and div-chartContainer depending on which one was scrolled.
+     *
+     * KNOWN ISSUE: since the event listener that fires this callback is on both div-timeline and div-chartContainer,
+     * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
+     * @param div the div that was scrolled by the user.
+     */
+    syncScrollTimeline(div) {
+        //links i used to understand ts callbacks, d3 event handling
+        //https://hstefanski.wordpress.com/2015/10/25/responding-to-d3-events-in-typescript/
+        //https://rollbar.com/blog/javascript-typeerror-cannot-read-property-of-undefined/
+        //https://www.d3indepth.com/selections/
+        //https://developer.mozilla.org/en-US/docs/Web/API/Element/scroll_event
+        //https://github.com/d3/d3-selection/blob/main/README.md#handling-events
+        //https://www.tutorialsteacher.com/d3js/event-handling-in-d3js
+        if (this.verbose) {
+            console.log('Synchronising scroll...');
+        }
+        let id = div.attr('id'); //d3.select(d3.event.currentTarget)
+        let chartID = 'div-chartContainer';
+        let timelineID = 'div-timeline';
+        switch (id) {
+            case chartID:
+                document.getElementById(timelineID).scrollLeft = document.getElementById(chartID).scrollLeft;
+                if (this.verbose) {
+                    console.log('LOG: Sync timeline scroll to chart scroll');
+                }
+                ;
+            case timelineID:
+                document.getElementById(chartID).scrollLeft = document.getElementById(timelineID).scrollLeft;
+                if (this.verbose) {
+                    console.log('LOG: Sync chart scroll to timeline scroll');
+                }
+                ;
+        }
     }
 }
 

@@ -31,4 +31,12 @@ export declare class Visual implements IVisual {
      * @param dataView The DataView object to configure the visual against.
      */
     private checkConfiguration;
+    /**
+     * Synchronises the left scrolling of the div-timeline and div-chartContainer depending on which one was scrolled.
+     *
+     * KNOWN ISSUE: since the event listener that fires this callback is on both div-timeline and div-chartContainer,
+     * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
+     * @param div the div that was scrolled by the user.
+     */
+    private syncScrollTimeline;
 }

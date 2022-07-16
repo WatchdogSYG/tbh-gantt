@@ -99,7 +99,7 @@ export class Visual implements IVisual {
     //text
 
     ////////////////DEV VARS\\\\\\\\\\\\\\\\
-    private style;//should be a CSSStyleDeclaration
+    private style: CSSStyleDeclaration;//should be a CSSStyleDeclaration
     private timeline: Timeline;
     private verbose: boolean = false; //verbose logging?
 
@@ -109,6 +109,8 @@ export class Visual implements IVisual {
 
     constructor(options: VisualConstructorOptions) {
         if (this.verbose) { console.log('LOG: Constructing Visual Object', options); }
+
+        var _this = this; //get a reference to self so that d3's anonymous callbacks can access member functions
 
         //jsUnit.allTests();
 
@@ -126,11 +128,27 @@ export class Visual implements IVisual {
         //         this.target.appendChild(new_p);
         //      }
 
-        // help from lines 377 onwards at https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
+        ////////////////////////////////////////////////////////////////
+        //  Generate Timeline object from data (put in function later)
+        ////////////////////////////////////////////////////////////////
+
+        let d1: dayjs.Dayjs = dayjs(new Date(2020, 3, 16));
+        let d2: dayjs.Dayjs = dayjs(new Date(2023, 5, 30));
+
+        this.timeline = new Timeline(d1, d2);
+        let padding: number = 0;//this.timeline.getPadding();
+
+        let tlWidth: number = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale());//cannot be less than div width!
+
+        let tlHeight: number = Lib.pxToNumber(this.style.getPropertyValue('--timelineHeight'));
+
+        let ts: TimeScale = this.timeline.getTimeScale();
+
 
         ////////////////////////////////////////////////////////////////
         //  Create body level child elements
         ////////////////////////////////////////////////////////////////
+        // help from lines 377 onwards at https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
 
         //the header including title, logos etc
         this.divHeader = d3.select(options.element)
@@ -164,7 +182,7 @@ export class Visual implements IVisual {
             .attr('id', 'div-statusLine');
 
         ////////////////////////////////////////////////////////////////
-        //  Create content elements
+        //  Create content elements (must set timeline width using selection.style())...
         ////////////////////////////////////////////////////////////////
 
         //div to hold the activity data in a table
@@ -175,19 +193,22 @@ export class Visual implements IVisual {
         //div to hold the chart elements including background, bars, text, controls
         this.divChartContainer = this.divContent
             .append('div')
-            .attr('id', 'div-chartContainer');
+            .attr('id', 'div-chartContainer')
+            .on('scroll', function () { _this.syncScrollTimeline(_this.divChartContainer) }); //_this.syncScrollTimeline(d.attr('id')) });
 
         //the structure layer of the chart (grid, shading)
         this.divStructureLayer = this.divChartContainer
             .append('div')
             .attr('class', 'gridStack')
-            .attr('id', 'div-structureLayer');
+            .attr('id', 'div-structureLayer')
+            .style('width', Lib.px(tlWidth));
 
         //the svg layer  of the chart (bars, links)
         this.divSvgLayer = this.divChartContainer
             .append('div')
             .attr('class', 'gridStack')
-            .attr('id', 'div-svgLayer');
+            .attr('id', 'div-svgLayer')
+            .style('width', Lib.px(tlWidth));
 
         //div in the header that contains the timeline and table header (separate for scrolling purposes)
         this.divTimelineAndActivitiesH.append('table')
@@ -198,7 +219,8 @@ export class Visual implements IVisual {
         //the div containing the timeline svgs
         this.divTimeline = this.divTimelineAndActivitiesH
             .append('div')
-            .attr('id', 'div-timeline');
+            .attr('id', 'div-timeline')
+            .on('scroll', function () { _this.syncScrollTimeline(_this.divTimeline) });
 
         //the div that needs more justification for its existence.
         this.divChart = this.divStructureLayer
@@ -206,18 +228,11 @@ export class Visual implements IVisual {
             .attr('id', 'div-chart')
             .attr('class', 'highlight');
 
+
         ////////////////////////////////////////////////////////////////
         //  Create svg timeline
         ////////////////////////////////////////////////////////////////
 
-        let d1: dayjs.Dayjs = dayjs(new Date(2020, 3, 16));
-        let d2: dayjs.Dayjs = dayjs(new Date(2023, 5, 30));
-
-        this.timeline = new Timeline(d1, d2);
-        let padding: number = 0;//this.timeline.getPadding();
-
-        let tlWidth: number = this.timeline.getDays() * this.timeline.getDayScale();//cannot be less than div width!
-        let tlHeight: number = Lib.toPxNumber(this.style.getPropertyValue('--timelineHeight'));
 
         let tl: Selection<SVGSVGElement> = this.divTimeline
             .append('svg')
@@ -227,13 +242,9 @@ export class Visual implements IVisual {
 
         let gBottom: Selection<SVGGElement> = tl.append('g')
             .classed('g-tl', true);
-            
-            let gTop: Selection<SVGGElement> = tl.append('g')
+
+        let gTop: Selection<SVGGElement> = tl.append('g')
             .classed('g-tl', true);
-
-        
-
-        let ts: TimeScale = this.timeline.getTimeScale();
 
         //////////////////////////////////////////////////////////////// YearText
         gTop.selectAll('text')
@@ -284,8 +295,6 @@ export class Visual implements IVisual {
             })
             .attr('y2', tlHeight)
             .attr('style', 'stroke:red');
-
-
 
         ////////////////////////////////////////////////////////////////
         //  Create #table-activities
@@ -469,6 +478,39 @@ export class Visual implements IVisual {
     private checkConfiguration(dataView: DataView) {
 
 
+    }
+
+    /**
+     * Synchronises the left scrolling of the div-timeline and div-chartContainer depending on which one was scrolled.
+     * 
+     * KNOWN ISSUE: since the event listener that fires this callback is on both div-timeline and div-chartContainer, 
+     * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
+     * @param div the div that was scrolled by the user.
+     */
+    private syncScrollTimeline(div: Selection<HTMLDivElement>) {
+        //links i used to understand ts callbacks, d3 event handling
+        //https://hstefanski.wordpress.com/2015/10/25/responding-to-d3-events-in-typescript/
+        //https://rollbar.com/blog/javascript-typeerror-cannot-read-property-of-undefined/
+        //https://www.d3indepth.com/selections/
+        //https://developer.mozilla.org/en-US/docs/Web/API/Element/scroll_event
+        //https://github.com/d3/d3-selection/blob/main/README.md#handling-events
+        //https://www.tutorialsteacher.com/d3js/event-handling-in-d3js
+
+        if (this.verbose) { console.log('Synchronising scroll...'); }
+
+        let id: string = div.attr('id');//d3.select(d3.event.currentTarget)
+        let chartID: string = 'div-chartContainer';
+        let timelineID: string = 'div-timeline';
+
+        switch (id) {
+            case chartID:
+                document.getElementById(timelineID).scrollLeft = document.getElementById(chartID).scrollLeft;
+                if (this.verbose) { console.log('LOG: Sync timeline scroll to chart scroll'); };
+
+            case timelineID:
+                document.getElementById(chartID).scrollLeft = document.getElementById(timelineID).scrollLeft;
+                if (this.verbose) { console.log('LOG: Sync chart scroll to timeline scroll'); };
+        }
     }
 
     ////////////////////////////////////////////////////////////////
