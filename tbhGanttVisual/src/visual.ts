@@ -134,8 +134,9 @@ export class Visual implements IVisual {
 
         let d1: dayjs.Dayjs = dayjs(new Date(2020, 3, 16));
         let d2: dayjs.Dayjs = dayjs(new Date(2023, 5, 30));
+        let status: dayjs.Dayjs = dayjs(new Date(2022, 6, 16));
 
-        this.timeline = new Timeline(d1, d2);
+        this.timeline = new Timeline(d1, d2, status);
         let padding: number = 0;//this.timeline.getPadding();
 
         let tlWidth: number = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale());//cannot be less than div width!
@@ -176,10 +177,7 @@ export class Visual implements IVisual {
             .append('div')
             .attr('id', 'div-content');
 
-        //overlapping div to contain the status line
-        this.divStatusLine = this.statusAndContent
-            .append('div')
-            .attr('id', 'div-statusLine');
+
 
         ////////////////////////////////////////////////////////////////
         //  Create content elements (must set timeline width using selection.style())...
@@ -196,17 +194,30 @@ export class Visual implements IVisual {
             .attr('id', 'div-chartContainer')
             .on('scroll', function () { _this.syncScrollTimeline(_this.divChartContainer) }); //_this.syncScrollTimeline(d.attr('id')) });
 
+        //overlapping div to contain the status line
+        this.divChartContainer
+            .append('div')
+            .attr('id', 'div-statusLine')
+            .classed('gridStack', true);
+
+        // this.divTimeline
+        //     .append('div')
+        //     .attr('id', 'div-statusLine')
+        //     .classed('gridStack', true);
+
+        this.divStatusLine = d3.selectAll('#div-statusLine');
+
         //the structure layer of the chart (grid, shading)
         this.divStructureLayer = this.divChartContainer
             .append('div')
-            .attr('class', 'gridStack')
+            .classed('gridStack', true)
             .attr('id', 'div-structureLayer')
             .style('width', Lib.px(tlWidth));
 
         //the svg layer  of the chart (bars, links)
         this.divSvgLayer = this.divChartContainer
             .append('div')
-            .attr('class', 'gridStack')
+            .classed('gridStack', true)
             .attr('id', 'div-svgLayer')
             .style('width', Lib.px(tlWidth));
 
@@ -225,8 +236,7 @@ export class Visual implements IVisual {
         //the div that needs more justification for its existence.
         this.divChart = this.divStructureLayer
             .append('div')
-            .attr('id', 'div-chart')
-            .attr('class', 'highlight');
+            .attr('id', 'div-chart');
 
 
         ////////////////////////////////////////////////////////////////
@@ -317,7 +327,26 @@ export class Visual implements IVisual {
         let values4: string[] = ['Activity E', '01/03/22', '25/06/22'];
         let values5: string[] = ['Activity F', '01/03/22', '25/06/22'];
         let values6: string[] = ['Activity G', '01/03/22', '25/06/22'];
-        let myData: string[][] = [keys, values1, values2, values3, values4, values5, values6];
+        let values7: string[] = ['Activity B', '01/03/22', '25/06/22'];
+        let values8: string[] = ['Activity C', '01/03/22', '25/06/22'];
+        let values9: string[] = ['Activity D', '01/03/22', '25/06/22'];
+        let values0: string[] = ['Activity E', '01/03/22', '25/06/22'];
+        let valuesa: string[] = ['Activity F', '01/03/22', '25/06/22'];
+        let valuesb: string[] = ['Activity G', '01/03/22', '25/06/22'];
+        let myData: string[][] = [keys,
+            values1,
+            values2,
+            values3,
+            values4,
+            values5,
+            values6,
+            values7,
+            values8,
+            values9,
+            values0,
+            valuesa,
+            valuesb,
+        ];
 
         this.populateActivityTable(myData, null, 'table-activities');
 
@@ -387,7 +416,7 @@ export class Visual implements IVisual {
                 .height
                 .toString()
                 .concat('px'))
-            .attr('transform', 'translate(30)');
+            .attr('transform', 'translate(' + this.timeline.statusDateLocation() + ')');
     }
 
     ////////////////////////////////////////////////////////////////

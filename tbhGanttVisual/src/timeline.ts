@@ -3,6 +3,8 @@
 // Year support
 // Month support
 
+//TODO status and data datae lines?
+
 import * as dayjs from 'dayjs';
 import * as Lib from './../src/lib';
 import * as Time from './../src/time';
@@ -18,6 +20,7 @@ export class Timeline {
 
     private d1: dayjs.Dayjs;
     private d2: dayjs.Dayjs;
+    private status: dayjs.Dayjs;
     private n_days: number;
     private n_months: number;
     private n_years: number;
@@ -44,6 +47,7 @@ export class Timeline {
     //simple getters and setters
     public getStart(): dayjs.Dayjs { return this.d1; }
     public getEnd(): dayjs.Dayjs { return this.d2; }
+    public getStatus(): dayjs.Dayjs { return this.status; }
     public getDays(): number { return this.n_days; }
     public getDayScale(): number { return this.dayScale; }
     public getMonths(): number { return this.n_months; }
@@ -68,7 +72,7 @@ export class Timeline {
     //  Constructor
     ////////////////////////////////////////////////////////////////
 
-    constructor(start: dayjs.Dayjs, end: dayjs.Dayjs) {
+    constructor(start: dayjs.Dayjs, end: dayjs.Dayjs, status: dayjs.Dayjs) {
 
         console.log('LOG: Constructing Timeline Object');
 
@@ -80,6 +84,8 @@ export class Timeline {
             this.d1 = start.startOf('d');
             this.d2 = end.endOf('d');
         }
+
+        this.status = status;
 
         this.n_years = this.d2.diff(this.d1, 'y', true);
         this.n_months = this.d2.diff(this.d1, 'M', true);
@@ -127,8 +133,6 @@ export class Timeline {
         this.dayScale = daysPerPixel;
         this.updateScaleFactors()
     }
-
-
 
     ////////////////////////////////////////////////////////////////
     //  Timeline Style Functions
@@ -283,6 +287,23 @@ export class Timeline {
         this.quarterScale[1] = this.monthScale[3] + this.monthScale[4] + this.monthScale[5];
         this.quarterScale[2] = this.monthScale[6] + this.monthScale[7] + this.monthScale[8];
         this.quarterScale[3] = this.monthScale[9] + this.monthScale[10] + this.monthScale[11];
+    }
+
+    /**
+     * Converts a Day.js date to a horizontal offset on the chart based on the Timeline scale.
+     * @param date the date to convert
+     * @returns the location from the left edge of the chart the input date corresponds to
+     */
+    public dateLocation(date: dayjs.Dayjs): number {
+        return date.diff(this.d1,'d',true)*this.dayScale;
+    }
+    
+    /**
+     * Converts the status date to a horizontal offset on the chart based on the Timeline scale. Similar to Timeline.dateLocation(date: dayjs.Dayjs).
+     * @returns The location from the left edge of the chart the current status date corresponds to
+     */
+    public statusDateLocation():number{
+        return this.dateLocation(this.status);
     }
 }
 

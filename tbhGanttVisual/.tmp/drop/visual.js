@@ -417,7 +417,7 @@ class Timeline {
     ////////////////////////////////////////////////////////////////
     //  Constructor
     ////////////////////////////////////////////////////////////////
-    constructor(start, end) {
+    constructor(start, end, status) {
         ////////////////////////////////////////////////////////////////
         //  Define members
         ////////////////////////////////////////////////////////////////
@@ -433,6 +433,7 @@ class Timeline {
             this.d1 = start.startOf('d');
             this.d2 = end.endOf('d');
         }
+        this.status = status;
         this.n_years = this.d2.diff(this.d1, 'y', true);
         this.n_months = this.d2.diff(this.d1, 'M', true);
         this.n_days = this.d2.diff(this.d1, 'd', true);
@@ -468,6 +469,7 @@ class Timeline {
     //simple getters and setters
     getStart() { return this.d1; }
     getEnd() { return this.d2; }
+    getStatus() { return this.status; }
     getDays() { return this.n_days; }
     getDayScale() { return this.dayScale; }
     getMonths() { return this.n_months; }
@@ -629,6 +631,21 @@ class Timeline {
         this.quarterScale[2] = this.monthScale[6] + this.monthScale[7] + this.monthScale[8];
         this.quarterScale[3] = this.monthScale[9] + this.monthScale[10] + this.monthScale[11];
     }
+    /**
+     * Converts a Day.js date to a horizontal offset on the chart based on the Timeline scale.
+     * @param date the date to convert
+     * @returns the location from the left edge of the chart the input date corresponds to
+     */
+    dateLocation(date) {
+        return date.diff(this.d1, 'd', true) * this.dayScale;
+    }
+    /**
+     * Converts the status date to a horizontal offset on the chart based on the Timeline scale. Similar to Timeline.dateLocation(date: dayjs.Dayjs).
+     * @returns The location from the left edge of the chart the current status date corresponds to
+     */
+    statusDateLocation() {
+        return this.dateLocation(this.status);
+    }
 }
 class YearSeparator {
     constructor(yearText, yearOffset, textAnchorOffset) {
@@ -731,7 +748,8 @@ class Visual {
         ////////////////////////////////////////////////////////////////
         let d1 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2020, 3, 16));
         let d2 = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2023, 5, 30));
-        this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_1__/* .Timeline */ .TY(d1, d2);
+        let status = dayjs__WEBPACK_IMPORTED_MODULE_2__(new Date(2022, 6, 16));
+        this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_1__/* .Timeline */ .TY(d1, d2, status);
         let padding = 0; //this.timeline.getPadding();
         let tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale()); //cannot be less than div width!
         let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_3__/* .pxToNumber */ .F(this.style.getPropertyValue('--timelineHeight'));
@@ -761,10 +779,6 @@ class Visual {
         this.divContent = this.statusAndContent
             .append('div')
             .attr('id', 'div-content');
-        //overlapping div to contain the status line
-        this.divStatusLine = this.statusAndContent
-            .append('div')
-            .attr('id', 'div-statusLine');
         ////////////////////////////////////////////////////////////////
         //  Create content elements (must set timeline width using selection.style())...
         ////////////////////////////////////////////////////////////////
@@ -777,16 +791,26 @@ class Visual {
             .append('div')
             .attr('id', 'div-chartContainer')
             .on('scroll', function () { _this.syncScrollTimeline(_this.divChartContainer); }); //_this.syncScrollTimeline(d.attr('id')) });
+        //overlapping div to contain the status line
+        this.divChartContainer
+            .append('div')
+            .attr('id', 'div-statusLine')
+            .classed('gridStack', true);
+        // this.divTimeline
+        //     .append('div')
+        //     .attr('id', 'div-statusLine')
+        //     .classed('gridStack', true);
+        this.divStatusLine = d3__WEBPACK_IMPORTED_MODULE_0__/* .selectAll */ .td_('#div-statusLine');
         //the structure layer of the chart (grid, shading)
         this.divStructureLayer = this.divChartContainer
             .append('div')
-            .attr('class', 'gridStack')
+            .classed('gridStack', true)
             .attr('id', 'div-structureLayer')
             .style('width', _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(tlWidth));
         //the svg layer  of the chart (bars, links)
         this.divSvgLayer = this.divChartContainer
             .append('div')
-            .attr('class', 'gridStack')
+            .classed('gridStack', true)
             .attr('id', 'div-svgLayer')
             .style('width', _src_lib__WEBPACK_IMPORTED_MODULE_3__.px(tlWidth));
         //div in the header that contains the timeline and table header (separate for scrolling purposes)
@@ -802,8 +826,7 @@ class Visual {
         //the div that needs more justification for its existence.
         this.divChart = this.divStructureLayer
             .append('div')
-            .attr('id', 'div-chart')
-            .attr('class', 'highlight');
+            .attr('id', 'div-chart');
         ////////////////////////////////////////////////////////////////
         //  Create svg timeline
         ////////////////////////////////////////////////////////////////
@@ -880,7 +903,26 @@ class Visual {
         let values4 = ['Activity E', '01/03/22', '25/06/22'];
         let values5 = ['Activity F', '01/03/22', '25/06/22'];
         let values6 = ['Activity G', '01/03/22', '25/06/22'];
-        let myData = [keys, values1, values2, values3, values4, values5, values6];
+        let values7 = ['Activity B', '01/03/22', '25/06/22'];
+        let values8 = ['Activity C', '01/03/22', '25/06/22'];
+        let values9 = ['Activity D', '01/03/22', '25/06/22'];
+        let values0 = ['Activity E', '01/03/22', '25/06/22'];
+        let valuesa = ['Activity F', '01/03/22', '25/06/22'];
+        let valuesb = ['Activity G', '01/03/22', '25/06/22'];
+        let myData = [keys,
+            values1,
+            values2,
+            values3,
+            values4,
+            values5,
+            values6,
+            values7,
+            values8,
+            values9,
+            values0,
+            valuesa,
+            valuesb,
+        ];
         this.populateActivityTable(myData, null, 'table-activities');
         ////////////////////////////////////////////////////////////////
         //  Prepare for chart drawing
@@ -937,7 +979,7 @@ class Visual {
             .height
             .toString()
             .concat('px'))
-            .attr('transform', 'translate(30)');
+            .attr('transform', 'translate(' + this.timeline.statusDateLocation() + ')');
     }
     ////////////////////////////////////////////////////////////////
     //  UPDATE VISUAL ON REFRESH
@@ -6095,9 +6137,11 @@ function creatorFixed(fullname) {
 
 "use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Ys": () => (/* reexport safe */ _select__WEBPACK_IMPORTED_MODULE_0__.Z)
+/* harmony export */   "Ys": () => (/* reexport safe */ _select__WEBPACK_IMPORTED_MODULE_0__.Z),
+/* harmony export */   "td": () => (/* reexport safe */ _selectAll__WEBPACK_IMPORTED_MODULE_1__.Z)
 /* harmony export */ });
 /* harmony import */ var _select__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4017);
+/* harmony import */ var _selectAll__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(628);
 
 
 
@@ -6190,6 +6234,25 @@ var xhtml = "http://www.w3.org/1999/xhtml";
   return typeof selector === "string"
       ? new _selection_index__WEBPACK_IMPORTED_MODULE_0__/* .Selection */ .Y1([[document.querySelector(selector)]], [document.documentElement])
       : new _selection_index__WEBPACK_IMPORTED_MODULE_0__/* .Selection */ .Y1([[selector]], _selection_index__WEBPACK_IMPORTED_MODULE_0__/* .root */ .Jz);
+}
+
+
+/***/ }),
+
+/***/ 628:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _selection_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3933);
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(selector) {
+  return typeof selector === "string"
+      ? new _selection_index__WEBPACK_IMPORTED_MODULE_0__/* .Selection */ .Y1([document.querySelectorAll(selector)], [document.documentElement])
+      : new _selection_index__WEBPACK_IMPORTED_MODULE_0__/* .Selection */ .Y1([selector == null ? [] : selector], _selection_index__WEBPACK_IMPORTED_MODULE_0__/* .root */ .Jz);
 }
 
 
@@ -10596,7 +10659,8 @@ var dependencies = {"d3-array":"1","d3-axis":"1","d3-brush":"1","d3-chord":"1","
 
 "use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Ys": () => (/* reexport safe */ d3_selection__WEBPACK_IMPORTED_MODULE_10__.Ys)
+/* harmony export */   "Ys": () => (/* reexport safe */ d3_selection__WEBPACK_IMPORTED_MODULE_10__.Ys),
+/* harmony export */   "td_": () => (/* reexport safe */ d3_selection__WEBPACK_IMPORTED_MODULE_10__.td)
 /* harmony export */ });
 /* harmony import */ var _dist_package_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2156);
 /* harmony import */ var d3_array__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(91);

@@ -128,11 +128,6 @@ div {
     height: 100%;
     z-index: 1;
 
-    grid-row-start: 1;
-    grid-row-end: span 2;
-    grid-column-start: 2;
-    grid-column-end: span 1;
-
     pointer-events: none;
 }
 
@@ -141,6 +136,8 @@ div {
     width: 25%;
     flex-shrink: 0;
     overflow-x: scroll;
+    overflow-y: scroll;
+    height: 100%;
 }
 
 #div-chartContainer {
@@ -199,6 +196,7 @@ div {
 #div-timeline {
     height: 100%;
 
+    border-bottom: 1px gray;
     width: 75%;
     overflow-x: scroll;
     overflow-y: clip;

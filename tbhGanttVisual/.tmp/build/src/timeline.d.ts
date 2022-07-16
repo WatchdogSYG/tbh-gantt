@@ -3,6 +3,7 @@ export declare class Timeline {
     verbose: boolean;
     private d1;
     private d2;
+    private status;
     private n_days;
     private n_months;
     private n_years;
@@ -19,6 +20,7 @@ export declare class Timeline {
     private ts;
     getStart(): dayjs.Dayjs;
     getEnd(): dayjs.Dayjs;
+    getStatus(): dayjs.Dayjs;
     getDays(): number;
     getDayScale(): number;
     getMonths(): number;
@@ -29,7 +31,7 @@ export declare class Timeline {
     setYearPadding(padding: number): void;
     private yearPadding;
     private monthPadding;
-    constructor(start: dayjs.Dayjs, end: dayjs.Dayjs);
+    constructor(start: dayjs.Dayjs, end: dayjs.Dayjs, status: dayjs.Dayjs);
     /**
      * Not yet implemented
      * @param daysPerPixel the desired scale factor
@@ -57,6 +59,17 @@ export declare class Timeline {
      * Updates the weekScale, quarterScale, and yearScale member variables based on the dayScale member variable.
      */
     private updateScaleFactors;
+    /**
+     * Converts a Day.js date to a horizontal offset on the chart based on the Timeline scale.
+     * @param date the date to convert
+     * @returns the location from the left edge of the chart the input date corresponds to
+     */
+    dateLocation(date: dayjs.Dayjs): number;
+    /**
+     * Converts the status date to a horizontal offset on the chart based on the Timeline scale. Similar to Timeline.dateLocation(date: dayjs.Dayjs).
+     * @returns The location from the left edge of the chart the current status date corresponds to
+     */
+    statusDateLocation(): number;
 }
 export interface ISeparator {
     text: string;
