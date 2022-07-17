@@ -1,8 +1,8 @@
 {
     "dataRoles": [
         {
-            "name": "Category",
-            "displayName": "Category",
+            "name": "WBS",
+            "displayName": "WBS",
             "displayNameKey": "Visual_Category",
             "kind": "Grouping"
         },
@@ -20,8 +20,14 @@
         }
         ,
         {
-            "name": "TF",
-            "displayName": "TF",
+            "name": "IsMilestone",
+            "displayName": "IsMilestone",
+            "displayNameKey": "Visual_Values",
+            "kind": "Measure"
+        },
+        {
+            "name": "IsCritical",
+            "displayName": "IsCritical",
             "displayNameKey": "Visual_Values",
             "kind": "Measure"
         }
@@ -31,7 +37,7 @@
             "matrix": {
                 "rows": {
                     "for": {
-                        "in": "Category"
+                        "in": "WBS"
                     }
                 },
                 "values": {
@@ -48,12 +54,36 @@
                         },
                         {
                             "for": {
-                                "in": "TF"
+                                "in": "IsMilestone"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "IsCritical"
                             }
                         }
                     ]
                 }
-            }
+            },
+            "conditions":[
+                {
+                    "WBS":{
+                        "min":1
+                    },
+                    "Start":{
+                        "max":1
+                    },
+                    "Finish":{
+                        "max":1
+                    },
+                    "IsMilestone":{
+                        "max":1
+                    },
+                    "IsCritical":{
+                        "max":1
+                    }
+                }
+            ]
         }
     ]
 }
