@@ -2,7 +2,7 @@ var tbhGanttVisual02814EA99E75457B80AA513BCFD5A299_DEBUG;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 944:
+/***/ 8944:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -11,13 +11,13 @@ var tbhGanttVisual02814EA99E75457B80AA513BCFD5A299_DEBUG;
 /* harmony export */ });
 class Activity {
     constructor(start, end, name) {
-        this.name = name;
         this.start = start;
         this.end = end;
+        this.name = name;
     }
-    getName() { return this.name; }
     getStart() { return this.start; }
     getEnd() { return this.end; }
+    getName() { return this.name; }
 }
 
 
@@ -729,7 +729,7 @@ class TimeScale {
 /* harmony import */ var _src_lib__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(809);
 /* harmony import */ var _src_time__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4734);
 /* harmony import */ var _src_timeline__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(1092);
-/* harmony import */ var _src_activity__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(944);
+/* harmony import */ var _src_activity__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(8944);
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(9665);
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_3__);
 /*
@@ -886,6 +886,9 @@ class Visual {
             .append('div')
             .attr('id', 'div-chart');
         ////////////////////////////////////////////////////////////////
+        //  Chart Configuration
+        ////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////
         //  Create svg timeline
         ////////////////////////////////////////////////////////////////
         let gantt = this.divChartContainer
@@ -893,12 +896,12 @@ class Visual {
             .attr('id', 'tl-top')
             .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(tlHeight + (myData.length * rowHeight)))
             .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(tlWidth));
-        let gBottom = gantt.append('g')
+        let gMonths = gantt.append('g')
             .classed('g-tl', true);
-        let gTop = gantt.append('g')
+        let gYears = gantt.append('g')
             .classed('g-tl', true);
         //////////////////////////////////////////////////////////////// YearText
-        gTop.selectAll('text')
+        gYears.selectAll('text')
             .data(ts.yearScale)
             .enter()
             .append('text')
@@ -911,7 +914,7 @@ class Visual {
             .attr('alignment-baseline', 'hanging')
             .classed('yearText', true);
         //////////////////////////////////////////////////////////////// YearLine
-        gTop.selectAll('line').data(ts.yearScale).enter().append('line')
+        gYears.selectAll('line').data(ts.yearScale).enter().append('line')
             .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
             .attr('y1', '0px')
             .attr('x2', function (d) {
@@ -921,7 +924,7 @@ class Visual {
             .attr('stroke-width', '2px')
             .attr('style', 'stroke:black');
         //////////////////////////////////////////////////////////////// MonthText
-        gBottom.selectAll('text')
+        gMonths.selectAll('text')
             .data(ts.monthScale)
             .enter()
             .append('text')
@@ -935,7 +938,7 @@ class Visual {
             .attr('text-anchor', 'middle')
             .classed('monthText', true);
         //////////////////////////////////////////////////////////////// YMonthLine
-        gBottom.selectAll('line').data(ts.monthScale).enter().append('line')
+        gMonths.selectAll('line').data(ts.monthScale).enter().append('line')
             .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
             .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(tlHeight / 2))
             .attr('x2', function (d) {
@@ -943,6 +946,26 @@ class Visual {
         })
             .attr('y2', tlHeight)
             .attr('style', 'stroke:red');
+        //////////////////////////////////////////////////////////////// Grid
+        let chartHeight = this.divChartContainer.node().getBoundingClientRect().height;
+        gMonths.selectAll('.grid-months')
+            .data(ts.monthScale).enter().append('line')
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
+            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(tlHeight))
+            .attr('x2', function (d) {
+            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
+        })
+            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(chartHeight))
+            .attr('style', 'stroke:green');
+        gYears.selectAll('.grid-years')
+            .data(ts.yearScale).enter().append('line')
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
+            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(tlHeight))
+            .attr('x2', function (d) {
+            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
+        })
+            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(chartHeight))
+            .attr('style', 'stroke:gray');
         ////////////////////////////////////////////////////////////////
         //  Create #table-activities
         ////////////////////////////////////////////////////////////////
@@ -1077,8 +1100,24 @@ class Visual {
      */
     checkConfiguration(dataView) {
         console.log('LOG: DATAVIEW CONFIGURATION');
-        console.log('LOG: number of heirachy levels' + dataView.matrix.rows.levels.length);
-        console.log(dataView.matrix.rows.root);
+        console.log('LOG: number of heirachy levels: ' + dataView.matrix.rows.levels.length);
+        //console.log(dataView.matrix.rows.root.children[0]);
+        let acts = [];
+        this.dfsPreorder(acts, dataView.matrix.rows.root.children[0]);
+        console.log(acts);
+    }
+    dfsPreorder(activities, node) {
+        let isLeaf = false;
+        if (node.children == null) {
+            isLeaf = true;
+        }
+        console.log("LOG: RECURSION: level = " + node.level + ', value = ' + node.levelValues[0].value);
+        activities.push(node.levelValues[0].value + ', level = ' + node.level); //need to check type?
+        if (!isLeaf) {
+            for (let i = 0; i < node.children.length; i++) {
+                this.dfsPreorder(activities, node.children[i]);
+            }
+        }
     }
     /**
      * Synchronises the left scrolling of the div-timeline and div-chart depending on which one was scrolled.

@@ -234,6 +234,11 @@ export class Visual implements IVisual {
             .attr('id', 'div-chart');
 
         ////////////////////////////////////////////////////////////////
+        //  Chart Configuration
+        ////////////////////////////////////////////////////////////////
+
+
+        ////////////////////////////////////////////////////////////////
         //  Create svg timeline
         ////////////////////////////////////////////////////////////////
 
@@ -243,14 +248,14 @@ export class Visual implements IVisual {
             .attr('height', Lib.px(tlHeight + (myData.length * rowHeight)))
             .attr('width', Lib.px(tlWidth));
 
-        let gBottom: Selection<SVGGElement> = gantt.append('g')
+        let gMonths: Selection<SVGGElement> = gantt.append('g')
             .classed('g-tl', true);
 
-        let gTop: Selection<SVGGElement> = gantt.append('g')
+        let gYears: Selection<SVGGElement> = gantt.append('g')
             .classed('g-tl', true);
 
         //////////////////////////////////////////////////////////////// YearText
-        gTop.selectAll('text')
+        gYears.selectAll('text')
             .data(ts.yearScale)
             .enter()
             .append('text')
@@ -264,7 +269,7 @@ export class Visual implements IVisual {
             .classed('yearText', true);
 
         //////////////////////////////////////////////////////////////// YearLine
-        gTop.selectAll('line').data(ts.yearScale).enter().append('line')
+        gYears.selectAll('line').data(ts.yearScale).enter().append('line')
             .attr('x1', function (d) { return Lib.px(d.offset); })
             .attr('y1', '0px')
             .attr('x2', function (d) {
@@ -275,7 +280,7 @@ export class Visual implements IVisual {
             .attr('style', 'stroke:black');
 
         //////////////////////////////////////////////////////////////// MonthText
-        gBottom.selectAll('text')
+        gMonths.selectAll('text')
             .data(ts.monthScale)
             .enter()
             .append('text')
@@ -290,7 +295,7 @@ export class Visual implements IVisual {
             .classed('monthText', true);
 
         //////////////////////////////////////////////////////////////// YMonthLine
-        gBottom.selectAll('line').data(ts.monthScale).enter().append('line')
+        gMonths.selectAll('line').data(ts.monthScale).enter().append('line')
             .attr('x1', function (d) { return Lib.px(d.offset); })
             .attr('y1', Lib.px(tlHeight / 2))
             .attr('x2', function (d) {
@@ -299,6 +304,28 @@ export class Visual implements IVisual {
             .attr('y2', tlHeight)
             .attr('style', 'stroke:red');
 
+        //////////////////////////////////////////////////////////////// Grid
+        let chartHeight: number = this.divChartContainer.node().getBoundingClientRect().height;
+
+        gMonths.selectAll('.grid-months')
+            .data(ts.monthScale).enter().append('line')
+            .attr('x1', function (d) { return Lib.px(d.offset); })
+            .attr('y1', Lib.px(tlHeight))
+            .attr('x2', function (d) {
+                return Lib.px(d.offset);
+            })
+            .attr('y2', Lib.px(chartHeight))
+            .attr('style', 'stroke:green');
+
+        gYears.selectAll('.grid-years')
+            .data(ts.yearScale).enter().append('line')
+            .attr('x1', function (d) { return Lib.px(d.offset); })
+            .attr('y1', Lib.px(tlHeight))
+            .attr('x2', function (d) {
+                return Lib.px(d.offset);
+            })
+            .attr('y2', Lib.px(chartHeight))
+            .attr('style', 'stroke:gray');
         ////////////////////////////////////////////////////////////////
         //  Create #table-activities
         ////////////////////////////////////////////////////////////////
@@ -323,8 +350,6 @@ export class Visual implements IVisual {
         ////////////////////////////////////////////////////////////////
         //  Prepare for chart drawing
         ////////////////////////////////////////////////////////////////
-
-
 
         let bars: Selection<SVGSVGElement> = gantt
             .append('g')
@@ -460,9 +485,35 @@ export class Visual implements IVisual {
      */
     private checkConfiguration(dataView: DataView) {
         console.log('LOG: DATAVIEW CONFIGURATION');
-        console.log('LOG: number of heirachy levels' + dataView.matrix.rows.levels.length);
-        console.log(dataView.matrix.rows.root);
+        console.log('LOG: number of heirachy levels: ' + dataView.matrix.rows.levels.length);
+        //console.log(dataView.matrix.rows.root.children[0]);
+
+        let acts: string[] = [];
+        this.dfsPreorder(acts, dataView.matrix.rows.root.children[0]);
+
+        console.log(acts);
     }
+
+
+
+
+    private dfsPreorder(activities: string[], node: powerbi.DataViewMatrixNode) {
+
+        let isLeaf: boolean = false;
+
+        if (node.children == null) {isLeaf = true;}
+
+        console.log("LOG: RECURSION: level = " + node.level + ', value = '+node.levelValues[0].value)
+        activities.push(node.levelValues[0].value + ', level = ' + node.level);//need to check type?
+
+        if (!isLeaf) {
+            for (let i = 0; i < node.children.length; i++) {
+                this.dfsPreorder(activities, node.children[i]);
+            }
+        }
+    }
+
+
 
     /**
      * Synchronises the left scrolling of the div-timeline and div-chart depending on which one was scrolled.
