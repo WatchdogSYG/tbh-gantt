@@ -10,14 +10,16 @@ var tbhGanttVisual02814EA99E75457B80AA513BCFD5A299_DEBUG;
 /* harmony export */   "c": () => (/* binding */ Activity)
 /* harmony export */ });
 class Activity {
-    constructor(start, end, name) {
+    constructor(name, start, end, level) {
         this.start = start;
         this.end = end;
         this.name = name;
+        this.level = level;
     }
     getStart() { return this.start; }
     getEnd() { return this.end; }
     getName() { return this.name; }
+    getLevel() { return this.level; }
 }
 
 
@@ -726,10 +728,10 @@ class TimeScale {
 /* harmony export */   "u": () => (/* binding */ Visual)
 /* harmony export */ });
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(662);
-/* harmony import */ var _src_lib__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(809);
+/* harmony import */ var _src_lib__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(809);
 /* harmony import */ var _src_time__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4734);
 /* harmony import */ var _src_timeline__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(1092);
-/* harmony import */ var _src_activity__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(8944);
+/* harmony import */ var _src_activity__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(8944);
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(9665);
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_3__);
 /*
@@ -797,21 +799,7 @@ class Visual {
         ////////////////////////////////////////////////////////////////
         //  Generate Timeline object from data (put in function later)
         ////////////////////////////////////////////////////////////////
-        let myData = [
-            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2022, 3, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)), 'Activity A'),
-            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2025, 5, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)), 'Activity B'),
-            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2023, 7, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)), 'Activity C'),
-            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2023, 8, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)), 'Activity D'),
-            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2023, 9, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)), 'Activity E'),
-            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2022, 9, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)), 'Activity F'),
-            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2023, 2, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)), 'Activity G'),
-            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2028, 6, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)), 'Activity B'),
-            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2029, 3, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)), 'Activity C'),
-            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2022, 7, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)), 'Activity D'),
-            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2021, 3, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)), 'Activity E'),
-            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2021, 8, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)), 'Activity F'),
-            new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2022, 3, 2)), dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)), 'Activity G')
-        ];
+        let myData = [];
         console.log('a');
         // console.log(dayjs.min(dayjs(new Date(2000,1,1)),dayjs(new Date(2001,1,1))));
         let d1 = _src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA([
@@ -850,8 +838,8 @@ class Visual {
         this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_2__/* .Timeline */ .TY(d1, d2, status);
         let padding = 0; //this.timeline.getPadding();
         let tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale()); //cannot be less than div width!
-        let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_5__/* .pxToNumber */ .F(this.style.getPropertyValue('--timelineHeight'));
-        let rowHeight = _src_lib__WEBPACK_IMPORTED_MODULE_5__/* .pxToNumber */ .F(this.style.getPropertyValue('--rowHeight'));
+        let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_4__/* .pxToNumber */ .F(this.style.getPropertyValue('--timelineHeight'));
+        let rowHeight = _src_lib__WEBPACK_IMPORTED_MODULE_4__/* .pxToNumber */ .F(this.style.getPropertyValue('--rowHeight'));
         let ts = this.timeline.getTimeScale();
         ////////////////////////////////////////////////////////////////
         //  Create body level child elements
@@ -894,8 +882,8 @@ class Visual {
         let gantt = this.divChartContainer
             .append('svg')
             .attr('id', 'tl-top')
-            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(tlHeight + (myData.length * rowHeight)))
-            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(tlWidth));
+            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(tlHeight + (myData.length * rowHeight)))
+            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(tlWidth));
         let gMonths = gantt.append('g')
             .classed('g-tl', true);
         let gYears = gantt.append('g')
@@ -906,7 +894,7 @@ class Visual {
             .enter()
             .append('text')
             .attr('x', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset + d.textAnchorOffset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.offset + d.textAnchorOffset);
         })
             .attr('y', '0px')
             .text(function (d) { return d.text; })
@@ -915,10 +903,10 @@ class Visual {
             .classed('yearText', true);
         //////////////////////////////////////////////////////////////// YearLine
         gYears.selectAll('line').data(ts.yearScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.offset); })
             .attr('y1', '0px')
             .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.offset);
         })
             .attr('y2', tlHeight)
             .attr('stroke-width', '2px')
@@ -929,9 +917,9 @@ class Visual {
             .enter()
             .append('text')
             .attr('x', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset + d.textAnchorOffset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.offset + d.textAnchorOffset);
         })
-            .attr('y', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(tlHeight / 2))
+            .attr('y', _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(tlHeight / 2))
             .text(function (d) { return d.text; })
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
@@ -939,10 +927,10 @@ class Visual {
             .classed('monthText', true);
         //////////////////////////////////////////////////////////////// YMonthLine
         gMonths.selectAll('line').data(ts.monthScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
-            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(tlHeight / 2))
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.offset); })
+            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(tlHeight / 2))
             .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.offset);
         })
             .attr('y2', tlHeight)
             .attr('style', 'stroke:red');
@@ -950,21 +938,21 @@ class Visual {
         let chartHeight = this.divChartContainer.node().getBoundingClientRect().height;
         gMonths.selectAll('.grid-months')
             .data(ts.monthScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
-            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(tlHeight))
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.offset); })
+            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(tlHeight))
             .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.offset);
         })
-            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(chartHeight))
+            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(chartHeight))
             .attr('style', 'stroke:green');
         gYears.selectAll('.grid-years')
             .data(ts.yearScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
-            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(tlHeight))
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.offset); })
+            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(tlHeight))
             .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.offset);
         })
-            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(chartHeight))
+            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(chartHeight))
             .attr('style', 'stroke:gray');
         ////////////////////////////////////////////////////////////////
         //  Create #table-activities
@@ -991,13 +979,13 @@ class Visual {
             .enter()
             .append('rect')
             .attr('x', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(_this.timeline.dateLocation(d.getStart()));
+            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(_this.timeline.dateLocation(d.getStart()));
         })
             .attr('height', rowHeight)
             .attr('width', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(_this.timeline.dateLocation(d.getEnd()) - _this.timeline.dateLocation(d.getStart()));
+            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(_this.timeline.dateLocation(d.getEnd()) - _this.timeline.dateLocation(d.getStart()));
         })
-            .attr('y', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(tlHeight + (rowHeight * i)); })
+            .attr('y', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(tlHeight + (rowHeight * i)); })
             .attr('rx', '3px')
             .attr('ry', '3px')
             .classed('activityBar', true);
@@ -1101,19 +1089,23 @@ class Visual {
     checkConfiguration(dataView) {
         console.log('LOG: DATAVIEW CONFIGURATION');
         console.log('LOG: number of heirachy levels: ' + dataView.matrix.rows.levels.length);
-        //console.log(dataView.matrix.rows.root.children[0]);
+        console.log(dataView.matrix.rows.root);
         let acts = [];
         this.dfsPreorder(acts, dataView.matrix.rows.root.children[0]);
-        console.log(acts);
+        for (let i = 0; i > acts.length; i++) {
+            console.log(acts[i].getStart());
+        }
     }
     dfsPreorder(activities, node) {
-        let isLeaf = false;
         if (node.children == null) {
-            isLeaf = true;
+            //console.log("LOG: RECURSION: level = " + node.level + ', start = '+ node.values[0].value);
+            if ((node.values[0] != null) && (node.values[1] != null)) { //every task must have a start and finish
+                activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_5__/* .Activity */ .c(node.value.toString(), dayjs__WEBPACK_IMPORTED_MODULE_3__(node.values[0].value.valueOf().toString(), 'x'), dayjs__WEBPACK_IMPORTED_MODULE_3__(node.values[1].value.valueOf().toString(), 'x'), node.level));
+            }
         }
-        console.log("LOG: RECURSION: level = " + node.level + ', value = ' + node.levelValues[0].value);
-        activities.push(node.levelValues[0].value + ', level = ' + node.level); //need to check type?
-        if (!isLeaf) {
+        else {
+            //console.log("LOG: RECURSION: level = " + node.level);
+            activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_5__/* .Activity */ .c(node.value.toString(), null, null, node.level)); //need to check type?
             for (let i = 0; i < node.children.length; i++) {
                 this.dfsPreorder(activities, node.children[i]);
             }

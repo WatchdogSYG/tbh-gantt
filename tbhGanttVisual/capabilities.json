@@ -1,20 +1,27 @@
 {
     "dataRoles": [
         {
-            "name": "Rows",
-            "displayName": "Rows",
-            "displayNameKey": "Visual_Rows",
+            "name": "Category",
+            "displayName": "Category",
+            "displayNameKey": "Visual_Category",
             "kind": "Grouping"
         },
         {
-            "name": "Columns",
-            "displayName": "Columns",
-            "displayNameKey": "Visual_Columns",
-            "kind": "Grouping"
+            "name": "Start",
+            "displayName": "Start",
+            "displayNameKey": "Visual_Values",
+            "kind": "Measure"
         },
         {
-            "name": "Value",
-            "displayName": "Value",
+            "name": "Finish",
+            "displayName": "Finish",
+            "displayNameKey": "Visual_Values",
+            "kind": "Measure"
+        }
+        ,
+        {
+            "name": "TF",
+            "displayName": "TF",
             "displayNameKey": "Visual_Values",
             "kind": "Measure"
         }
@@ -24,19 +31,24 @@
             "matrix": {
                 "rows": {
                     "for": {
-                        "in": "Rows"
-                    }
-                },
-                "columns": {
-                    "for": {
-                        "in": "Columns"
+                        "in": "Category"
                     }
                 },
                 "values": {
                     "select": [
                         {
                             "for": {
-                                "in": "Value"
+                                "in": "Start"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "Finish"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "TF"
                             }
                         }
                     ]

@@ -130,19 +130,7 @@ export class Visual implements IVisual {
 
         let myData: Activity[] = [
 
-            new Activity(dayjs(new Date(2022, 3, 2)), dayjs(new Date(2030, 3, 4)), 'Activity A'),
-            new Activity(dayjs(new Date(2025, 5, 2)), dayjs(new Date(2024, 3, 4)), 'Activity B'),
-            new Activity(dayjs(new Date(2023, 7, 2)), dayjs(new Date(2024, 3, 4)), 'Activity C'),
-            new Activity(dayjs(new Date(2023, 8, 2)), dayjs(new Date(2024, 3, 4)), 'Activity D'),
-            new Activity(dayjs(new Date(2023, 9, 2)), dayjs(new Date(2024, 3, 4)), 'Activity E'),
-            new Activity(dayjs(new Date(2022, 9, 2)), dayjs(new Date(2024, 3, 4)), 'Activity F'),
-            new Activity(dayjs(new Date(2023, 2, 2)), dayjs(new Date(2024, 3, 4)), 'Activity G'),
-            new Activity(dayjs(new Date(2028, 6, 2)), dayjs(new Date(2030, 3, 4)), 'Activity B'),
-            new Activity(dayjs(new Date(2029, 3, 2)), dayjs(new Date(2030, 3, 4)), 'Activity C'),
-            new Activity(dayjs(new Date(2022, 7, 2)), dayjs(new Date(2030, 3, 4)), 'Activity D'),
-            new Activity(dayjs(new Date(2021, 3, 2)), dayjs(new Date(2030, 3, 4)), 'Activity E'),
-            new Activity(dayjs(new Date(2021, 8, 2)), dayjs(new Date(2030, 3, 4)), 'Activity F'),
-            new Activity(dayjs(new Date(2022, 3, 2)), dayjs(new Date(2030, 3, 4)), 'Activity G')
+            
         ];
 
         console.log('a');
@@ -486,35 +474,43 @@ export class Visual implements IVisual {
     private checkConfiguration(dataView: DataView) {
         console.log('LOG: DATAVIEW CONFIGURATION');
         console.log('LOG: number of heirachy levels: ' + dataView.matrix.rows.levels.length);
-        //console.log(dataView.matrix.rows.root.children[0]);
+        console.log(dataView.matrix.rows.root);
 
-        let acts: string[] = [];
+        let acts: Activity[] = [];
         this.dfsPreorder(acts, dataView.matrix.rows.root.children[0]);
-
-        console.log(acts);
+        
+        for(let i = 0; i> acts.length; i++){
+            console.log(acts[i].getStart());
+        }
+        
     }
 
 
+    private dfsPreorder(activities: Activity[], node: powerbi.DataViewMatrixNode) {
 
 
-    private dfsPreorder(activities: string[], node: powerbi.DataViewMatrixNode) {
+        if (node.children == null) {
+            //console.log("LOG: RECURSION: level = " + node.level + ', start = '+ node.values[0].value);
+            if ((node.values[0] != null) && (node.values[1] != null)) {//every task must have a start and finish
+                activities.push(new Activity(
+                    node.value.toString(),
+                    dayjs(node.values[0].value.valueOf().toString(), 'x'),
+                    dayjs(node.values[1].value.valueOf().toString(), 'x'),
+                    node.level));
+            }
 
-        let isLeaf: boolean = false;
-
-        if (node.children == null) {isLeaf = true;}
-
-        console.log("LOG: RECURSION: level = " + node.level + ', value = '+node.levelValues[0].value)
-        activities.push(node.levelValues[0].value + ', level = ' + node.level);//need to check type?
-
-        if (!isLeaf) {
+        } else {
+            //console.log("LOG: RECURSION: level = " + node.level);
+            activities.push(new Activity(
+                node.value.toString(),
+                null,
+                null,
+                node.level));//need to check type?
             for (let i = 0; i < node.children.length; i++) {
                 this.dfsPreorder(activities, node.children[i]);
             }
         }
     }
-
-
-
     /**
      * Synchronises the left scrolling of the div-timeline and div-chart depending on which one was scrolled.
      * 

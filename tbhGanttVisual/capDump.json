@@ -1,0 +1,36 @@
+{
+    "dataRoles": [
+        {
+            "name": "Activities",
+            "displayName": "Activities",
+            "displayNameKey": "Visual_Category",
+            "kind": "Grouping"
+        },
+        {
+            "name": "Start",
+            "displayName": "Start Date",
+            "displayNameKey": "Visual_Values",
+            "kind": "Measure"
+        }
+    ],
+    "dataViewMappings": [
+        {
+            "matrix": {
+                "rows": {
+                    "for": {
+                        "in": "Rows"
+                    }
+                },
+                "values": {
+                    "select": [
+                        {
+                            "for": {
+                                "in": "Start"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

@@ -7,5 +7,6 @@ export declare class Activity {
     getStart(): dayjs.Dayjs;
     getEnd(): dayjs.Dayjs;
     getName(): string;
-    constructor(start: dayjs.Dayjs, end: dayjs.Dayjs, name: string);
+    getLevel(): number;
+    constructor(name: string, start: dayjs.Dayjs, end: dayjs.Dayjs, level: number);
 }
