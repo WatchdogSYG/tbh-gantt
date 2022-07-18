@@ -1,0 +1,1844 @@
+DevTools failed to load source map: Could not load content for chrome-extension://gighmmpiobklfepjocnamgkkbiglidom/browser-polyfill.js.map: System error: net::ERR_FILE_NOT_FOUND
+powerBIWebBootstrap.min.d76b697f71850a926cb2.js:1          GET https://wabi-australia-southeast-redirect.analysis.windows.net/metadata/app?preferReadOnlySession=true&cmd=report&artifactObjectId=a67ed624-a847-47fa-be94-e831b3171615 401
+(anonymous) @ powerBIWebBootstrap.min.d76b697f71850a926cb2.js:1
+getAppMetadataInternal @ powerBIWebBootstrap.min.d76b697f71850a926cb2.js:1
+getAppMetadata @ powerBIWebBootstrap.min.d76b697f71850a926cb2.js:1
+(anonymous) @ powerBIWebBootstrap.min.d76b697f71850a926cb2.js:1
+DevTools failed to load source map: Could not load content for https://content.powerapps.com/resource/powerbiwfe/scripts/interact.min.js.map: HTTP error: status code 404, net::ERR_HTTP_RESPONSE_CODE_FAILURE
+DevTools failed to load source map: Could not parse content for https://app.powerbi.com/13.0.18620.44/scripts/ai.0.js.map: Unexpected token < in JSON at position 2
+DevTools failed to load source map: Could not load content for chrome-extension://gighmmpiobklfepjocnamgkkbiglidom/browser-polyfill.js.map: System error: net::ERR_FILE_NOT_FOUND
+DevTools failed to load source map: Could not load content for chrome-extension://gighmmpiobklfepjocnamgkkbiglidom/browser-polyfill.js.map: System error: net::ERR_FILE_NOT_FOUND
+visual.ts:138 a
+visual.ts:171 a
+visual.ts:173 a
+timeline.ts:77 LOG: Constructing Timeline Object
+timeline.ts:150 LOG: Generating YearSeparator array for timeline.
+timeline.ts:200 (10) [YearSeparator, YearSeparator, YearSeparator, YearSeparator, YearSeparator, YearSeparator, YearSeparator, YearSeparator, YearSeparator, YearSeparator]
+timeline.ts:201 LOG: YearScale generation complete.
+timeline.ts:214 LOG: Generating MonthSeparator array for timeline.
+timeline.ts:268 (109) [MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, MonthSeparator, …]
+timeline.ts:269 LOG: MonthSeparator array generation complete.
+visual.ts:349 a
+visual.ts:451 LOG: DATAVIEW CONFIGURATION
+visual.ts:451 LOG: DATAVIEW CONFIGURATION
+visual.ts:451 LOG: DATAVIEW CONFIGURATION
+visual.ts:452 LOG: number of heirachy levels: 4
+visual.ts:453 {childIdentityFields: Array(1), children: Array(1)}
+visual.ts:454 dfs
+visual.ts:456 dfs
+visual.ts:514 1570743000000
+visual.ts:515 Fri Oct 11 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1568673000000
+visual.ts:515 Tue Sep 17 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1545078600000
+visual.ts:515 Tue Dec 18 2018 07:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1557066600000
+visual.ts:515 Mon May 06 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1545078600000
+visual.ts:515 Tue Dec 18 2018 07:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1556807400000
+visual.ts:515 Fri May 03 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1565904600000
+visual.ts:515 Fri Aug 16 2019 07:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1565904600000
+visual.ts:515 Fri Aug 16 2019 07:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1580247000000
+visual.ts:515 Wed Jan 29 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1580679000000
+visual.ts:515 Mon Feb 03 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1587681000000
+visual.ts:515 Fri Apr 24 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1574199000000
+visual.ts:515 Wed Nov 20 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1594074600000
+visual.ts:515 Tue Jul 07 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1600295400000
+visual.ts:515 Thu Sep 17 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1580851800000
+visual.ts:515 Wed Feb 05 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574199000000
+visual.ts:515 Wed Nov 20 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1590445800000
+visual.ts:515 Tue May 26 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1588199400000
+visual.ts:515 Thu Apr 30 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1600727400000
+visual.ts:515 Tue Sep 22 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1601418600000
+visual.ts:515 Wed Sep 30 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1590618600000
+visual.ts:515 Thu May 28 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1588717800000
+visual.ts:515 Wed May 06 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1581629400000
+visual.ts:515 Fri Feb 14 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574631000000
+visual.ts:515 Mon Nov 25 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1575581400000
+visual.ts:515 Fri Dec 06 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574976600000
+visual.ts:515 Fri Nov 29 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1579728600000
+visual.ts:515 Thu Jan 23 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1576791000000
+visual.ts:515 Fri Dec 20 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1590618600000
+visual.ts:515 Thu May 28 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1586903400000
+visual.ts:515 Wed Apr 15 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1584480600000
+visual.ts:515 Wed Mar 18 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1582752600000
+visual.ts:515 Thu Feb 27 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1573680600000
+visual.ts:515 Thu Nov 14 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1576445400000
+visual.ts:515 Mon Dec 16 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574285400000
+visual.ts:515 Thu Nov 21 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1601933400000
+visual.ts:515 Tue Oct 06 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1601418600000
+visual.ts:515 Wed Sep 30 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1602624600000
+visual.ts:515 Wed Oct 14 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571693400000
+visual.ts:515 Tue Oct 22 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571088600000
+visual.ts:515 Tue Oct 15 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572211800000
+visual.ts:515 Mon Oct 28 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571779800000
+visual.ts:515 Wed Oct 23 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1576013400000
+visual.ts:515 Wed Dec 11 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1596493800000
+visual.ts:515 Tue Aug 04 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1603229400000
+visual.ts:515 Wed Oct 21 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1596061800000
+visual.ts:515 Thu Jul 30 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1603056600000
+visual.ts:515 Mon Oct 19 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1595975400000
+visual.ts:515 Wed Jul 29 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1602797400000
+​ Fri Oct 16 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1574285400000
+​ Thu Nov 21 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1572471000000
+​ Thu Oct 31 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1585776600000
+​ Thu Apr 02 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1575840600000
+​ Mon Dec 09 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1570570200000
+​ Wed Oct 09 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1582147800000
+​ Thu Feb 20 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1580333400000
+​ Thu Jan 30 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1582752600000
+​ Thu Feb 27 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1580851800000
+​ Wed Feb 05 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1582234200000
+​ Fri Feb 21 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1572298200000
+​ Tue Oct 29 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1579555800000
+visual.ts:515 Tue Jan 21 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1592519400000
+visual.ts:515 Fri Jun 19 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1571088600000
+visual.ts:515 Tue Oct 15 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1573075800000
+visual.ts:515 Thu Nov 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1568327400000
+visual.ts:515 Fri Sep 13 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1570113000000
+visual.ts:515 Fri Oct 04 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1570026600000
+visual.ts:515 Thu Oct 03 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1537738200000
+visual.ts:515 Mon Sep 24 2018 07:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1597876200000
+visual.ts:515 Thu Aug 20 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1580333400000
+visual.ts:515 Thu Jan 30 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1575408600000
+visual.ts:515 Wed Dec 04 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1575840600000
+visual.ts:515 Mon Dec 09 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1573421400000
+visual.ts:515 Mon Nov 11 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1581629400000
+visual.ts:515 Fri Feb 14 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1581975000000
+visual.ts:515 Tue Feb 18 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574199000000
+visual.ts:515 Wed Nov 20 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1573075800000
+visual.ts:515 Thu Nov 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1581370200000
+visual.ts:515 Tue Feb 11 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1594679400000
+visual.ts:515 Tue Jul 14 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1571779800000
+visual.ts:515 Wed Oct 23 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574631000000
+visual.ts:515 Mon Nov 25 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1575322200000
+visual.ts:515 Tue Dec 03 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574717400000
+visual.ts:515 Tue Nov 26 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1573421400000
+visual.ts:515 Mon Nov 11 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1573075800000
+visual.ts:515 Thu Nov 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1589236200000
+visual.ts:515 Tue May 12 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1591914600000
+visual.ts:515 Fri Jun 12 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1587508200000
+visual.ts:515 Wed Apr 22 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1586385000000
+​ Thu Apr 09 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1586212200000
+​ Tue Apr 07 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1585517400000
+​ Mon Mar 30 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1580765400000
+​ Tue Feb 04 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1581370200000
+​ Tue Feb 11 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1580938200000
+​ Thu Feb 06 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1595802600000
+​ Mon Jul 27 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1596580200000
+​ Wed Aug 05 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1596148200000
+​ Fri Jul 31 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1586125800000
+​ Mon Apr 06 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1588890600000
+​ Fri May 08 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1588631400000
+visual.ts:515 Tue May 05 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1588285800000
+visual.ts:515 Fri May 01 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1587681000000
+visual.ts:515 Fri Apr 24 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1588285800000
+visual.ts:515 Fri May 01 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1594593000000
+visual.ts:515 Mon Jul 13 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1596580200000
+visual.ts:515 Wed Aug 05 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1597012200000
+visual.ts:515 Mon Aug 10 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1597271400000
+visual.ts:515 Thu Aug 13 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1597185000000
+visual.ts:515 Wed Aug 12 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1578864600000
+visual.ts:515 Mon Jan 13 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1589927400000
+visual.ts:515 Wed May 20 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1581543000000
+visual.ts:515 Thu Feb 13 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574112600000
+visual.ts:515 Tue Nov 19 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572471000000
+visual.ts:515 Thu Oct 31 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574199000000
+visual.ts:515 Wed Nov 20 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1576704600000
+visual.ts:515 Thu Dec 19 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1590964200000
+visual.ts:515 Mon Jun 01 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1589495400000
+visual.ts:515 Fri May 15 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1591309800000
+visual.ts:515 Fri Jun 05 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1597357800000
+visual.ts:515 Fri Aug 14 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1586125800000
+visual.ts:515 Mon Apr 06 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1591914600000
+visual.ts:515 Fri Jun 12 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1587594600000
+visual.ts:515 Thu Apr 23 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1589927400000
+visual.ts:515 Wed May 20 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1573075800000
+visual.ts:515 Thu Nov 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571347800000
+visual.ts:515 Fri Oct 18 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571347800000
+visual.ts:515 Fri Oct 18 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571347800000
+visual.ts:515 Fri Oct 18 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572298200000
+visual.ts:515 Tue Oct 29 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1588804200000
+visual.ts:515 Thu May 07 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1572298200000
+visual.ts:515 Tue Oct 29 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1548189000000
+visual.ts:515 Wed Jan 23 2019 07:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1568014200000
+visual.ts:515 Mon Sep 09 2019 17:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1561501800000
+visual.ts:515 Wed Jun 26 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1580247000000
+visual.ts:515 Wed Jan 29 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1579037400000
+visual.ts:515 Wed Jan 15 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1596580200000
+visual.ts:515 Wed Aug 05 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1579123800000
+visual.ts:515 Thu Jan 16 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1573767000000
+visual.ts:515 Fri Nov 15 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1573075800000
+visual.ts:515 Thu Nov 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1579815000000
+visual.ts:515 Fri Jan 24 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574976600000
+visual.ts:515 Fri Nov 29 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1548365400000
+visual.ts:515 Fri Jan 25 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1562106600000
+visual.ts:515 Wed Jul 03 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1572471000000
+visual.ts:515 Thu Oct 31 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572211800000
+visual.ts:515 Mon Oct 28 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1579037400000
+visual.ts:515 Wed Jan 15 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1582579800000
+visual.ts:515 Tue Feb 25 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1580419800000
+visual.ts:515 Fri Jan 31 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1576013400000
+visual.ts:515 Wed Dec 11 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1573162200000
+visual.ts:515 Fri Nov 08 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1575408600000
+visual.ts:515 Wed Dec 04 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1573507800000
+visual.ts:515 Tue Nov 12 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1573767000000
+​ Fri Nov 15 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1571607000000
+​ Mon Oct 21 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1570397400000
+​ Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1584048600000
+​ Fri Mar 13 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1583357400000
+​ Thu Mar 05 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1574371800000
+​ Fri Nov 22 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1580679000000
+​ Mon Feb 03 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1569364200000
+​ Wed Sep 25 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1571261400000
+​ Thu Oct 17 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1570397400000
+​ Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1573680600000
+​ Thu Nov 14 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1574717400000
+​ Tue Nov 26 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1566801000000
+​ Mon Aug 26 2019 16:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1539808200000
+​ Thu Oct 18 2018 07:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1579123800000
+​ Thu Jan 16 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1591309800000
+​ Fri Jun 05 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1587076200000
+​ Fri Apr 17 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1539811800000
+​ Thu Oct 18 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1556634600000
+​ Wed May 01 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1581888600000
+​ Mon Feb 17 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1585171800000
+​ Thu Mar 26 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1589841000000
+​ Tue May 19 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1574199000000
+​ Wed Nov 20 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1571952600000
+​ Fri Oct 25 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1576013400000
+​ Wed Dec 11 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1570570200000
+​ Wed Oct 09 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1596753000000
+​ Fri Aug 07 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1585690200000
+​ Wed Apr 01 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1583357400000
+​ Thu Mar 05 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1586903400000
+visual.ts:515 Wed Apr 15 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1588717800000
+visual.ts:515 Wed May 06 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1594161000000
+visual.ts:515 Wed Jul 08 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1602019800000
+visual.ts:515 Wed Oct 07 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1584567000000
+visual.ts:515 Thu Mar 19 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1591914600000
+visual.ts:515 Fri Jun 12 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1589495400000
+visual.ts:515 Fri May 15 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1593383400000
+visual.ts:515 Mon Jun 29 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1590705000000
+visual.ts:515 Fri May 29 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1582666200000
+visual.ts:515 Wed Feb 26 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1592346600000
+visual.ts:515 Wed Jun 17 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1591137000000
+visual.ts:515 Wed Jun 03 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1575927000000
+visual.ts:515 Tue Dec 10 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1588890600000
+visual.ts:515 Fri May 08 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1589841000000
+visual.ts:515 Tue May 19 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1581543000000
+visual.ts:515 Thu Feb 13 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1576791000000
+visual.ts:515 Fri Dec 20 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1584048600000
+visual.ts:515 Fri Mar 13 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1581975000000
+visual.ts:515 Tue Feb 18 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1576445400000
+visual.ts:515 Mon Dec 16 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1581456600000
+visual.ts:515 Wed Feb 12 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1586125800000
+visual.ts:515 Mon Apr 06 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1580851800000
+visual.ts:515 Wed Feb 05 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1576704600000
+visual.ts:515 Thu Dec 19 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1576531800000
+visual.ts:515 Tue Dec 17 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1591309800000
+visual.ts:515 Fri Jun 05 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1574976600000
+visual.ts:515 Fri Nov 29 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572298200000
+visual.ts:515 Tue Oct 29 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1585517400000
+visual.ts:515 Mon Mar 30 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1583875800000
+visual.ts:515 Wed Mar 11 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1587508200000
+visual.ts:515 Wed Apr 22 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1590705000000
+visual.ts:515 Fri May 29 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1574717400000
+visual.ts:515 Tue Nov 26 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572298200000
+visual.ts:515 Tue Oct 29 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574803800000
+visual.ts:515 Wed Nov 27 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1576186200000
+visual.ts:515 Fri Dec 13 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1580247000000
+visual.ts:515 Wed Jan 29 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574026200000
+visual.ts:515 Mon Nov 18 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574026200000
+visual.ts:515 Mon Nov 18 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572211800000
+visual.ts:515 Mon Oct 28 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1579123800000
+visual.ts:515 Thu Jan 16 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1567981800000
+visual.ts:515 Mon Sep 09 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1587681000000
+visual.ts:515 Fri Apr 24 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1581888600000
+visual.ts:515 Mon Feb 17 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570483800000
+visual.ts:515 Tue Oct 08 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1548016200000
+visual.ts:515 Mon Jan 21 2019 07:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1579642200000
+visual.ts:515 Wed Jan 22 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1596061800000
+visual.ts:515 Thu Jul 30 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1589236200000
+visual.ts:515 Tue May 12 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1594074600000
+visual.ts:515 Tue Jul 07 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1587335400000
+visual.ts:515 Mon Apr 20 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1581629400000
+visual.ts:515 Fri Feb 14 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1593729000000
+visual.ts:515 Fri Jul 03 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1591223400000
+visual.ts:515 Thu Jun 04 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1580419800000
+visual.ts:515 Fri Jan 31 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1575495000000
+​ Thu Dec 05 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1589322600000
+​ Wed May 13 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1590100200000
+​ Fri May 22 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1574890200000
+​ Thu Nov 28 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1579642200000
+​ Wed Jan 22 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1572298200000
+​ Tue Oct 29 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1569191400000
+​ Mon Sep 23 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1591050600000
+​ Tue Jun 02 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1579210200000
+​ Fri Jan 17 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1591914600000
+​ Fri Jun 12 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1591223400000
+​ Thu Jun 04 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1592519400000
+​ Fri Jun 19 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1574717400000
+​ Tue Nov 26 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1575581400000
+​ Fri Dec 06 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1574803800000
+​ Wed Nov 27 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1579728600000
+​ Thu Jan 23 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1573162200000
+​ Fri Nov 08 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1576704600000
+​ Thu Dec 19 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1573767000000
+​ Fri Nov 15 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1583962200000
+​ Thu Mar 12 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1587076200000
+​ Fri Apr 17 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1579555800000
+​ Tue Jan 21 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1591050600000
+​ Tue Jun 02 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1592433000000
+​ Thu Jun 18 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1579469400000
+​ Mon Jan 20 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1587421800000
+​ Tue Apr 21 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1574976600000
+​ Fri Nov 29 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1580851800000
+​ Wed Feb 05 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+​ 1589927400000
+​ Wed May 20 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+​ 1573594200000
+​ Wed Nov 13 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1580938200000
+visual.ts:515 Thu Feb 06 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1580765400000
+visual.ts:515 Tue Feb 04 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1576445400000
+visual.ts:515 Mon Dec 16 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574976600000
+visual.ts:515 Fri Nov 29 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574890200000
+visual.ts:515 Thu Nov 28 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1583271000000
+visual.ts:515 Wed Mar 04 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1600813800000
+visual.ts:515 Wed Sep 23 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1567377000000
+visual.ts:515 Mon Sep 02 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1594794600000
+visual.ts:515 Wed Jul 15 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1591137000000
+visual.ts:515 Wed Jun 03 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1569277800000
+visual.ts:515 Tue Sep 24 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1583098200000
+visual.ts:515 Mon Mar 02 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1569277800000
+visual.ts:515 Tue Sep 24 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1592865000000
+visual.ts:515 Tue Jun 23 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1576704600000
+visual.ts:515 Thu Dec 19 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1590445800000
+visual.ts:515 Tue May 26 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1584567000000
+visual.ts:515 Thu Mar 19 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1584567000000
+visual.ts:515 Thu Mar 19 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1596580200000
+visual.ts:515 Wed Aug 05 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1590013800000
+visual.ts:515 Thu May 21 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1584567000000
+visual.ts:515 Thu Mar 19 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1562538600000
+visual.ts:515 Mon Jul 08 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1582579800000
+visual.ts:515 Tue Feb 25 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1592260200000
+visual.ts:515 Tue Jun 16 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1588545000000
+visual.ts:515 Mon May 04 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1574717400000
+visual.ts:515 Tue Nov 26 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572384600000
+visual.ts:515 Wed Oct 30 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1579728600000
+visual.ts:515 Thu Jan 23 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1602019800000
+visual.ts:515 Wed Oct 07 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1569450600000
+visual.ts:515 Thu Sep 26 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1575927000000
+visual.ts:515 Tue Dec 10 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1568068200000
+visual.ts:515 Tue Sep 10 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1570656600000
+visual.ts:515 Thu Oct 10 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1539808200000
+visual.ts:515 Thu Oct 18 2018 07:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572989400000
+visual.ts:515 Wed Nov 06 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1573421400000
+visual.ts:515 Mon Nov 11 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574976600000
+visual.ts:515 Fri Nov 29 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574285400000
+visual.ts:515 Thu Nov 21 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574199000000
+visual.ts:515 Wed Nov 20 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1585690200000
+visual.ts:515 Wed Apr 01 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1588631400000
+visual.ts:515 Tue May 05 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1590964200000
+visual.ts:515 Mon Jun 01 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1580247000000
+visual.ts:515 Wed Jan 29 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574371800000
+visual.ts:515 Fri Nov 22 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570743000000
+visual.ts:515 Fri Oct 11 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1582579800000
+visual.ts:515 Tue Feb 25 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1575840600000
+visual.ts:515 Mon Dec 09 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1582752600000
+visual.ts:515 Thu Feb 27 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1588545000000
+visual.ts:515 Mon May 04 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1581888600000
+visual.ts:515 Mon Feb 17 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1589495400000
+visual.ts:515 Fri May 15 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1576186200000
+visual.ts:515 Fri Dec 13 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1580851800000
+visual.ts:515 Wed Feb 05 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1562193000000
+visual.ts:515 Thu Jul 04 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1590705000000
+visual.ts:515 Fri May 29 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1545082200000
+visual.ts:515 Tue Dec 18 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1562538600000
+visual.ts:515 Mon Jul 08 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1565217000000
+visual.ts:515 Thu Aug 08 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1569450600000
+visual.ts:515 Thu Sep 26 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1593729000000
+visual.ts:515 Fri Jul 03 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1589927400000
+visual.ts:515 Wed May 20 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1574890200000
+visual.ts:515 Thu Nov 28 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1581024600000
+visual.ts:515 Fri Feb 07 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1558017000000
+visual.ts:515 Fri May 17 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1556836200000
+visual.ts:515 Fri May 03 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1574285400000
+visual.ts:515 Thu Nov 21 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1580419800000
+visual.ts:515 Fri Jan 31 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1576445400000
+visual.ts:515 Mon Dec 16 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1583875800000
+visual.ts:515 Wed Mar 11 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571693400000
+visual.ts:515 Tue Oct 22 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574890200000
+visual.ts:515 Thu Nov 28 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571779800000
+visual.ts:515 Wed Oct 23 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571088600000
+visual.ts:515 Tue Oct 15 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1579210200000
+visual.ts:515 Fri Jan 17 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1587335400000
+visual.ts:515 Mon Apr 20 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1581370200000
+visual.ts:515 Tue Feb 11 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1590100200000
+visual.ts:515 Fri May 22 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1588285800000
+visual.ts:515 Fri May 01 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1558535400000
+visual.ts:515 Thu May 23 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1574717400000
+visual.ts:515 Tue Nov 26 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1551360600000
+visual.ts:515 Fri Mar 01 2019 00:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1553031000000
+visual.ts:515 Wed Mar 20 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1554211800000
+visual.ts:515 Wed Apr 03 2019 00:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1562538600000
+visual.ts:515 Mon Jul 08 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1568932200000
+visual.ts:515 Fri Sep 20 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1574631000000
+visual.ts:515 Mon Nov 25 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1585603800000
+visual.ts:515 Tue Mar 31 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1575927000000
+visual.ts:515 Tue Dec 10 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1579123800000
+visual.ts:515 Thu Jan 16 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1576618200000
+visual.ts:515 Wed Dec 18 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1579555800000
+visual.ts:515 Tue Jan 21 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1576445400000
+visual.ts:515 Mon Dec 16 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1576618200000
+visual.ts:515 Wed Dec 18 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574803800000
+visual.ts:515 Wed Nov 27 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1568845800000
+visual.ts:515 Thu Sep 19 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1570743000000
+visual.ts:515 Fri Oct 11 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1603056600000
+visual.ts:515 Mon Oct 19 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1569853800000
+visual.ts:515 Tue Oct 01 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1575408600000
+visual.ts:515 Wed Dec 04 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1540243800000
+visual.ts:515 Tue Oct 23 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1562797800000
+visual.ts:515 Thu Jul 11 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1562193000000
+visual.ts:515 Thu Jul 04 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1568068200000
+visual.ts:515 Tue Sep 10 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1556461800000
+visual.ts:515 Mon Apr 29 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1567377000000
+visual.ts:515 Mon Sep 02 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1567377000000
+visual.ts:515 Mon Sep 02 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1605159000000
+visual.ts:515 Thu Nov 12 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1596522600000
+visual.ts:515 Tue Aug 04 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1575581400000
+visual.ts:515 Fri Dec 06 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574890200000
+visual.ts:515 Thu Nov 28 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572557400000
+visual.ts:515 Fri Nov 01 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572211800000
+visual.ts:515 Mon Oct 28 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1575408600000
+visual.ts:515 Wed Dec 04 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1573075800000
+visual.ts:515 Thu Nov 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1584567000000
+visual.ts:515 Thu Mar 19 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571779800000
+visual.ts:515 Wed Oct 23 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1587681000000
+visual.ts:515 Fri Apr 24 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1583098200000
+visual.ts:515 Mon Mar 02 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1588631400000
+visual.ts:515 Tue May 05 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1575408600000
+visual.ts:515 Wed Dec 04 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1587421800000
+visual.ts:515 Tue Apr 21 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1572211800000
+visual.ts:515 Mon Oct 28 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1603834200000
+visual.ts:515 Wed Oct 28 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1589495400000
+visual.ts:515 Fri May 15 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1574112600000
+visual.ts:515 Tue Nov 19 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1602538200000
+visual.ts:515 Tue Oct 13 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571261400000
+visual.ts:515 Thu Oct 17 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571261400000
+visual.ts:515 Thu Oct 17 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1559169000000
+visual.ts:515 Thu May 30 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1563399000000
+visual.ts:515 Thu Jul 18 2019 07:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1573162200000
+visual.ts:515 Fri Nov 08 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1561933800000
+visual.ts:515 Mon Jul 01 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1542576600000
+visual.ts:515 Mon Nov 19 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574199000000
+visual.ts:515 Wed Nov 20 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1575927000000
+visual.ts:515 Tue Dec 10 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1539293400000
+visual.ts:515 Fri Oct 12 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1539293400000
+visual.ts:515 Fri Oct 12 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1537741800000
+visual.ts:515 Mon Sep 24 2018 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1539293400000
+visual.ts:515 Fri Oct 12 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1544131800000
+visual.ts:515 Fri Dec 07 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1542576600000
+visual.ts:515 Mon Nov 19 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1539293400000
+visual.ts:515 Fri Oct 12 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1539293400000
+visual.ts:515 Fri Oct 12 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1539293400000
+visual.ts:515 Fri Oct 12 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1539293400000
+visual.ts:515 Fri Oct 12 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1539293400000
+visual.ts:515 Fri Oct 12 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1567377000000
+visual.ts:515 Mon Sep 02 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1567377000000
+visual.ts:515 Mon Sep 02 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1567377000000
+visual.ts:515 Mon Sep 02 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1603143000000
+visual.ts:515 Tue Oct 20 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1567377000000
+visual.ts:515 Mon Sep 02 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1567377000000
+visual.ts:515 Mon Sep 02 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1567377000000
+visual.ts:515 Mon Sep 02 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1606685400000
+visual.ts:515 Mon Nov 30 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1567377000000
+visual.ts:515 Mon Sep 02 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1549488600000
+visual.ts:515 Thu Feb 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1549488600000
+visual.ts:515 Thu Feb 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1549488600000
+visual.ts:515 Thu Feb 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1549488600000
+visual.ts:515 Thu Feb 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1549488600000
+visual.ts:515 Thu Feb 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1539293400000
+visual.ts:515 Fri Oct 12 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1549402200000
+visual.ts:515 Wed Feb 06 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1562884200000
+visual.ts:515 Fri Jul 12 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1549488600000
+visual.ts:515 Thu Feb 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1549488600000
+visual.ts:515 Thu Feb 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1549488600000
+visual.ts:515 Thu Feb 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1541971800000
+visual.ts:515 Mon Nov 12 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1559514600000
+visual.ts:515 Mon Jun 03 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1571088600000
+visual.ts:515 Tue Oct 15 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571088600000
+visual.ts:515 Tue Oct 15 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1569364200000
+visual.ts:515 Wed Sep 25 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1579555800000
+visual.ts:515 Tue Jan 21 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1573680600000
+visual.ts:515 Thu Nov 14 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572211800000
+visual.ts:515 Mon Oct 28 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1583875800000
+visual.ts:515 Wed Mar 11 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1600410600000
+visual.ts:515 Fri Sep 18 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1582003800000
+visual.ts:515 Tue Feb 18 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1581571800000
+visual.ts:515 Thu Feb 13 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1579671000000
+visual.ts:515 Wed Jan 22 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1576128600000
+visual.ts:515 Thu Dec 12 2019 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1587450600000
+visual.ts:515 Tue Apr 21 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1594103400000
+visual.ts:515 Tue Jul 07 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1597041000000
+visual.ts:515 Mon Aug 10 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1591079400000
+visual.ts:515 Tue Jun 02 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1591857000000
+visual.ts:515 Thu Jun 11 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1587709800000
+visual.ts:515 Fri Apr 24 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1579239000000
+visual.ts:515 Fri Jan 17 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1592202600000
+visual.ts:515 Mon Jun 15 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1575523800000
+visual.ts:515 Thu Dec 05 2019 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1587537000000
+visual.ts:515 Wed Apr 22 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1580794200000
+visual.ts:515 Tue Feb 04 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1586327400000
+visual.ts:515 Wed Apr 08 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1573450200000
+visual.ts:515 Mon Nov 11 2019 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1584509400000
+visual.ts:515 Wed Mar 18 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1582263000000
+visual.ts:515 Fri Feb 21 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1586413800000
+visual.ts:515 Thu Apr 09 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1583386200000
+visual.ts:515 Thu Mar 05 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1580362200000
+visual.ts:515 Thu Jan 30 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1591079400000
+visual.ts:515 Tue Jun 02 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1594362600000
+visual.ts:515 Fri Jul 10 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1594794600000
+visual.ts:515 Wed Jul 15 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1592548200000
+visual.ts:515 Fri Jun 19 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1582176600000
+visual.ts:515 Thu Feb 20 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1582867800000
+visual.ts:515 Fri Feb 28 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1583472600000
+visual.ts:515 Fri Mar 06 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1594621800000
+visual.ts:515 Mon Jul 13 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1603085400000
+visual.ts:515 Mon Oct 19 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1600929000000
+visual.ts:515 Thu Sep 24 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1595572200000
+visual.ts:515 Fri Jul 24 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1602739800000
+visual.ts:515 Thu Oct 15 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1602826200000
+visual.ts:515 Fri Oct 16 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1600842600000
+visual.ts:515 Wed Sep 23 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1584509400000
+visual.ts:515 Wed Mar 18 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1593412200000
+visual.ts:515 Mon Jun 29 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1605159000000
+visual.ts:515 Thu Nov 12 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1596004200000
+visual.ts:515 Wed Jul 29 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1582867800000
+visual.ts:515 Fri Feb 28 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1580247000000
+visual.ts:515 Wed Jan 29 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1583299800000
+visual.ts:515 Wed Mar 04 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1563834600000
+visual.ts:515 Tue Jul 23 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1565793000000
+visual.ts:515 Thu Aug 15 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1583098200000
+visual.ts:515 Mon Mar 02 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1583875800000
+visual.ts:515 Wed Mar 11 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1563834600000
+visual.ts:515 Tue Jul 23 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1606685400000
+visual.ts:515 Mon Nov 30 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1584999000000
+visual.ts:515 Tue Mar 24 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1593469800000
+visual.ts:515 Tue Jun 30 2020 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1612157340000
+visual.ts:515 Mon Feb 01 2021 15:59:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1567377000000
+visual.ts:515 Mon Sep 02 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1563777000000
+visual.ts:515 Mon Jul 22 2019 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1587623400000
+visual.ts:515 Thu Apr 23 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1574285400000
+visual.ts:515 Thu Nov 21 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1597300200000
+visual.ts:515 Thu Aug 13 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1612157400000
+visual.ts:515 Mon Feb 01 2021 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571693400000
+visual.ts:515 Tue Oct 22 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1575322200000
+visual.ts:515 Tue Dec 03 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1579383000000
+visual.ts:515 Sun Jan 19 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571779800000
+visual.ts:515 Wed Oct 23 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570483800000
+visual.ts:515 Tue Oct 08 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570483800000
+visual.ts:515 Tue Oct 08 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1576099800000
+visual.ts:515 Thu Dec 12 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574199000000
+visual.ts:515 Wed Nov 20 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1575408600000
+visual.ts:515 Wed Dec 04 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1575581400000
+visual.ts:515 Fri Dec 06 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570656600000
+visual.ts:515 Thu Oct 10 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570743000000
+visual.ts:515 Fri Oct 11 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571693400000
+visual.ts:515 Tue Oct 22 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572384600000
+visual.ts:515 Wed Oct 30 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1566858600000
+visual.ts:515 Tue Aug 27 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1573680600000
+visual.ts:515 Thu Nov 14 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571693400000
+visual.ts:515 Tue Oct 22 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1589265000000
+visual.ts:515 Tue May 12 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1568586600000
+visual.ts:515 Mon Sep 16 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1568586600000
+visual.ts:515 Mon Sep 16 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1559601000000
+visual.ts:515 Tue Jun 04 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1570483800000
+visual.ts:515 Tue Oct 08 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570483800000
+visual.ts:515 Tue Oct 08 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574890200000
+visual.ts:515 Thu Nov 28 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1573075800000
+visual.ts:515 Thu Nov 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1569882600000
+visual.ts:515 Tue Oct 01 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1559601000000
+visual.ts:515 Tue Jun 04 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1571347800000
+visual.ts:515 Fri Oct 18 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1575495000000
+visual.ts:515 Thu Dec 05 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574285400000
+visual.ts:515 Thu Nov 21 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571779800000
+visual.ts:515 Wed Oct 23 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1559255400000
+visual.ts:515 Fri May 31 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1559601000000
+visual.ts:515 Tue Jun 04 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1562884200000
+visual.ts:515 Fri Jul 12 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1568586600000
+visual.ts:515 Mon Sep 16 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1570570200000
+visual.ts:515 Wed Oct 09 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1563143400000
+visual.ts:515 Mon Jul 15 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1570483800000
+visual.ts:515 Tue Oct 08 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1579469400000
+visual.ts:515 Mon Jan 20 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1573421400000
+visual.ts:515 Mon Nov 11 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570743000000
+visual.ts:515 Fri Oct 11 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570483800000
+visual.ts:515 Tue Oct 08 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1579296600000
+visual.ts:515 Sat Jan 18 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1537738200000
+visual.ts:515 Mon Sep 24 2018 07:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1555054200000
+visual.ts:515 Fri Apr 12 2019 17:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1551619800000
+visual.ts:515 Mon Mar 04 2019 00:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1537738200000
+visual.ts:515 Mon Sep 24 2018 07:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1561501800000
+visual.ts:515 Wed Jun 26 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1566945000000
+visual.ts:515 Wed Aug 28 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1570656600000
+visual.ts:515 Thu Oct 10 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570656600000
+visual.ts:515 Thu Oct 10 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1559860200000
+visual.ts:515 Fri Jun 07 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1562538600000
+visual.ts:515 Mon Jul 08 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1566167400000
+visual.ts:515 Mon Aug 19 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1559255400000
+visual.ts:515 Fri May 31 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1560465000000
+visual.ts:515 Fri Jun 14 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1569364200000
+visual.ts:515 Wed Sep 25 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1569364200000
+visual.ts:515 Wed Sep 25 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1571607000000
+visual.ts:515 Mon Oct 21 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1537741800000
+visual.ts:515 Mon Sep 24 2018 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1537741800000
+visual.ts:515 Mon Sep 24 2018 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1558535400000
+visual.ts:515 Thu May 23 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1559255400000
+visual.ts:515 Fri May 31 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1553805000000
+visual.ts:515 Fri Mar 29 2019 07:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1543440600000
+visual.ts:515 Thu Nov 29 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1559773800000
+visual.ts:515 Thu Jun 06 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1537741800000
+visual.ts:515 Mon Sep 24 2018 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1537741800000
+visual.ts:515 Mon Sep 24 2018 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1552858200000
+visual.ts:515 Mon Mar 18 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1553463000000
+visual.ts:515 Mon Mar 25 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1544535000000
+visual.ts:515 Wed Dec 12 2018 00:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1541367000000
+visual.ts:515 Mon Nov 05 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1553463000000
+visual.ts:515 Mon Mar 25 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1543440600000
+visual.ts:515 Thu Nov 29 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1543440600000
+visual.ts:515 Thu Nov 29 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1553693400000
+visual.ts:515 Thu Mar 28 2019 00:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1543440600000
+visual.ts:515 Thu Nov 29 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1544742360000
+visual.ts:515 Fri Dec 14 2018 09:36:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1544499000000
+visual.ts:515 Tue Dec 11 2018 14:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1543440600000
+visual.ts:515 Thu Nov 29 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1544995800000
+visual.ts:515 Mon Dec 17 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1559169000000
+visual.ts:515 Thu May 30 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1544477400000
+visual.ts:515 Tue Dec 11 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1542115800000
+visual.ts:515 Wed Nov 14 2018 00:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1543440600000
+visual.ts:515 Thu Nov 29 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1543440600000
+visual.ts:515 Thu Nov 29 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1543440600000
+visual.ts:515 Thu Nov 29 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1565130600000
+visual.ts:515 Wed Aug 07 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1543440600000
+visual.ts:515 Thu Nov 29 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1543527000000
+visual.ts:515 Fri Nov 30 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1543440600000
+visual.ts:515 Thu Nov 29 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1547415000000
+visual.ts:515 Mon Jan 14 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1559169000000
+visual.ts:515 Thu May 30 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1569450600000
+visual.ts:515 Thu Sep 26 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1543354200000
+visual.ts:515 Wed Nov 28 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1561588200000
+visual.ts:515 Thu Jun 27 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1557095400000
+visual.ts:515 Mon May 06 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1557095400000
+visual.ts:515 Mon May 06 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1568241000000
+visual.ts:515 Thu Sep 12 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1543354200000
+visual.ts:515 Wed Nov 28 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1545082200000
+visual.ts:515 Tue Dec 18 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1544045400000
+visual.ts:515 Thu Dec 06 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1562106600000
+visual.ts:515 Wed Jul 03 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1554557400000
+visual.ts:515 Sun Apr 07 2019 00:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1544362200000
+visual.ts:515 Mon Dec 10 2018 00:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1573162200000
+visual.ts:515 Fri Nov 08 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1542144600000
+visual.ts:515 Wed Nov 14 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1542144600000
+visual.ts:515 Wed Nov 14 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1556058600000
+visual.ts:515 Wed Apr 24 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1560292200000
+visual.ts:515 Wed Jun 12 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1572989400000
+visual.ts:515 Wed Nov 06 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1568241000000
+visual.ts:515 Thu Sep 12 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1571376600000
+visual.ts:515 Fri Oct 18 2019 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1565044200000
+visual.ts:515 Tue Aug 06 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1546896600000
+visual.ts:515 Tue Jan 08 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1555277400000
+visual.ts:515 Mon Apr 15 2019 07:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1564957800000
+visual.ts:515 Mon Aug 05 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1537741800000
+visual.ts:515 Mon Sep 24 2018 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1537741800000
+visual.ts:515 Mon Sep 24 2018 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1556577000000
+visual.ts:515 Tue Apr 30 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1557066600000
+visual.ts:515 Mon May 06 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1545082200000
+visual.ts:515 Tue Dec 18 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1539034200000
+visual.ts:515 Tue Oct 09 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1539639000000
+visual.ts:515 Tue Oct 16 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1537741800000
+visual.ts:515 Mon Sep 24 2018 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1539552600000
+visual.ts:515 Mon Oct 15 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1540243800000
+visual.ts:515 Tue Oct 23 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1552339800000
+visual.ts:515 Tue Mar 12 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1539034200000
+visual.ts:515 Tue Oct 09 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1538346600000
+visual.ts:515 Mon Oct 01 2018 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1540243800000
+visual.ts:515 Tue Oct 23 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1538346600000
+visual.ts:515 Mon Oct 01 2018 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1538346600000
+visual.ts:515 Mon Oct 01 2018 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1538346600000
+visual.ts:515 Mon Oct 01 2018 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1543354200000
+visual.ts:515 Wed Nov 28 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1538433000000
+visual.ts:515 Tue Oct 02 2018 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1548365400000
+visual.ts:515 Fri Jan 25 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1539639000000
+visual.ts:515 Tue Oct 16 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1540243800000
+visual.ts:515 Tue Oct 23 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1538433000000
+visual.ts:515 Tue Oct 02 2018 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1539034200000
+visual.ts:515 Tue Oct 09 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1539639000000
+visual.ts:515 Tue Oct 16 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1543354200000
+visual.ts:515 Wed Nov 28 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1545139800000
+visual.ts:515 Wed Dec 19 2018 00:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1548250200000
+visual.ts:515 Thu Jan 24 2019 00:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1562193000000
+visual.ts:515 Thu Jul 04 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1538433000000
+visual.ts:515 Tue Oct 02 2018 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1539005400000
+visual.ts:515 Tue Oct 09 2018 00:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1564353000000
+visual.ts:515 Mon Jul 29 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1542144600000
+visual.ts:515 Wed Nov 14 2018 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1537741800000
+visual.ts:515 Mon Sep 24 2018 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1568673000000
+visual.ts:515 Tue Sep 17 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1562625000000
+visual.ts:515 Tue Jul 09 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1571952600000
+visual.ts:515 Fri Oct 25 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1566426600000
+visual.ts:515 Thu Aug 22 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1566426600000
+visual.ts:515 Thu Aug 22 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1567636200000
+visual.ts:515 Thu Sep 05 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1566772200000
+visual.ts:515 Mon Aug 26 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1563143400000
+visual.ts:515 Mon Jul 15 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1579037400000
+visual.ts:515 Wed Jan 15 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1576099800000
+visual.ts:515 Thu Dec 12 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572557400000
+visual.ts:515 Fri Nov 01 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1565217000000
+visual.ts:515 Thu Aug 08 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1565649000000
+visual.ts:515 Tue Aug 13 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1561933800000
+visual.ts:515 Mon Jul 01 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1561300200000
+visual.ts:515 Mon Jun 24 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1562538600000
+visual.ts:515 Mon Jul 08 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1561329000000
+visual.ts:515 Mon Jun 24 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1572211800000
+visual.ts:515 Mon Oct 28 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1566253800000
+visual.ts:515 Tue Aug 20 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1561933800000
+visual.ts:515 Mon Jul 01 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1561300200000
+visual.ts:515 Mon Jun 24 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1561588200000
+visual.ts:515 Thu Jun 27 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1568673000000
+visual.ts:515 Tue Sep 17 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1575235800000
+visual.ts:515 Mon Dec 02 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1565562600000
+visual.ts:515 Mon Aug 12 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1565562600000
+visual.ts:515 Mon Aug 12 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1572989400000
+visual.ts:515 Wed Nov 06 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1562193000000
+visual.ts:515 Thu Jul 04 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1572989400000
+visual.ts:515 Wed Nov 06 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1560465000000
+visual.ts:515 Fri Jun 14 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1559169000000
+visual.ts:515 Thu May 30 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1559169000000
+visual.ts:515 Thu May 30 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1559169000000
+visual.ts:515 Thu May 30 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1559169000000
+visual.ts:515 Thu May 30 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1559169000000
+visual.ts:515 Thu May 30 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1561069800000
+visual.ts:515 Fri Jun 21 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1562106600000
+visual.ts:515 Wed Jul 03 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1549229400000
+visual.ts:515 Mon Feb 04 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1549229400000
+visual.ts:515 Mon Feb 04 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1562106600000
+visual.ts:515 Wed Jul 03 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1583904600000
+visual.ts:515 Wed Mar 11 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572586200000
+visual.ts:515 Fri Nov 01 2019 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1573709400000
+visual.ts:515 Thu Nov 14 2019 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1583299800000
+visual.ts:515 Wed Mar 04 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1583991000000
+visual.ts:515 Thu Mar 12 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1587364200000
+visual.ts:515 Mon Apr 20 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1589178600000
+visual.ts:515 Mon May 11 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574746200000
+visual.ts:515 Tue Nov 26 2019 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1583991000000
+visual.ts:515 Thu Mar 12 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1578979800000
+visual.ts:515 Tue Jan 14 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1590647400000
+visual.ts:515 Thu May 28 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1579584600000
+visual.ts:515 Tue Jan 21 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1590993000000
+visual.ts:515 Mon Jun 01 2020 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1585805400000
+visual.ts:515 Thu Apr 02 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571981400000
+visual.ts:515 Fri Oct 25 2019 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571635800000
+visual.ts:515 Mon Oct 21 2019 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1578979800000
+visual.ts:515 Tue Jan 14 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570685400000
+visual.ts:515 Thu Oct 10 2019 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1578979800000
+visual.ts:515 Tue Jan 14 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1580880600000
+visual.ts:515 Wed Feb 05 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571981400000
+visual.ts:515 Fri Oct 25 2019 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571981400000
+visual.ts:515 Fri Oct 25 2019 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570570200000
+visual.ts:515 Wed Oct 09 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571693400000
+visual.ts:515 Tue Oct 22 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1566167400000
+visual.ts:515 Mon Aug 19 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1580333400000
+visual.ts:515 Thu Jan 30 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1579728600000
+visual.ts:515 Thu Jan 23 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574717400000
+visual.ts:515 Tue Nov 26 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570570200000
+visual.ts:515 Wed Oct 09 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572211800000
+visual.ts:515 Mon Oct 28 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572211800000
+visual.ts:515 Mon Oct 28 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1569277800000
+visual.ts:515 Tue Sep 24 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1578864600000
+visual.ts:515 Mon Jan 13 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1575408600000
+visual.ts:515 Wed Dec 04 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1575322200000
+visual.ts:515 Tue Dec 03 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1565562600000
+visual.ts:515 Mon Aug 12 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1573162200000
+visual.ts:515 Fri Nov 08 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572989400000
+visual.ts:515 Wed Nov 06 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574199000000
+visual.ts:515 Wed Nov 20 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1573594200000
+visual.ts:515 Wed Nov 13 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1575408600000
+visual.ts:515 Wed Dec 04 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1569191400000
+visual.ts:515 Mon Sep 23 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1569450600000
+visual.ts:515 Thu Sep 26 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1567981800000
+visual.ts:515 Mon Sep 09 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1567981800000
+visual.ts:515 Mon Sep 09 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1574199000000
+visual.ts:515 Wed Nov 20 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571607000000
+visual.ts:515 Mon Oct 21 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1562538600000
+visual.ts:515 Mon Jul 08 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1562538600000
+visual.ts:515 Mon Jul 08 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1562538600000
+visual.ts:515 Mon Jul 08 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1562538600000
+visual.ts:515 Mon Jul 08 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1571002200000
+visual.ts:515 Mon Oct 14 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572989400000
+visual.ts:515 Wed Nov 06 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1569191400000
+visual.ts:515 Mon Sep 23 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1565130600000
+visual.ts:515 Wed Aug 07 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1565130600000
+visual.ts:515 Wed Aug 07 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1569191400000
+visual.ts:515 Mon Sep 23 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572989400000
+visual.ts:515 Wed Nov 06 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570570200000
+visual.ts:515 Wed Oct 09 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572989400000
+visual.ts:515 Wed Nov 06 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571175000000
+visual.ts:515 Wed Oct 16 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1567981800000
+visual.ts:515 Mon Sep 09 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1580419800000
+visual.ts:515 Fri Jan 31 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1575322200000
+visual.ts:515 Tue Dec 03 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1568586600000
+visual.ts:515 Mon Sep 16 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570743000000
+visual.ts:515 Fri Oct 11 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571002200000
+visual.ts:515 Mon Oct 14 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1569450600000
+visual.ts:515 Thu Sep 26 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1573767000000
+visual.ts:515 Fri Nov 15 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574803800000
+visual.ts:515 Wed Nov 27 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574803800000
+visual.ts:515 Wed Nov 27 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1576618200000
+visual.ts:515 Wed Dec 18 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571002200000
+visual.ts:515 Mon Oct 14 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1569796200000
+visual.ts:515 Mon Sep 30 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1571002200000
+visual.ts:515 Mon Oct 14 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1579469400000
+visual.ts:515 Mon Jan 20 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571002200000
+visual.ts:515 Mon Oct 14 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574803800000
+visual.ts:515 Wed Nov 27 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572211800000
+visual.ts:515 Mon Oct 28 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1565562600000
+visual.ts:515 Mon Aug 12 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1566772200000
+visual.ts:515 Mon Aug 26 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571607000000
+visual.ts:515 Mon Oct 21 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1573594200000
+visual.ts:515 Wed Nov 13 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1565562600000
+visual.ts:515 Mon Aug 12 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1576013400000
+visual.ts:515 Wed Dec 11 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571175000000
+visual.ts:515 Wed Oct 16 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571002200000
+visual.ts:515 Mon Oct 14 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1575927000000
+visual.ts:515 Tue Dec 10 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1573594200000
+visual.ts:515 Wed Nov 13 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572327000000
+visual.ts:515 Tue Oct 29 2019 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574919000000
+visual.ts:515 Thu Nov 28 2019 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1576042200000
+visual.ts:515 Wed Dec 11 2019 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1584077400000
+visual.ts:515 Fri Mar 13 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1580794200000
+visual.ts:515 Tue Feb 04 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1568701800000
+visual.ts:515 Tue Sep 17 2019 16:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1573536600000
+visual.ts:515 Tue Nov 12 2019 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1576128600000
+visual.ts:515 Thu Dec 12 2019 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1578375000000
+visual.ts:515 Tue Jan 07 2020 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1571376600000
+visual.ts:515 Fri Oct 18 2019 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572298200000
+visual.ts:515 Tue Oct 29 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1569796200000
+visual.ts:515 Mon Sep 30 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1571895000000
+visual.ts:515 Thu Oct 24 2019 16:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1563143400000
+visual.ts:515 Mon Jul 15 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1561329000000
+visual.ts:515 Mon Jun 24 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1557671400000
+visual.ts:515 Mon May 13 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1557844200000
+visual.ts:515 Wed May 15 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1557844200000
+visual.ts:515 Wed May 15 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1559140200000
+visual.ts:515 Thu May 30 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1562884200000
+visual.ts:515 Fri Jul 12 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1547472600000
+visual.ts:515 Tue Jan 15 2019 00:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1554067800000
+visual.ts:515 Mon Apr 01 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1547559000000
+visual.ts:515 Wed Jan 16 2019 00:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1561933800000
+visual.ts:515 Mon Jul 01 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1557844200000
+visual.ts:515 Wed May 15 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1557844200000
+visual.ts:515 Wed May 15 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1557095400000
+visual.ts:515 Mon May 06 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1558362600000
+visual.ts:515 Tue May 21 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1551043800000
+visual.ts:515 Mon Feb 25 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1558449000000
+visual.ts:515 Wed May 22 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1558305000000
+visual.ts:515 Mon May 20 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1545053400000
+visual.ts:515 Tue Dec 18 2018 00:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1545053400000
+visual.ts:515 Tue Dec 18 2018 00:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1558276200000
+visual.ts:515 Mon May 20 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1559514600000
+visual.ts:515 Mon Jun 03 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1559313000000
+visual.ts:515 Sat Jun 01 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1557671400000
+visual.ts:515 Mon May 13 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1565649000000
+visual.ts:515 Tue Aug 13 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1559226600000
+visual.ts:515 Fri May 31 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1555885800000
+visual.ts:515 Mon Apr 22 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1571607000000
+visual.ts:515 Mon Oct 21 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1572298200000
+visual.ts:515 Tue Oct 29 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1568327400000
+visual.ts:515 Fri Sep 13 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1564957800000
+visual.ts:515 Mon Aug 05 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1560436200000
+visual.ts:515 Fri Jun 14 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1557095400000
+visual.ts:515 Mon May 06 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1557844200000
+visual.ts:515 Wed May 15 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1560954600000
+visual.ts:515 Thu Jun 20 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1559169000000
+visual.ts:515 Thu May 30 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1558305000000
+visual.ts:515 Mon May 20 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1570656600000
+visual.ts:515 Thu Oct 10 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1559831400000
+visual.ts:515 Fri Jun 07 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1566253800000
+visual.ts:515 Tue Aug 20 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1560436200000
+visual.ts:515 Fri Jun 14 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1558305000000
+visual.ts:515 Mon May 20 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1572989400000
+visual.ts:515 Wed Nov 06 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1573680600000
+visual.ts:515 Thu Nov 14 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1570397400000
+visual.ts:515 Mon Oct 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1569450600000
+visual.ts:515 Thu Sep 26 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1569450600000
+visual.ts:515 Thu Sep 26 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1559313000000
+visual.ts:515 Sat Jun 01 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1560724200000
+visual.ts:515 Mon Jun 17 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1559485800000
+visual.ts:515 Mon Jun 03 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1559485800000
+visual.ts:515 Mon Jun 03 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1560724200000
+visual.ts:515 Mon Jun 17 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1564612200000
+visual.ts:515 Thu Aug 01 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1548250200000
+visual.ts:515 Thu Jan 24 2019 00:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1556749800000
+visual.ts:515 Thu May 02 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1571866200000
+visual.ts:515 Thu Oct 24 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1549978200000
+visual.ts:515 Wed Feb 13 2019 00:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1562797800000
+visual.ts:515 Thu Jul 11 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1559485800000
+visual.ts:515 Mon Jun 03 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1559485800000
+visual.ts:515 Mon Jun 03 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1559226600000
+visual.ts:515 Fri May 31 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1557844200000
+visual.ts:515 Wed May 15 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1557930600000
+visual.ts:515 Thu May 16 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1558449000000
+visual.ts:515 Wed May 22 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1557891000000
+visual.ts:515 Wed May 15 2019 13:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1563143400000
+visual.ts:515 Mon Jul 15 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1560205800000
+visual.ts:515 Tue Jun 11 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1559255400000
+visual.ts:515 Fri May 31 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1547472600000
+visual.ts:515 Tue Jan 15 2019 00:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1547472600000
+visual.ts:515 Tue Jan 15 2019 00:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1558967400000
+visual.ts:515 Tue May 28 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1558535400000
+visual.ts:515 Thu May 23 2019 00:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1558305000000
+visual.ts:515 Mon May 20 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1558996200000
+visual.ts:515 Tue May 28 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1569796200000
+visual.ts:515 Mon Sep 30 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1570483800000
+visual.ts:515 Tue Oct 08 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1569277800000
+visual.ts:515 Tue Sep 24 2019 08:00:00 GMT+0930 (Australian Central Standard Time)
+visual.ts:514 1577741400000
+visual.ts:515 Tue Dec 31 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574285400000
+visual.ts:515 Thu Nov 21 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1581543000000
+visual.ts:515 Thu Feb 13 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1577223000000
+visual.ts:515 Wed Dec 25 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1575667800000
+visual.ts:515 Sat Dec 07 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1577223000000
+visual.ts:515 Wed Dec 25 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1574285400000
+visual.ts:515 Thu Nov 21 2019 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1578605400000
+visual.ts:515 Fri Jan 10 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:514 1580419800000
+visual.ts:515 Fri Jan 31 2020 08:00:00 GMT+1030 (Australian Central Daylight Time)
+visual.ts:459 dfs
+visual.ts:463 startMin
+visual.ts:479 endMax
+visual.ts:495 (916) [Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, Activity, …][0 … 99]0: Activityend: M {$L: 'en', $d: Mon Feb 03 1614 00:00:00 GMT+0914 (Australian Central Daylight Time), $x: {…}, $y: 1614, $M: 1, …}level: 0name: "TBH Demo Road Project - Latest Status"start: M {$L: 'en', $d: Wed Jan 07 1542 00:00:00 GMT+0914 (Australian Central Daylight Time), $x: {…}, $y: 1542, $M: 0, …}[[Prototype]]: Object1: Activityend: M {$L: 'en', $d: Mon Feb 03 1614 00:00:00 GMT+0914 (Australian Central Daylight Time), $x: {…}, $y: 1614, $M: 1, …}level: 1name: "TBH Demo Project Schedule"start: M {$L: 'en', $d: Wed Jan 07 1542 00:00:00 GMT+0914 (Australian Central Daylight Time), $x: {…}, $y: 1542, $M: 0, …}[[Prototype]]: Object2: Activityend: M {$L: 'en', $d: Mon Feb 03 1614 00:00:00 GMT+0914 (Australian Central Daylight Time), $x: {…}, $y: 1614, $M: 1, …}level: 2name: "Construction"start: M {$L: 'en', $d: Wed Jan 07 1542 00:00:00 GMT+0914 (Australian Central Daylight Time), $x: {…}, $y: 1542, $M: 0, …}[[Prototype]]: Object3: Activityend: M {$L: 'en', $d: Thu Mar 02 1578 00:00:00 GMT+0914 (Australian Central Daylight Time), $x: {…}, $y: 1578, $M: 2, …}level: 3name: "APA Approval of Gas Protection Slab Design"start: M {$L: 'en', $d: Mon Mar 01 1576 00:00:00 GMT+0914 (Australian Central Daylight Time), $x: {…}, $y: 1576, $M: 2, …}[[Prototype]]: Object4: Activity {start: M, end: M, name: 'Approval of Management Plans by Stakeholders (Critical Item)', level: 3}5: Activity {start: M, end: M, name: 'Approvals by Ausnet (Initial Approval)', level: 3}6: Activity {start: M, end: M, name: 'Approvals by Ausnet after Design Change', level: 3}7: Activity {start: M, end: M, name: 'Approvals by Jemena (Initial Approval)', level: 3}8: Activity {start: M, end: M, name: 'Approvals by Jemena after Design Change', level: 3}9: Activity {start: M, end: M, name: 'Approvals by MRPV', level: 3}10: Activity {start: M, end: M, name: 'Approvals by YVW', level: 3}11: Activity {start: M, end: M, name: 'Area Available for Eathworks and RE walls for Northbound Exit Ramp', level: 3}12: Activity {start: M, end: M, name: 'Asphalt Base - SIZE 20  TYPE SI ASPHALT - 90 mm  thick', level: 3}13: Activity {start: M, end: M, name: 'Asphalt Base - SIZE 20 TYPE SF ASPHALT - 75 mm  thick', level: 3}14: Activity {start: M, end: M, name: 'Asphalt Base - SIZE 20 TYPE SI ASPHALT - 90 mm  thick', level: 3}15: Activity {start: M, end: M, name: 'Asphalt Base - SIZE 20 TYPE SS ASPHALT - 70 mm  thick', level: 3}16: Activity {start: M, end: M, name: 'Asphalt Base - SIZE 20 TYPE SS ASPHALT - 75 mm  thick', level: 3}17: Activity {start: M, end: M, name: 'Asphalt Intermediate Course 2 - SIZE 20  TYPE SI ASPHALT - 85 mm thick', level: 3}18: Activity {start: M, end: M, name: 'Asphalt Intermediate Course 2 - SIZE 20 TYPE SI ASPHALT - 85 mm thick', level: 3}19: Activity {start: M, end: M, name: 'Asphalt Intermediate Course 2 - SIZE 20 TYPE SS ASPHALT - 70 mm thick', level: 3}20: Activity {start: M, end: M, name: 'Asphalt Intermediate Course 2 - SIZE 20 TYPE SS ASPHALT - 95 mm thick', level: 3}21: Activity {start: M, end: M, name: 'Asphalt Intermediate Course 2 layers at 75 mm each - SIZE 20 TYPE SS ASPHALT - 150 mm thick', level: 3}22: Activity {start: M, end: M, name: 'Asphalt Surfacing layer - SIZE I0 OGA  - 30 mm thick', level: 3}23: Activity {start: M, end: M, name: 'Asphalt Wearing Course - SIZE I4 TYPE SMA-H ASPHALT  - 35 mm thick', level: 3}24: Activity {start: M, end: M, name: 'Asphalt Wearing Course - SIZE I4 TYPE SMA-H ASPHALT  - 40 mm thick', level: 3}25: Activity {start: M, end: M, name: 'Asphalt Wearing Course - SIZE I4 TYPE V ASPHALT  - 40 mm  thick', level: 3}26: Activity {start: M, end: M, name: 'Asphalt Wearing Course - SIZE I4 TYPE V ASPHALT  - 40 mm thick', level: 3}27: Activity {start: M, end: M, name: "Back Fill RCP's", level: 3}28: Activity {start: M, end: M, name: 'Backfill around Headwall Sructure and Connect RCP Drains', level: 3}29: Activity {start: M, end: M, name: 'Backfill around Headwall Structure and and Regrade Creek to Match', level: 3}30: Activity {start: M, end: M, name: 'Backfill around Headwall Structure and Regrade Creek to Match', level: 3}31: Activity {start: M, end: M, name: 'Backfill around Junction Pit and Culverts', level: 3}32: Activity {start: M, end: M, name: 'Backfill around Junction Pits and Connect Strip Drains and RCP Drains', level: 3}33: Activity {start: M, end: M, name: 'Backfill behind Fender Wall to u/s of Approach Slab', level: 3}34: Activity {start: M, end: M, name: 'Backfill Drainage Structure', level: 3}35: Activity {start: M, end: M, name: 'Backup kerb', level: 3}36: Activity {start: M, end: M, name: 'Barrier Installation Hume Freeway - OH Rd/Hume Pier Protection Barrier Construction (Stage 3)', level: 3}37: Activity {start: M, end: M, name: 'Barrier Installation Hume Freeway - Sth of OH Bridge to Nth LoW (Stage 1)', level: 3}38: Activity {start: M, end: M, name: 'Barrier installation Hume Freeway - Sth of OH Bridge to Sth LoW (Stage 2)', level: 3}39: Activity {start: M, end: M, name: 'Barrier Removal Hume Freeway - OH Rd/Hume Pier Protection Barrier Construction (Stage 3)', level: 3}40: Activity {start: M, end: M, name: 'Barrier Removal Hume Freeway - Sth of OH Bridge to Nth LoW (Stage 1)', level: 3}41: Activity {start: M, end: M, name: 'Barrier Removal Hume Freeway - Sth of OH Bridge to Sth LoW (Stage 2)', level: 3}42: Activity {start: M, end: M, name: 'Base Slabs Cure and Strip', level: 3}43: Activity {start: M, end: M, name: 'Bedding, Padding and Backfilling of Dig 1', level: 3}44: Activity {start: M, end: M, name: 'Bedding, Padding and Backfilling of Dig 2', level: 3}45: Activity {start: M, end: M, name: 'Bedding, Padding and Backfilling of Dig 3', level: 3}46: Activity {start: M, end: M, name: 'Break Back RC Piles', level: 3}47: Activity {start: M, end: M, name: 'Bridge Line Marking North', level: 3}48: Activity {start: M, end: M, name: 'Bridge Line Marking South', level: 3}49: Activity {start: M, end: M, name: 'Bridge OGA North- SIZE I4 TYPE V ASPHALT  - 40 mm thick', level: 3}50: Activity {start: M, end: M, name: 'Bridge OGA South- SIZE I4 TYPE V ASPHALT  - 40 mm thick', level: 3}51: Activity {start: M, end: M, name: 'Bridge Regulation North- SIZE 20 TYPE SI ASPHALT  - 20 mm thick', level: 3}52: Activity {start: M, end: M, name: 'Bridge Regulation South - SIZE 20 TYPE SI ASPHALT  - 20 mm thick', level: 3}53: Activity {start: M, end: M, name: 'Bulk Earthworks - Early Fill Import', level: 3}54: Activity {start: M, end: M, name: "Bulk Earthworks - Early Fill Placement from Eastbound O'herns Cut", level: 3}55: Activity {start: M, end: M, name: 'Bulk Earthworks - Excavate and fill', level: 3}56: Activity {start: M, end: M, name: 'Bulk Earthworks - Excavate Subgrade and Place Subg…dening Zone ( Rock Excavation and Removal 1550 m)', level: 3}57: Activity {start: M, end: M, name: 'Bulk Earthworks - Excavate to Subgrade', level: 3}58: Activity {start: M, end: M, name: 'Bulk Earthworks - Fill', level: 3}59: Activity {start: M, end: M, name: 'Bulk Earthworks - Fill at RSS Extension', level: 3}60: Activity {start: M, end: M, name: 'Bulk Earthworks - Fill Dependant on RW-C', level: 3}61: Activity {start: M, end: M, name: 'Bulk Earthworks - Fill NB Entry Ramp on Hume', level: 3}62: Activity {start: M, end: M, name: 'Capping Material - CBR >6%- SWELL <1.5% PERMEABILITY < 5X10‘ m/sec) - 150 mm thick', level: 3}63: Activity {start: M, end: M, name: 'Capping Material - CBR >6%- SWELL <1.5% PERMEABILITY < 5X10‘ m/sec) - 185 mm thick', level: 3}64: Activity {start: M, end: M, name: 'Capping Material - CBR >6%- SWELL <1.5% PERMEABILI… 5X10‘ m/sec) - 185 mm thick - Localised YVW pits', level: 3}65: Activity {start: M, end: M, name: 'Capping Material - CBR >6%- SWELL <1.5% PERMEABILITY < 5X10‘ m/sec) - 200 mm thick', level: 3}66: Activity {start: M, end: M, name: 'Civil Works to prepare for Jet Grout Injection (incl. OH Rd access track)', level: 3}67: Activity {start: M, end: M, name: 'Cleanup and Demobilise', level: 3}68: Activity {start: M, end: M, name: 'Clear, Grub Road Alignment', level: 3}69: Activity {start: M, end: M, name: "Clear, Grub Road Alignment (230 & 240 O'Herns Rd)", level: 3}70: Activity {start: M, end: M, name: "Clear, Grub Road Alignment (excl. 230 & 240 O'Herns Rd)", level: 3}71: Activity {start: M, end: M, name: 'Commence Process to Engage Major Utilities Providers', level: 3}72: Activity {start: M, end: M, name: 'Commission System', level: 3}73: Activity {start: M, end: M, name: 'Compact and Prepare Subgrade', level: 3}74: Activity {start: M, end: M, name: 'Concrete Curing', level: 3}75: Activity {start: M, end: M, name: 'Concrete Curning', level: 3}76: Activity {start: M, end: M, name: 'Construct 6 no. SEP manholes over existing drainage pipes CH 6770 to CH 6900', level: 3}77: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install 450 x 300 BC - D086-D089 ADJ to NG2 (31m)', level: 3}78: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install 450 x 300 BC - D090-D093 ADJ to TP2 (26m)', level: 3}79: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install BC - D226-D228 (43m)', level: 3}80: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install pipe and Pits - D0147-D153 (222m)', level: 3}81: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install pipe and Pits - D075-D077 (45m)', level: 3}82: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install pipe and Pits - D114-D117 (124m)', level: 3}83: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install pipe and Pits - D130-D137-D136 (79m)', level: 3}84: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install pipe and Pits - D161-D167 & D175(100m)', level: 3}85: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install pipe and Pits - D161-D183(170 m)', level: 3}86: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install pipe and Pits - D174-D167 & D168 (100m)', level: 3}87: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install pipe and Pits …9-D041 (28m) & OUTLET D039 -D056-D058-D060 (195m)', level: 3}88: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install pipe and Pits - OUTLET D143-D146 (97m) & D143-D147 (15m)', level: 3}89: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install pipe and Pits …UTLET DX037-D065 (149m) & OUTLET DX037-D038 (14m)', level: 3}90: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install RCP 225 m plus pits - D066-D072 (147m)', level: 3}91: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install RCP incl Pits -  D024-D027(45m)', level: 3}92: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install RCP incl Pits - D027-D031 (65m)', level: 3}93: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install RCP incl Pits - D118-D120 (17m)', level: 3}94: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install RCP incl Pits - D121-D123 (90m)', level: 3}95: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install RCP plus pits - D020-D018 (35m)', level: 3}96: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install RCP plus pits - D078-D079 & D080-D081 (23 m)', level: 3}97: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install RCP plus pits - D082-D085-D84 (32m)', level: 3}98: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install RCP plus pits - D094-D103-D105 (157m)', level: 3}99: Activity {start: M, end: M, name: 'Construct Drainage Lines -  Install RCP plus pits - D109-D110 (9m)', level: 3}[100 … 199][200 … 299][300 … 399][400 … 499][500 … 599][600 … 699][700 … 799][800 … 899][900 … 915]900: Activity {start: M, end: M, name: 'Pricing Period RFT - Type B Placement Subcontractor', level: 3}901: Activity {start: M, end: M, name: 'Pricing Period RFT -Drainage Contractor', level: 3}902: Activity {start: M, end: M, name: 'Pricing Period RFT -Major Drainage Contractor', level: 3}903: Activity {start: M, end: M, name: 'Pricing Period RFT -Sub Soil Drainage Contractor', level: 3}904: Activity {start: M, end: M, name: 'Procure Architectural Formliner', level: 3}905: Activity {start: M, end: M, name: 'QA Documentation Client Review & Approval', level: 3}906: Activity {start: M, end: M, name: 'QA Documentation Development', level: 3}907: Activity {start: M, end: M, name: 'RW-B (PLAIN FINISH)', level: 3}908: Activity {start: M, end: M, name: 'RW-C (PLAIN FINISH)', level: 3}909: Activity {start: M, end: M, name: 'RW-F (ARCH FINISH)', level: 3}910: Activity {start: M, end: M, name: 'RW-G (ARCH FINISH)', level: 3}911: Activity {start: M, end: M, name: 'RW-K NORTH (ARCH FINISH)', level: 3}912: Activity {start: M, end: M, name: 'RW-K SOUTH (ARCH FINISH)', level: 3}913: Activity {start: M, end: M, name: 'RW-L NORTH (ARCH FINISH)', level: 3}914: Activity {start: M, end: M, name: 'RW-L SOUTH (ARCH FINISH)', level: 3}915: Activityend: M {$L: 'en', $d: Wed Jan 23 1585 00:00:00 GMT+0914 (Australian Central Daylight Time), $x: {…}, $y: 1585, $M: 0, …}level: 3name: "RW-M (ARCH FINISH)"start: M {$L: 'en', $d: Sat Aug 06 1583 00:00:00 GMT+0914 (Australian Central Standard Time), $x: {…}, $y: 1583, $M: 7, …}[[Prototype]]: Objectlength: 916[[Prototype]]: Array(0)

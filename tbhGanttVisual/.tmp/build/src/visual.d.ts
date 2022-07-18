@@ -24,6 +24,11 @@ export declare class Visual implements IVisual {
      * @param dataView The DataView object to configure the visual against.
      */
     private checkConfiguration;
+    /**
+     *
+     * @param activities
+     * @param node
+     */
     private dfsPreorder;
     /**
      * Synchronises the left scrolling of the div-timeline and div-chart depending on which one was scrolled.

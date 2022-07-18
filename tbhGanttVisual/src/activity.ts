@@ -14,7 +14,7 @@ export class Activity {
     public getName(): string { return this.name; }
     public getLevel(): number { return this.level; }
 
-    constructor(name: string,start: dayjs.Dayjs, end: dayjs.Dayjs,  level: number) {
+    constructor(name: string, start: dayjs.Dayjs, end: dayjs.Dayjs, level: number) {
         this.start = start;
         this.end = end;
         this.name = name;
@@ -23,6 +23,10 @@ export class Activity {
 
     }
 
-
-
+    public setStart(date: dayjs.Dayjs) {
+        this.start = date;
+    }
+    public setEnd(date: dayjs.Dayjs) {
+        this.end = date;
+    }
 }

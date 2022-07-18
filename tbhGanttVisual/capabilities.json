@@ -17,8 +17,7 @@
             "displayName": "Finish",
             "displayNameKey": "Visual_Values",
             "kind": "Measure"
-        }
-        ,
+        },
         {
             "name": "TF",
             "displayName": "TF",

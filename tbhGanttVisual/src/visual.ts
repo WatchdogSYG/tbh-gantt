@@ -41,6 +41,7 @@ import DataView = powerbi.DataView;
 
 import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
 import VisualObjectInstance = powerbi.VisualObjectInstance;
+import VisualObjectInstanceEnumeration = powerbi.VisualObjectInstanceEnumeration;
 import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnumerationObject;
 
 import IVisualHost = powerbi.extensibility.IVisualHost;
@@ -58,6 +59,7 @@ import * as MinMax from 'dayjs/plugin/minMax';
 
 //UNIT TESTS
 import * as jsUnit from './../tests/globalTests';
+import { CursorPos } from 'readline';
 
 ////////////////////////////////////////////////////////////////
 //  Begin class definition
@@ -130,7 +132,7 @@ export class Visual implements IVisual {
 
         let myData: Activity[] = [
 
-            
+
         ];
 
         console.log('a');
@@ -399,35 +401,9 @@ export class Visual implements IVisual {
         //options.dataViews[0].metadata.columns.entries
 
         this.checkConfiguration(dataView);
-        // let width: number = options.viewport.width;
-        // let height: number = options.viewport.height;
-        // this.svg.attr('width', width);
-        // this.svg.attr('height', height);
-        // let radius: number = Math.min(width, height) / 2.2;
-        // this.circle
-        //     .style('fill', 'white')
-        //     .style('fill-opacity', 0.5)
-        //     .style('stroke', 'black')
-        //     .style('stroke-width', 2)
-        //     .attr('r', radius)
-        //     .attr('cx', width / 2)
-        //     .attr('cy', height / 2);
-        // let fontSizeValue: number = Math.min(width, height) / 5;
-        // this.textValue
-        //     .text(<string>dataView.single.value)
-        //     .attr('x', '50%')
-        //     .attr('y', '50%')
-        //     .attr('dy', '0.35em')
-        //     .attr('text-anchor', 'middle')
-        //     .style('font-size', fontSizeValue + 'px');
-        // let fontSizeLabel: number = fontSizeValue / 4;
-        // this.textLabel
-        //     .text(dataView.metadata.columns[0].displayName)
-        //     .attr('x', '50%')
-        //     .attr('y', height / 2)
-        //     .attr('dy', fontSizeValue / 1.2)
-        //     .attr('text-anchor', 'middle')
-        //     .style('font-size', fontSizeLabel + 'px');
+
+        // let ops : EnumerateVisualObjectInstancesOptions = new EnumerateVisualObjectInstancesOptions('subTotals')
+        // let o: VisualObjectInstanceEnumeration = this.enumerateObjectInstances(EnumerateVisualObjectInstancesOptions);
 
     }
 
@@ -475,30 +451,69 @@ export class Visual implements IVisual {
         console.log('LOG: DATAVIEW CONFIGURATION');
         console.log('LOG: number of heirachy levels: ' + dataView.matrix.rows.levels.length);
         console.log(dataView.matrix.rows.root);
-
+        console.log('dfs');
         let acts: Activity[] = [];
+        console.log('dfs');
         this.dfsPreorder(acts, dataView.matrix.rows.root.children[0]);
-        
-        for(let i = 0; i> acts.length; i++){
-            console.log(acts[i].getStart());
+
+        console.log('dfs');
+
+        let aggregateBuffer: dayjs.Dayjs[] = [];
+        let currentLevel: number = acts[acts.length - 1].getLevel();
+        console.log('startMin');
+
+        for (let i = 0; i < acts.length; i++) {
+            let l: number = acts[acts.length - i - 1].getLevel();
+
+            if (l < currentLevel) {// going up indents, summarise
+                acts[acts.length - i - 1].setStart(Time.minDayjs(aggregateBuffer));
+                currentLevel = l;
+            } else if (l > currentLevel) {//going down andents, clear buffer
+                aggregateBuffer = [];
+                currentLevel = l;
+            } else {//same indent, add to buffer
+                aggregateBuffer.push(acts[acts.length - i - 1].getStart());
+            }
         }
-        
+
+        console.log('endMax');
+
+        for (let i = 0; i < acts.length; i++) {
+            let l: number = acts[acts.length - i - 1].getLevel();
+
+            if (l < currentLevel) {// going up indents, summarise
+                acts[acts.length - i - 1].setEnd(Time.maxDayjs(aggregateBuffer));
+                currentLevel = l;
+            } else if (l > currentLevel) {//going down andents, clear buffer
+                aggregateBuffer = [];
+                currentLevel = l;
+            } else {//same indent, add to buffer
+                aggregateBuffer.push(acts[acts.length - i - 1].getEnd());
+            }
+        }
+
+        console.log(acts);
+
     }
 
 
+    /**
+     * 
+     * @param activities 
+     * @param node 
+     */
     private dfsPreorder(activities: Activity[], node: powerbi.DataViewMatrixNode) {
-
-
         if (node.children == null) {
             //console.log("LOG: RECURSION: level = " + node.level + ', start = '+ node.values[0].value);
             if ((node.values[0] != null) && (node.values[1] != null)) {//every task must have a start and finish
                 activities.push(new Activity(
                     node.value.toString(),
-                    dayjs(node.values[0].value.valueOf().toString(), 'x'),
-                    dayjs(node.values[1].value.valueOf().toString(), 'x'),
+                    dayjs(node.values[0].value.valueOf().toString(), 'X'),
+                    dayjs(node.values[1].value.valueOf().toString(), 'X'),
                     node.level));
+                    console.log(node.values[0].value.valueOf().toString());
+                    console.log(node.values[0].value);
             }
-
         } else {
             //console.log("LOG: RECURSION: level = " + node.level);
             activities.push(new Activity(
@@ -543,6 +558,24 @@ export class Visual implements IVisual {
                 if (this.verbose) { console.log('LOG: Sync chart scroll to timeline scroll'); };
         }
     }
+
+    // public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
+    //     let objectName: string = options.objectName;
+    //     let objectEnumeration: VisualObjectInstance[] = [];
+
+    //     switch (objectName) {
+    //         case 'myCustomObject':
+    //             objectEnumeration.push({
+    //                 objectName: objectName,
+    //                 properties: { ... },
+    //                 selector: { ... }
+    //             });
+    //             break;
+    //     };
+
+    //     return objectEnumeration;
+    // }
+
 
     ////////////////////////////////////////////////////////////////
     //  END OF CLASS
