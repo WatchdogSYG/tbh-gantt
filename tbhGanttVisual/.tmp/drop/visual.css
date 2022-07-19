@@ -64,7 +64,7 @@ div {
   height: fit-content;
 }
 #div-content {
-  height: fit-content;
+  height: 100%;
   width: 100%;
   display: flex;
 }

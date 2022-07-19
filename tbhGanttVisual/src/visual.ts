@@ -60,6 +60,7 @@ import * as MinMax from 'dayjs/plugin/minMax';
 //UNIT TESTS
 import * as jsUnit from './../tests/globalTests';
 import { CursorPos } from 'readline';
+import { start } from 'repl';
 
 ////////////////////////////////////////////////////////////////
 //  Begin class definition
@@ -89,11 +90,10 @@ export class Visual implements IVisual {
     //tables
 
     private activityTable: Selection<any>;
-    private timelineTable: Selection<HTMLTableElement>;
-    private ganttGridTable: Selection<HTMLTableElement>;
 
     //svgs
 
+    private gantt: Selection<SVGSVGElement>;
     //text
 
     ////////////////DEV VARS\\\\\\\\\\\\\\\\
@@ -101,14 +101,21 @@ export class Visual implements IVisual {
     private timeline: Timeline;
     private verbose: boolean = false; //verbose logging?
 
+    private start: dayjs.Dayjs;
+    private end: dayjs.Dayjs;
+    private status: dayjs.Dayjs;
+
+    private tlWidth: number;
+    private tlHeight: number;
+    private rowHeight: number;
+    private chartHeight: number;
+
     ////////////////////////////////////////////////////////////////
     //  Constructor
     ////////////////////////////////////////////////////////////////
 
     constructor(options: VisualConstructorOptions) {
         if (this.verbose) { console.log('LOG: Constructing Visual Object', options); }
-
-        var _this = this; //get a reference to self so that d3's anonymous callbacks can access member functions
 
         //jsUnit.allTests();
 
@@ -126,62 +133,35 @@ export class Visual implements IVisual {
         //         this.target.appendChild(new_p);
         //      }
 
-        ////////////////////////////////////////////////////////////////
-        //  Generate Timeline object from data (put in function later)
-        ////////////////////////////////////////////////////////////////
+        this.generateBody(options);
+        //generatetimeline with default dates
 
-        let myData: Activity[] = [
+        this.status = dayjs(new Date(2022, 6, 19));
 
+    }
 
-        ];
+    ////////////////////////////////////////////////////////////////
+    //  UPDATE VISUAL ON REFRESH
+    ////////////////////////////////////////////////////////////////
 
-        console.log('a');
-        // console.log(dayjs.min(dayjs(new Date(2000,1,1)),dayjs(new Date(2001,1,1))));
+    public update(options: VisualUpdateOptions) {
+        //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
+        if (this.verbose) { console.log('Visual update()', options); }
 
-        let d1: dayjs.Dayjs = Time.minDayjs([
-            dayjs(new Date(2022, 3, 2)),
-            dayjs(new Date(2025, 5, 2)),
-            dayjs(new Date(2023, 7, 2)),
-            dayjs(new Date(2023, 8, 2)),
-            dayjs(new Date(2023, 9, 2)),
-            dayjs(new Date(2022, 9, 2)),
-            dayjs(new Date(2023, 2, 2)),
-            dayjs(new Date(2028, 6, 2)),
-            dayjs(new Date(2029, 3, 2)),
-            dayjs(new Date(2022, 7, 2)),
-            dayjs(new Date(2021, 3, 2)),
-            dayjs(new Date(2021, 8, 2)),
-            dayjs(new Date(2022, 3, 2))]);
+        let dataView: DataView = options.dataViews[0];
+        //options.dataViews[0].metadata.columns.entries
 
-        let d2: dayjs.Dayjs = Time.maxDayjs([
-            dayjs(new Date(2024, 3, 4)),
-            dayjs(new Date(2024, 3, 4)),
-            dayjs(new Date(2024, 3, 4)),
-            dayjs(new Date(2024, 3, 4)),
-            dayjs(new Date(2024, 3, 4)),
-            dayjs(new Date(2024, 3, 4)),
-            dayjs(new Date(2024, 3, 4)),
-            dayjs(new Date(2030, 3, 4)),
-            dayjs(new Date(2030, 3, 4)),
-            dayjs(new Date(2030, 3, 4)),
-            dayjs(new Date(2030, 3, 4)),
-            dayjs(new Date(2030, 3, 4)),
-            dayjs(new Date(2030, 3, 4))]);
+        let acts: Activity[] = this.checkConfiguration(dataView);
 
-        console.log('a');
-        let status: dayjs.Dayjs = dayjs(new Date(2022, 6, 16));
-        console.log('a');
-        this.timeline = new Timeline(d1, d2, status);
-        let padding: number = 0;//this.timeline.getPadding();
+        this.drawTimeline(acts);
+        this.drawChart(acts, this.gantt);
 
-        let tlWidth: number = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale());//cannot be less than div width!
+        // let ops : EnumerateVisualObjectInstancesOptions = new EnumerateVisualObjectInstancesOptions('subTotals')
+        // let o: VisualObjectInstanceEnumeration = this.enumerateObjectInstances(EnumerateVisualObjectInstancesOptions);
 
-        let tlHeight: number = Lib.pxToNumber(this.style.getPropertyValue('--timelineHeight'));
+    }
 
-
-        let rowHeight: number = Lib.pxToNumber(this.style.getPropertyValue('--rowHeight'));
-
-        let ts: TimeScale = this.timeline.getTimeScale();
+    private generateBody(options: VisualConstructorOptions) {
 
         ////////////////////////////////////////////////////////////////
         //  Create body level child elements
@@ -223,25 +203,135 @@ export class Visual implements IVisual {
             .append('div')
             .attr('id', 'div-chart');
 
-        ////////////////////////////////////////////////////////////////
-        //  Chart Configuration
-        ////////////////////////////////////////////////////////////////
+        this.activityTable = this.divActivities
+            .append('table')
+            .attr('id', 'table-activities');
 
+    }
+
+    /**
+     * Returns the configuration of the desired graph to determine which elements to render based on the data in dataView.
+     * @param dataView The DataView object to configure the visual against.
+     */
+    private checkConfiguration(dataView: DataView): Activity[] {
+
+        console.log('LOG: Checking Configuration');
+
+        if (this.verbose) {
+            console.log('LOG: DATAVIEW CONFIGURATION');
+            console.log('LOG: number of heirachy levels: ' + dataView.matrix.rows.levels.length);
+        }
+
+        //check verbose
+        console.log(dataView.matrix.rows.root);
+
+        let acts: Activity[] = [];
+
+        this.dfsPreorder(acts, dataView.matrix.rows.root.children[0]);
+
+        let aggregateBuffer: dayjs.Dayjs[] = [];
+        let currentLevel: number = acts[acts.length - 1].getLevel();
+
+        let globalStart: dayjs.Dayjs[] = [];
+        let globalEnd: dayjs.Dayjs[] = [];
+
+        for (let i = 0; i < acts.length; i++) {
+            let l: number = acts[acts.length - i - 1].getLevel();
+
+            if (l < currentLevel) {// going up indents, summarise
+                acts[acts.length - i - 1].setStart(Time.minDayjs(aggregateBuffer));
+                currentLevel = l;
+            } else if (l > currentLevel) {//going down andents, clear buffer
+                aggregateBuffer = [];
+                currentLevel = l;
+            } else {//same indent, add to buffer
+                aggregateBuffer.push(acts[acts.length - i - 1].getStart());
+            }
+
+            if (l == 0) {
+                globalStart.push(acts[acts.length - i - 1].getStart());
+            }
+        }
+
+        for (let i = 0; i < acts.length; i++) {
+            let l: number = acts[acts.length - i - 1].getLevel();
+
+            if (l < currentLevel) {// going up indents, summarise
+                acts[acts.length - i - 1].setEnd(Time.maxDayjs(aggregateBuffer));
+                currentLevel = l;
+            } else if (l > currentLevel) {//going down andents, clear buffer
+                aggregateBuffer = [];
+                currentLevel = l;
+            } else {//same indent, add to buffer
+                aggregateBuffer.push(acts[acts.length - i - 1].getEnd());
+            }
+            if (l == 0) {
+                globalEnd.push(acts[acts.length - i - 1].getEnd());
+            }
+        }
+
+        this.start = Time.minDayjs(globalStart);
+        this.end = Time.minDayjs(globalEnd);
+
+        console.log('LOG: DONE Checking Configuration');
+
+        return acts;
+    }
+
+    /**
+     * 
+     * @param activities 
+     * @param node 
+     */
+    private dfsPreorder(activities: Activity[], node: powerbi.DataViewMatrixNode) {
+        if (node.children == null) {
+            //console.log("LOG: RECURSION: level = " + node.level + ', start = '+ node.values[0].value);
+            if ((node.values[0] != null) && (node.values[1] != null)) {//every task must have a start and finish
+                activities.push(new Activity(
+                    node.value.toString(),
+                    dayjs(node.values[0].value as Date),
+                    dayjs(node.values[1].value as Date),
+                    node.level));
+            }
+        } else {
+            //console.log("LOG: RECURSION: level = " + node.level);
+            activities.push(new Activity(
+                node.value.toString(),
+                null,
+                null,
+                node.level));//need to check type?
+            for (let i = 0; i < node.children.length; i++) {
+                this.dfsPreorder(activities, node.children[i]);
+            }
+        }
+    }
+
+    private drawTimeline(acts: Activity[]) {
+        console.log('LOG: Drawing Timeline');
+
+        this.timeline = new Timeline(this.start, this.end, this.status);
+
+        this.tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale());//cannot be less than div width!
+        this.tlHeight = Lib.pxToNumber(this.style.getPropertyValue('--timelineHeight'));
+        this.rowHeight = Lib.pxToNumber(this.style.getPropertyValue('--rowHeight'));
+        this.chartHeight = this.divChartContainer.node().getBoundingClientRect().height;
+
+        let ts: TimeScale = this.timeline.getTimeScale();
 
         ////////////////////////////////////////////////////////////////
         //  Create svg timeline
         ////////////////////////////////////////////////////////////////
 
-        let gantt: Selection<SVGSVGElement> = this.divChartContainer
+        this.gantt = this.divChartContainer
             .append('svg')
             .attr('id', 'tl-top')
-            .attr('height', Lib.px(tlHeight + (myData.length * rowHeight)))
-            .attr('width', Lib.px(tlWidth));
+            .attr('height', Lib.px(this.tlHeight + (acts.length * this.rowHeight)))
+            .attr('width', Lib.px(this.tlWidth));
 
-        let gMonths: Selection<SVGGElement> = gantt.append('g')
+        let gMonths: Selection<SVGGElement> = this.gantt.append('g')
             .classed('g-tl', true);
 
-        let gYears: Selection<SVGGElement> = gantt.append('g')
+        let gYears: Selection<SVGGElement> = this.gantt.append('g')
             .classed('g-tl', true);
 
         //////////////////////////////////////////////////////////////// YearText
@@ -265,7 +355,7 @@ export class Visual implements IVisual {
             .attr('x2', function (d) {
                 return Lib.px(d.offset);
             })
-            .attr('y2', tlHeight)
+            .attr('y2', this.tlHeight)
             .attr('stroke-width', '2px')
             .attr('style', 'stroke:black');
 
@@ -277,7 +367,7 @@ export class Visual implements IVisual {
             .attr('x', function (d) {
                 return Lib.px(d.offset + d.textAnchorOffset);
             })
-            .attr('y', Lib.px(tlHeight / 2))
+            .attr('y', Lib.px(this.tlHeight / 2))
             .text(function (d) { return d.text; })
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
@@ -287,35 +377,43 @@ export class Visual implements IVisual {
         //////////////////////////////////////////////////////////////// YMonthLine
         gMonths.selectAll('line').data(ts.monthScale).enter().append('line')
             .attr('x1', function (d) { return Lib.px(d.offset); })
-            .attr('y1', Lib.px(tlHeight / 2))
+            .attr('y1', Lib.px(this.tlHeight / 2))
             .attr('x2', function (d) {
                 return Lib.px(d.offset);
             })
-            .attr('y2', tlHeight)
+            .attr('y2', this.tlHeight)
             .attr('style', 'stroke:red');
 
         //////////////////////////////////////////////////////////////// Grid
-        let chartHeight: number = this.divChartContainer.node().getBoundingClientRect().height;
 
         gMonths.selectAll('.grid-months')
             .data(ts.monthScale).enter().append('line')
             .attr('x1', function (d) { return Lib.px(d.offset); })
-            .attr('y1', Lib.px(tlHeight))
+            .attr('y1', Lib.px(this.tlHeight))
             .attr('x2', function (d) {
                 return Lib.px(d.offset);
             })
-            .attr('y2', Lib.px(chartHeight))
+            .attr('y2', Lib.px(this.chartHeight))
             .attr('style', 'stroke:green');
 
         gYears.selectAll('.grid-years')
             .data(ts.yearScale).enter().append('line')
             .attr('x1', function (d) { return Lib.px(d.offset); })
-            .attr('y1', Lib.px(tlHeight))
+            .attr('y1', Lib.px(this.tlHeight))
             .attr('x2', function (d) {
                 return Lib.px(d.offset);
             })
-            .attr('y2', Lib.px(chartHeight))
+            .attr('y2', Lib.px(this.chartHeight))
             .attr('style', 'stroke:gray');
+
+        console.log('LOG: DONE Drawing Timeline');
+    }
+
+    private drawChart(acts: Activity[], gantt: Selection<SVGSVGElement>) {
+
+        console.log('LOG: Drawing Chart');
+
+        console.log('here');
         ////////////////////////////////////////////////////////////////
         //  Create #table-activities
         ////////////////////////////////////////////////////////////////
@@ -326,43 +424,38 @@ export class Visual implements IVisual {
         // https://stackoverflow.com/questions/37583275/how-to-append-multiple-child-elements-to-a-div-in-d3-js?noredirect=1&lq=1
         // https://stackoverflow.com/questions/21485981/appending-multiple-non-nested-elements-for-each-data-member-with-d3-js
 
-        this.activityTable = this.divActivities
-            .append('table')
-            .attr('id', 'table-activities');
-
-
-
-
-
+        var _this = this; //get a reference to self so that d3's anonymous callbacks can access member functions
 
         //this.populateActivityTable(myData, null, 'table-activities');
 
         ////////////////////////////////////////////////////////////////
         //  Prepare for chart drawing
         ////////////////////////////////////////////////////////////////
-
+        console.log('here');
         let bars: Selection<SVGSVGElement> = gantt
             .append('g')
             .append('svg')
             .attr('id', 'svg-bars');
+            
+        console.log('here');
 
-        console.log('a');
         bars.selectAll('rect')
-            .data(myData)
+            .data(acts)
             .enter()
             .append('rect')
             .attr('x', function (d) {
                 return Lib.px(_this.timeline.dateLocation(d.getStart()));
             })
-            .attr('height', rowHeight)
+            .attr('height', this.rowHeight)
             .attr('width', function (d) {
                 return Lib.px(_this.timeline.dateLocation(d.getEnd()) - _this.timeline.dateLocation(d.getStart()));
             })
-            .attr('y', function (d, i) { return Lib.px(tlHeight + (rowHeight * i)) })
+            .attr('y', function (d, i) { return Lib.px(_this.tlHeight + (_this.rowHeight * i)) })
             .attr('rx', '3px')
             .attr('ry', '3px')
             .classed('activityBar', true);
 
+        console.log('here');
         ////////////////////////////////////////////////////////////////
         //  Draw chart
         ////////////////////////////////////////////////////////////////
@@ -384,29 +477,14 @@ export class Visual implements IVisual {
                 .concat('px'))
             .attr('transform', 'translate(' + this.timeline.statusDateLocation() + ')');
 
+        console.log('LOG: DONE Drawing Chart');
     }
 
-    ////////////////////////////////////////////////////////////////
-    //  UPDATE VISUAL ON REFRESH
-    ////////////////////////////////////////////////////////////////
+    private drawTable(acts: Activity[]) {
+        console.log('LOG: Drawing Table');
 
-    public update(options: VisualUpdateOptions) {
-        //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
-        if (this.verbose) { console.log('Visual update', options); }
-        // if (this.textNode) {
-        //     this.textNode.textContent = (this.updateCount++).toString();
-        // }
-
-        let dataView: DataView = options.dataViews[0];
-        //options.dataViews[0].metadata.columns.entries
-
-        this.checkConfiguration(dataView);
-
-        // let ops : EnumerateVisualObjectInstancesOptions = new EnumerateVisualObjectInstancesOptions('subTotals')
-        // let o: VisualObjectInstanceEnumeration = this.enumerateObjectInstances(EnumerateVisualObjectInstancesOptions);
-
-    }
-
+        console.log('LOG: DONE Drawing Timeline');
+    } Table
     /*
     * Returns a <table> element based on the Activities from the DataView.
     * Returns an empty table if options is null.
@@ -442,90 +520,6 @@ export class Visual implements IVisual {
     //         .text(function (d) { return d; });//we are taking d from the bound data from the trs
     //     // .attr('class','style'+d.wbsIndex);
     // }
-
-    /**
-     * Returns the configuration of the desired graph to determine which elements to render based on the data in dataView.
-     * @param dataView The DataView object to configure the visual against.
-     */
-    private checkConfiguration(dataView: DataView) {
-        console.log('LOG: DATAVIEW CONFIGURATION');
-        console.log('LOG: number of heirachy levels: ' + dataView.matrix.rows.levels.length);
-        console.log(dataView.matrix.rows.root);
-        console.log('dfs');
-        let acts: Activity[] = [];
-        console.log('dfs');
-        this.dfsPreorder(acts, dataView.matrix.rows.root.children[0]);
-
-        console.log('dfs');
-
-        let aggregateBuffer: dayjs.Dayjs[] = [];
-        let currentLevel: number = acts[acts.length - 1].getLevel();
-        console.log('startMin');
-
-        for (let i = 0; i < acts.length; i++) {
-            let l: number = acts[acts.length - i - 1].getLevel();
-
-            if (l < currentLevel) {// going up indents, summarise
-                acts[acts.length - i - 1].setStart(Time.minDayjs(aggregateBuffer));
-                currentLevel = l;
-            } else if (l > currentLevel) {//going down andents, clear buffer
-                aggregateBuffer = [];
-                currentLevel = l;
-            } else {//same indent, add to buffer
-                aggregateBuffer.push(acts[acts.length - i - 1].getStart());
-            }
-        }
-
-        console.log('endMax');
-
-        for (let i = 0; i < acts.length; i++) {
-            let l: number = acts[acts.length - i - 1].getLevel();
-
-            if (l < currentLevel) {// going up indents, summarise
-                acts[acts.length - i - 1].setEnd(Time.maxDayjs(aggregateBuffer));
-                currentLevel = l;
-            } else if (l > currentLevel) {//going down andents, clear buffer
-                aggregateBuffer = [];
-                currentLevel = l;
-            } else {//same indent, add to buffer
-                aggregateBuffer.push(acts[acts.length - i - 1].getEnd());
-            }
-        }
-
-        console.log(acts);
-
-    }
-
-
-    /**
-     * 
-     * @param activities 
-     * @param node 
-     */
-    private dfsPreorder(activities: Activity[], node: powerbi.DataViewMatrixNode) {
-        if (node.children == null) {
-            //console.log("LOG: RECURSION: level = " + node.level + ', start = '+ node.values[0].value);
-            if ((node.values[0] != null) && (node.values[1] != null)) {//every task must have a start and finish
-                activities.push(new Activity(
-                    node.value.toString(),
-                    dayjs(node.values[0].value.valueOf().toString(), 'X'),
-                    dayjs(node.values[1].value.valueOf().toString(), 'X'),
-                    node.level));
-                    console.log(node.values[0].value.valueOf().toString());
-                    console.log(node.values[0].value);
-            }
-        } else {
-            //console.log("LOG: RECURSION: level = " + node.level);
-            activities.push(new Activity(
-                node.value.toString(),
-                null,
-                null,
-                node.level));//need to check type?
-            for (let i = 0; i < node.children.length; i++) {
-                this.dfsPreorder(activities, node.children[i]);
-            }
-        }
-    }
     /**
      * Synchronises the left scrolling of the div-timeline and div-chart depending on which one was scrolled.
      * 
@@ -533,7 +527,7 @@ export class Visual implements IVisual {
      * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
      * @param div the div that was scrolled by the user.
      */
-    private syncScrollTimeline(div: Selection<HTMLDivElement>) {
+    private syncScrollTimelineLeft(div: Selection<HTMLDivElement>) {
         //links i used to understand ts callbacks, d3 event handling
         //https://hstefanski.wordpress.com/2015/10/25/responding-to-d3-events-in-typescript/
         //https://rollbar.com/blog/javascript-typeerror-cannot-read-property-of-undefined/
@@ -555,6 +549,39 @@ export class Visual implements IVisual {
 
             case timelineID:
                 document.getElementById(chartID).scrollLeft = document.getElementById(timelineID).scrollLeft;
+                if (this.verbose) { console.log('LOG: Sync chart scroll to timeline scroll'); };
+        }
+    }
+
+    /**
+    * Synchronises the top scrolling of the div-timeline and div-chart depending on which one was scrolled.
+    * 
+    * KNOWN ISSUE: since the event listener that fires this callback is on both div-timeline and div-chart, 
+    * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
+    * @param div the div that was scrolled by the user.
+    */
+    private syncScrollTimelineTop(div: Selection<HTMLDivElement>) {
+        //links i used to understand ts callbacks, d3 event handling
+        //https://hstefanski.wordpress.com/2015/10/25/responding-to-d3-events-in-typescript/
+        //https://rollbar.com/blog/javascript-typeerror-cannot-read-property-of-undefined/
+        //https://www.d3indepth.com/selections/
+        //https://developer.mozilla.org/en-US/docs/Web/API/Element/scroll_event
+        //https://github.com/d3/d3-selection/blob/main/README.md#handling-events
+        //https://www.tutorialsteacher.com/d3js/event-handling-in-d3js
+
+        if (this.verbose) { console.log('Synchronising scroll...'); }
+
+        let id: string = div.attr('id');//d3.select(d3.event.currentTarget)
+        let chartID: string = 'div-chart';
+        let timelineID: string = 'div-timeline';
+
+        switch (id) {
+            case chartID:
+                document.getElementById(timelineID).scrollTop = document.getElementById(chartID).scrollTop;
+                if (this.verbose) { console.log('LOG: Sync timeline scroll to chart scroll'); };
+
+            case timelineID:
+                document.getElementById(chartID).scrollTop = document.getElementById(timelineID).scrollTop;
                 if (this.verbose) { console.log('LOG: Sync chart scroll to timeline scroll'); };
         }
     }

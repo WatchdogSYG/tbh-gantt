@@ -478,7 +478,9 @@ class Timeline {
         ////////////////////////////////////////////////////////////////
         //--------DEV--------//
         this.verbose = false;
-        console.log('LOG: Constructing Timeline Object');
+        if (this.verbose) {
+            console.log('LOG: Constructing Timeline Object');
+        }
         //check which date is larger and round to nearest day
         if (start > end) {
             this.d1 = end.startOf('d');
@@ -496,7 +498,7 @@ class Timeline {
         this.span_months = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .spanMonths */ .V7(start, end);
         this.span_years = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .spanYears */ .LP(start, end);
         this.yearPadding = 5;
-        this.dayScale = 1;
+        this.dayScale = 2;
         this.updateScaleFactors();
         if (this.verbose) {
             console.log('LOG: Timeline created from ' +
@@ -559,15 +561,19 @@ class Timeline {
      * display elements in the timeline based on the start and finish dates.
      */
     generateYears() {
-        console.log('LOG: Generating YearSeparator array for timeline.');
+        if (this.verbose) {
+            console.log('LOG: Generating YearSeparator array for timeline.');
+        }
         let result;
         let cumulativeOffset = 0;
         let proportion;
         //If the dates are in the same year, the loop will not return the correct value. Handle it here.      
         if (this.span_years == 0) { //same year, return year
             result = [new YearSeparator(this.d1.year().toString(), 0, this.yearPadding)];
-            console.log(result);
-            console.log('LOG: YearScale generation complete.');
+            if (this.verbose) {
+                console.log(result);
+                console.log('LOG: YearScale generation complete.');
+            }
             return result;
         }
         //the dates are not in the same year, run this loop
@@ -603,8 +609,10 @@ class Timeline {
             }
             cumulativeOffset += _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInYear */ .dT(this.d1.year() + i) * this.dayScale * proportion;
         }
-        console.log(result);
-        console.log('LOG: YearScale generation complete.');
+        if (this.verbose) {
+            console.log(result);
+            console.log('LOG: YearScale generation complete.');
+        }
         return result;
     }
     /**
@@ -616,22 +624,24 @@ class Timeline {
  * display elements in the timeline based on the start and finish dates.
  */
     generateMonths() {
-        console.log('LOG: Generating MonthSeparator array for timeline.');
+        if (this.verbose) {
+            console.log('LOG: Generating MonthSeparator array for timeline.');
+        }
         let result;
         let cumulativeOffset = 0;
         let proportion;
         //If the dates are in the same year, the loop will not return the correct value. Handle it here.      
         if (this.span_months == 0) { //same month, return month
             result = [new MonthSeparator(_src_time__WEBPACK_IMPORTED_MODULE_0__/* .month */ .iL(this.d1.month()), 0, _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(this.d1.month(), this.d1.year()) / 2)];
-            console.log(result);
-            console.log('LOG: MonthSeparator array generation complete.');
+            if (this.verbose) {
+                console.log(result);
+                console.log('LOG: MonthSeparator array generation complete.');
+            }
             return result;
         }
         //the dates are not in the same month, run this loop
         result = [];
         for (let i = 0; i < this.span_months; i++) {
-            if (this.verbose) {
-            }
             //check if we are considering the first or last month and calc the proportion of the section we want
             if (i == 0) { //this is the first month, take the portion of that month and create the offset. TODO check if the text will overlap
                 proportion = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .remainingDaysInMonth */ .DO(this.d1);
@@ -663,8 +673,10 @@ class Timeline {
         if (result[1].offset < (0.75 * this.dayScale * _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(this.d1.month() + 1, this.d1.year()))) {
             result[0].text = '';
         }
-        console.log(result);
-        console.log('LOG: MonthSeparator array generation complete.');
+        if (this.verbose) {
+            console.log(result);
+            console.log('LOG: MonthSeparator array generation complete.');
+        }
         return result;
     }
     ////////////////////////////////////////////////////////////////
@@ -734,10 +746,10 @@ class TimeScale {
 /* harmony export */   "u": () => (/* binding */ Visual)
 /* harmony export */ });
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(662);
-/* harmony import */ var _src_lib__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(809);
+/* harmony import */ var _src_lib__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(809);
 /* harmony import */ var _src_time__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4734);
 /* harmony import */ var _src_timeline__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(1092);
-/* harmony import */ var _src_activity__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(8944);
+/* harmony import */ var _src_activity__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(8944);
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(9665);
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_3__);
 /*
@@ -788,7 +800,6 @@ class Visual {
         if (this.verbose) {
             console.log('LOG: Constructing Visual Object', options);
         }
-        var _this = this; //get a reference to self so that d3's anonymous callbacks can access member functions
         //jsUnit.allTests();
         this.style = getComputedStyle(document.querySelector(':root'));
         //     this.target = options.element;
@@ -802,51 +813,27 @@ class Visual {
         //         new_p.appendChild(new_em);
         //         this.target.appendChild(new_p);
         //      }
-        ////////////////////////////////////////////////////////////////
-        //  Generate Timeline object from data (put in function later)
-        ////////////////////////////////////////////////////////////////
-        let myData = [];
-        console.log('a');
-        // console.log(dayjs.min(dayjs(new Date(2000,1,1)),dayjs(new Date(2001,1,1))));
-        let d1 = _src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA([
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2022, 3, 2)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2025, 5, 2)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2023, 7, 2)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2023, 8, 2)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2023, 9, 2)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2022, 9, 2)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2023, 2, 2)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2028, 6, 2)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2029, 3, 2)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2022, 7, 2)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2021, 3, 2)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2021, 8, 2)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2022, 3, 2))
-        ]);
-        let d2 = _src_time__WEBPACK_IMPORTED_MODULE_1__/* .maxDayjs */ .AY([
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2024, 3, 4)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4)),
-            dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2030, 3, 4))
-        ]);
-        console.log('a');
-        let status = dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2022, 6, 16));
-        console.log('a');
-        this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_2__/* .Timeline */ .TY(d1, d2, status);
-        let padding = 0; //this.timeline.getPadding();
-        let tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale()); //cannot be less than div width!
-        let tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_4__/* .pxToNumber */ .F(this.style.getPropertyValue('--timelineHeight'));
-        let rowHeight = _src_lib__WEBPACK_IMPORTED_MODULE_4__/* .pxToNumber */ .F(this.style.getPropertyValue('--rowHeight'));
-        let ts = this.timeline.getTimeScale();
+        this.generateBody(options);
+        //generatetimeline with default dates
+        this.status = dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2022, 6, 19));
+    }
+    ////////////////////////////////////////////////////////////////
+    //  UPDATE VISUAL ON REFRESH
+    ////////////////////////////////////////////////////////////////
+    update(options) {
+        //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
+        if (this.verbose) {
+            console.log('Visual update()', options);
+        }
+        let dataView = options.dataViews[0];
+        //options.dataViews[0].metadata.columns.entries
+        let acts = this.checkConfiguration(dataView);
+        this.drawTimeline(acts);
+        this.drawChart(acts, this.gantt);
+        // let ops : EnumerateVisualObjectInstancesOptions = new EnumerateVisualObjectInstancesOptions('subTotals')
+        // let o: VisualObjectInstanceEnumeration = this.enumerateObjectInstances(EnumerateVisualObjectInstancesOptions);
+    }
+    generateBody(options) {
         ////////////////////////////////////////////////////////////////
         //  Create body level child elements
         ////////////////////////////////////////////////////////////////
@@ -879,20 +866,106 @@ class Visual {
         this.divChartContainer = this.divContent
             .append('div')
             .attr('id', 'div-chart');
-        ////////////////////////////////////////////////////////////////
-        //  Chart Configuration
-        ////////////////////////////////////////////////////////////////
+        this.activityTable = this.divActivities
+            .append('table')
+            .attr('id', 'table-activities');
+    }
+    /**
+     * Returns the configuration of the desired graph to determine which elements to render based on the data in dataView.
+     * @param dataView The DataView object to configure the visual against.
+     */
+    checkConfiguration(dataView) {
+        console.log('LOG: Checking Configuration');
+        if (this.verbose) {
+            console.log('LOG: DATAVIEW CONFIGURATION');
+            console.log('LOG: number of heirachy levels: ' + dataView.matrix.rows.levels.length);
+        }
+        //check verbose
+        console.log(dataView.matrix.rows.root);
+        let acts = [];
+        this.dfsPreorder(acts, dataView.matrix.rows.root.children[0]);
+        let aggregateBuffer = [];
+        let currentLevel = acts[acts.length - 1].getLevel();
+        let globalStart = [];
+        let globalEnd = [];
+        for (let i = 0; i < acts.length; i++) {
+            let l = acts[acts.length - i - 1].getLevel();
+            if (l < currentLevel) { // going up indents, summarise
+                acts[acts.length - i - 1].setStart(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA(aggregateBuffer));
+                currentLevel = l;
+            }
+            else if (l > currentLevel) { //going down andents, clear buffer
+                aggregateBuffer = [];
+                currentLevel = l;
+            }
+            else { //same indent, add to buffer
+                aggregateBuffer.push(acts[acts.length - i - 1].getStart());
+            }
+            if (l == 0) {
+                globalStart.push(acts[acts.length - i - 1].getStart());
+            }
+        }
+        for (let i = 0; i < acts.length; i++) {
+            let l = acts[acts.length - i - 1].getLevel();
+            if (l < currentLevel) { // going up indents, summarise
+                acts[acts.length - i - 1].setEnd(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .maxDayjs */ .AY(aggregateBuffer));
+                currentLevel = l;
+            }
+            else if (l > currentLevel) { //going down andents, clear buffer
+                aggregateBuffer = [];
+                currentLevel = l;
+            }
+            else { //same indent, add to buffer
+                aggregateBuffer.push(acts[acts.length - i - 1].getEnd());
+            }
+            if (l == 0) {
+                globalEnd.push(acts[acts.length - i - 1].getEnd());
+            }
+        }
+        this.start = _src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA(globalStart);
+        this.end = _src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA(globalEnd);
+        console.log('LOG: DONE Checking Configuration');
+        return acts;
+    }
+    /**
+     *
+     * @param activities
+     * @param node
+     */
+    dfsPreorder(activities, node) {
+        if (node.children == null) {
+            //console.log("LOG: RECURSION: level = " + node.level + ', start = '+ node.values[0].value);
+            if ((node.values[0] != null) && (node.values[1] != null)) { //every task must have a start and finish
+                activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(node.value.toString(), dayjs__WEBPACK_IMPORTED_MODULE_3__(node.values[0].value), dayjs__WEBPACK_IMPORTED_MODULE_3__(node.values[1].value), node.level));
+            }
+        }
+        else {
+            //console.log("LOG: RECURSION: level = " + node.level);
+            activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(node.value.toString(), null, null, node.level)); //need to check type?
+            for (let i = 0; i < node.children.length; i++) {
+                this.dfsPreorder(activities, node.children[i]);
+            }
+        }
+    }
+    drawTimeline(acts) {
+        console.log('LOG: Drawing Timeline');
+        this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_2__/* .Timeline */ .TY(this.start, this.end, this.status);
+        this.tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale()); //cannot be less than div width!
+        this.tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_5__/* .pxToNumber */ .F(this.style.getPropertyValue('--timelineHeight'));
+        this.rowHeight = _src_lib__WEBPACK_IMPORTED_MODULE_5__/* .pxToNumber */ .F(this.style.getPropertyValue('--rowHeight'));
+        this.chartHeight = this.divChartContainer.node().getBoundingClientRect().height;
+        let ts = this.timeline.getTimeScale();
         ////////////////////////////////////////////////////////////////
         //  Create svg timeline
         ////////////////////////////////////////////////////////////////
-        let gantt = this.divChartContainer
+        this.gantt = this.divChartContainer
             .append('svg')
             .attr('id', 'tl-top')
-            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(tlHeight + (myData.length * rowHeight)))
-            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(tlWidth));
-        let gMonths = gantt.append('g')
+            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight + (acts.length * this.rowHeight)))
+            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlWidth));
+        let gMonths = this.gantt.append('g')
             .classed('g-tl', true);
-        let gYears = gantt.append('g')
+        let gYears = this.gantt.append('g')
             .classed('g-tl', true);
         //////////////////////////////////////////////////////////////// YearText
         gYears.selectAll('text')
@@ -900,7 +973,7 @@ class Visual {
             .enter()
             .append('text')
             .attr('x', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.offset + d.textAnchorOffset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset + d.textAnchorOffset);
         })
             .attr('y', '0px')
             .text(function (d) { return d.text; })
@@ -909,12 +982,12 @@ class Visual {
             .classed('yearText', true);
         //////////////////////////////////////////////////////////////// YearLine
         gYears.selectAll('line').data(ts.yearScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.offset); })
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
             .attr('y1', '0px')
             .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.offset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
         })
-            .attr('y2', tlHeight)
+            .attr('y2', this.tlHeight)
             .attr('stroke-width', '2px')
             .attr('style', 'stroke:black');
         //////////////////////////////////////////////////////////////// MonthText
@@ -923,9 +996,9 @@ class Visual {
             .enter()
             .append('text')
             .attr('x', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.offset + d.textAnchorOffset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset + d.textAnchorOffset);
         })
-            .attr('y', _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(tlHeight / 2))
+            .attr('y', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight / 2))
             .text(function (d) { return d.text; })
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
@@ -933,33 +1006,37 @@ class Visual {
             .classed('monthText', true);
         //////////////////////////////////////////////////////////////// YMonthLine
         gMonths.selectAll('line').data(ts.monthScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.offset); })
-            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(tlHeight / 2))
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
+            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight / 2))
             .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.offset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
         })
-            .attr('y2', tlHeight)
+            .attr('y2', this.tlHeight)
             .attr('style', 'stroke:red');
         //////////////////////////////////////////////////////////////// Grid
-        let chartHeight = this.divChartContainer.node().getBoundingClientRect().height;
         gMonths.selectAll('.grid-months')
             .data(ts.monthScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.offset); })
-            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(tlHeight))
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
+            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight))
             .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.offset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
         })
-            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(chartHeight))
+            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.chartHeight))
             .attr('style', 'stroke:green');
         gYears.selectAll('.grid-years')
             .data(ts.yearScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.offset); })
-            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(tlHeight))
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
+            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight))
             .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(d.offset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
         })
-            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(chartHeight))
+            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.chartHeight))
             .attr('style', 'stroke:gray');
+        console.log('LOG: DONE Drawing Timeline');
+    }
+    drawChart(acts, gantt) {
+        console.log('LOG: Drawing Chart');
+        console.log('here');
         ////////////////////////////////////////////////////////////////
         //  Create #table-activities
         ////////////////////////////////////////////////////////////////
@@ -968,33 +1045,33 @@ class Visual {
         // https://stackoverflow.com/questions/21485981/appending-multiple-non-nested-elements-for-each-data-member-with-d3-js/33809812#33809812
         // https://stackoverflow.com/questions/37583275/how-to-append-multiple-child-elements-to-a-div-in-d3-js?noredirect=1&lq=1
         // https://stackoverflow.com/questions/21485981/appending-multiple-non-nested-elements-for-each-data-member-with-d3-js
-        this.activityTable = this.divActivities
-            .append('table')
-            .attr('id', 'table-activities');
+        var _this = this; //get a reference to self so that d3's anonymous callbacks can access member functions
         //this.populateActivityTable(myData, null, 'table-activities');
         ////////////////////////////////////////////////////////////////
         //  Prepare for chart drawing
         ////////////////////////////////////////////////////////////////
+        console.log('here');
         let bars = gantt
             .append('g')
             .append('svg')
             .attr('id', 'svg-bars');
-        console.log('a');
+        console.log('here');
         bars.selectAll('rect')
-            .data(myData)
+            .data(acts)
             .enter()
             .append('rect')
             .attr('x', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(_this.timeline.dateLocation(d.getStart()));
+            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(_this.timeline.dateLocation(d.getStart()));
         })
-            .attr('height', rowHeight)
+            .attr('height', this.rowHeight)
             .attr('width', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(_this.timeline.dateLocation(d.getEnd()) - _this.timeline.dateLocation(d.getStart()));
+            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(_this.timeline.dateLocation(d.getEnd()) - _this.timeline.dateLocation(d.getStart()));
         })
-            .attr('y', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_4__.px(tlHeight + (rowHeight * i)); })
+            .attr('y', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(_this.tlHeight + (_this.rowHeight * i)); })
             .attr('rx', '3px')
             .attr('ry', '3px')
             .classed('activityBar', true);
+        console.log('here');
         ////////////////////////////////////////////////////////////////
         //  Draw chart
         ////////////////////////////////////////////////////////////////
@@ -1014,23 +1091,11 @@ class Visual {
             .toString()
             .concat('px'))
             .attr('transform', 'translate(' + this.timeline.statusDateLocation() + ')');
+        console.log('LOG: DONE Drawing Chart');
     }
-    ////////////////////////////////////////////////////////////////
-    //  UPDATE VISUAL ON REFRESH
-    ////////////////////////////////////////////////////////////////
-    update(options) {
-        //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
-        if (this.verbose) {
-            console.log('Visual update', options);
-        }
-        // if (this.textNode) {
-        //     this.textNode.textContent = (this.updateCount++).toString();
-        // }
-        let dataView = options.dataViews[0];
-        //options.dataViews[0].metadata.columns.entries
-        this.checkConfiguration(dataView);
-        // let ops : EnumerateVisualObjectInstancesOptions = new EnumerateVisualObjectInstancesOptions('subTotals')
-        // let o: VisualObjectInstanceEnumeration = this.enumerateObjectInstances(EnumerateVisualObjectInstancesOptions);
+    drawTable(acts) {
+        console.log('LOG: Drawing Table');
+        console.log('LOG: DONE Drawing Timeline');
     }
     /*
     * Returns a <table> element based on the Activities from the DataView.
@@ -1062,82 +1127,13 @@ class Visual {
     //     // .attr('class','style'+d.wbsIndex);
     // }
     /**
-     * Returns the configuration of the desired graph to determine which elements to render based on the data in dataView.
-     * @param dataView The DataView object to configure the visual against.
-     */
-    checkConfiguration(dataView) {
-        console.log('LOG: DATAVIEW CONFIGURATION');
-        console.log('LOG: number of heirachy levels: ' + dataView.matrix.rows.levels.length);
-        console.log(dataView.matrix.rows.root);
-        console.log('dfs');
-        let acts = [];
-        console.log('dfs');
-        this.dfsPreorder(acts, dataView.matrix.rows.root.children[0]);
-        console.log('dfs');
-        let aggregateBuffer = [];
-        let currentLevel = acts[acts.length - 1].getLevel();
-        console.log('startMin');
-        for (let i = 0; i < acts.length; i++) {
-            let l = acts[acts.length - i - 1].getLevel();
-            if (l < currentLevel) { // going up indents, summarise
-                acts[acts.length - i - 1].setStart(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA(aggregateBuffer));
-                currentLevel = l;
-            }
-            else if (l > currentLevel) { //going down andents, clear buffer
-                aggregateBuffer = [];
-                currentLevel = l;
-            }
-            else { //same indent, add to buffer
-                aggregateBuffer.push(acts[acts.length - i - 1].getStart());
-            }
-        }
-        console.log('endMax');
-        for (let i = 0; i < acts.length; i++) {
-            let l = acts[acts.length - i - 1].getLevel();
-            if (l < currentLevel) { // going up indents, summarise
-                acts[acts.length - i - 1].setEnd(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .maxDayjs */ .AY(aggregateBuffer));
-                currentLevel = l;
-            }
-            else if (l > currentLevel) { //going down andents, clear buffer
-                aggregateBuffer = [];
-                currentLevel = l;
-            }
-            else { //same indent, add to buffer
-                aggregateBuffer.push(acts[acts.length - i - 1].getEnd());
-            }
-        }
-        console.log(acts);
-    }
-    /**
-     *
-     * @param activities
-     * @param node
-     */
-    dfsPreorder(activities, node) {
-        if (node.children == null) {
-            //console.log("LOG: RECURSION: level = " + node.level + ', start = '+ node.values[0].value);
-            if ((node.values[0] != null) && (node.values[1] != null)) { //every task must have a start and finish
-                activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_5__/* .Activity */ .c(node.value.toString(), dayjs__WEBPACK_IMPORTED_MODULE_3__(node.values[0].value.valueOf().toString(), 'X'), dayjs__WEBPACK_IMPORTED_MODULE_3__(node.values[1].value.valueOf().toString(), 'X'), node.level));
-                console.log(node.values[0].value.valueOf().toString());
-                console.log(node.values[0].value);
-            }
-        }
-        else {
-            //console.log("LOG: RECURSION: level = " + node.level);
-            activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_5__/* .Activity */ .c(node.value.toString(), null, null, node.level)); //need to check type?
-            for (let i = 0; i < node.children.length; i++) {
-                this.dfsPreorder(activities, node.children[i]);
-            }
-        }
-    }
-    /**
      * Synchronises the left scrolling of the div-timeline and div-chart depending on which one was scrolled.
      *
      * KNOWN ISSUE: since the event listener that fires this callback is on both div-timeline and div-chart,
      * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
      * @param div the div that was scrolled by the user.
      */
-    syncScrollTimeline(div) {
+    syncScrollTimelineLeft(div) {
         //links i used to understand ts callbacks, d3 event handling
         //https://hstefanski.wordpress.com/2015/10/25/responding-to-d3-events-in-typescript/
         //https://rollbar.com/blog/javascript-typeerror-cannot-read-property-of-undefined/
@@ -1160,6 +1156,42 @@ class Visual {
                 ;
             case timelineID:
                 document.getElementById(chartID).scrollLeft = document.getElementById(timelineID).scrollLeft;
+                if (this.verbose) {
+                    console.log('LOG: Sync chart scroll to timeline scroll');
+                }
+                ;
+        }
+    }
+    /**
+    * Synchronises the top scrolling of the div-timeline and div-chart depending on which one was scrolled.
+    *
+    * KNOWN ISSUE: since the event listener that fires this callback is on both div-timeline and div-chart,
+    * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
+    * @param div the div that was scrolled by the user.
+    */
+    syncScrollTimelineTop(div) {
+        //links i used to understand ts callbacks, d3 event handling
+        //https://hstefanski.wordpress.com/2015/10/25/responding-to-d3-events-in-typescript/
+        //https://rollbar.com/blog/javascript-typeerror-cannot-read-property-of-undefined/
+        //https://www.d3indepth.com/selections/
+        //https://developer.mozilla.org/en-US/docs/Web/API/Element/scroll_event
+        //https://github.com/d3/d3-selection/blob/main/README.md#handling-events
+        //https://www.tutorialsteacher.com/d3js/event-handling-in-d3js
+        if (this.verbose) {
+            console.log('Synchronising scroll...');
+        }
+        let id = div.attr('id'); //d3.select(d3.event.currentTarget)
+        let chartID = 'div-chart';
+        let timelineID = 'div-timeline';
+        switch (id) {
+            case chartID:
+                document.getElementById(timelineID).scrollTop = document.getElementById(chartID).scrollTop;
+                if (this.verbose) {
+                    console.log('LOG: Sync timeline scroll to chart scroll');
+                }
+                ;
+            case timelineID:
+                document.getElementById(chartID).scrollTop = document.getElementById(timelineID).scrollTop;
                 if (this.verbose) {
                     console.log('LOG: Sync chart scroll to timeline scroll');
                 }

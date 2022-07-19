@@ -74,7 +74,7 @@ export class Timeline {
 
     constructor(start: dayjs.Dayjs, end: dayjs.Dayjs, status: dayjs.Dayjs) {
 
-        console.log('LOG: Constructing Timeline Object');
+        if (this.verbose) { console.log('LOG: Constructing Timeline Object'); }
 
         //check which date is larger and round to nearest day
         if (start > end) {
@@ -95,7 +95,9 @@ export class Timeline {
         this.span_years = Time.spanYears(start, end);
 
         this.yearPadding = 5;
-        this.dayScale = 1;
+        this.dayScale = 2;
+
+
         this.updateScaleFactors();
         if (this.verbose) {
             console.log('LOG: Timeline created from ' +
@@ -147,7 +149,7 @@ export class Timeline {
      * display elements in the timeline based on the start and finish dates.
      */
     private generateYears(): YearSeparator[] {
-        console.log('LOG: Generating YearSeparator array for timeline.');
+        if (this.verbose) { console.log('LOG: Generating YearSeparator array for timeline.'); }
 
         let result: YearSeparator[];
         let cumulativeOffset: number = 0;
@@ -156,8 +158,10 @@ export class Timeline {
         //If the dates are in the same year, the loop will not return the correct value. Handle it here.      
         if (this.span_years == 0) { //same year, return year
             result = [new YearSeparator(this.d1.year().toString(), 0, this.yearPadding)];
-            console.log(result);
-            console.log('LOG: YearScale generation complete.');
+            if (this.verbose) {
+                console.log(result);
+                console.log('LOG: YearScale generation complete.');
+            }
             return result;
         }
 
@@ -165,7 +169,6 @@ export class Timeline {
         result = [];
         for (let i = 0; i < this.span_years; i++) {
             if (this.verbose) { console.log('LOG: year index = ' + i); }
-
 
             //check if we are considering the first or last year and calc the proportion of the section we want
             if (i == 0) {//this is the first year, take the portion of that year and create the offset. TODO check if the text will overlap
@@ -197,8 +200,11 @@ export class Timeline {
             cumulativeOffset += Time.daysInYear(this.d1.year() + i) * this.dayScale * proportion;
         }
 
-        console.log(result);
-        console.log('LOG: YearScale generation complete.');
+        if (this.verbose) {
+            console.log(result);
+            console.log('LOG: YearScale generation complete.');
+        }
+
         return result;
     }
 
@@ -211,7 +217,7 @@ export class Timeline {
  * display elements in the timeline based on the start and finish dates.
  */
     private generateMonths(): MonthSeparator[] {
-        console.log('LOG: Generating MonthSeparator array for timeline.');
+        if (this.verbose) { console.log('LOG: Generating MonthSeparator array for timeline.'); }
 
         let result: MonthSeparator[];
         let cumulativeOffset: number = 0;
@@ -220,16 +226,16 @@ export class Timeline {
         //If the dates are in the same year, the loop will not return the correct value. Handle it here.      
         if (this.span_months == 0) { //same month, return month
             result = [new MonthSeparator(Time.month(this.d1.month()), 0, Time.daysInMonth(this.d1.month(), this.d1.year()) / 2)];
-            console.log(result);
-            console.log('LOG: MonthSeparator array generation complete.');
+            if (this.verbose) {
+                console.log(result);
+                console.log('LOG: MonthSeparator array generation complete.');
+            }
             return result;
         }
 
         //the dates are not in the same month, run this loop
         result = [];
         for (let i = 0; i < this.span_months; i++) {
-            if (this.verbose) {
-            }
 
             //check if we are considering the first or last month and calc the proportion of the section we want
             if (i == 0) {//this is the first month, take the portion of that month and create the offset. TODO check if the text will overlap
@@ -265,8 +271,12 @@ export class Timeline {
         if (result[1].offset < (0.75 * this.dayScale * Time.daysInMonth(this.d1.month() + 1, this.d1.year()))) {
             result[0].text = '';
         }
-        console.log(result);
-        console.log('LOG: MonthSeparator array generation complete.');
+
+        if (this.verbose) {
+            console.log(result);
+            console.log('LOG: MonthSeparator array generation complete.');
+        }
+
         return result;
     }
 
@@ -295,14 +305,14 @@ export class Timeline {
      * @returns the location from the left edge of the chart the input date corresponds to
      */
     public dateLocation(date: dayjs.Dayjs): number {
-        return date.diff(this.d1,'d',true)*this.dayScale;
+        return date.diff(this.d1, 'd', true) * this.dayScale;
     }
-    
+
     /**
      * Converts the status date to a horizontal offset on the chart based on the Timeline scale. Similar to Timeline.dateLocation(date: dayjs.Dayjs).
      * @returns The location from the left edge of the chart the current status date corresponds to
      */
-    public statusDateLocation():number{
+    public statusDateLocation(): number {
         return this.dateLocation(this.status);
     }
 }
