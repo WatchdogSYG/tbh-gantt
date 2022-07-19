@@ -564,6 +564,7 @@ class Timeline {
         if (this.verbose) {
             console.log('LOG: Generating YearSeparator array for timeline.');
         }
+        console.log(document.body.clientHeight);
         let result;
         let cumulativeOffset = 0;
         let proportion;
@@ -815,7 +816,7 @@ class Visual {
         //      }
         this.generateBody(options);
         //generatetimeline with default dates
-        this.status = dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2022, 6, 19));
+        this.status = dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2019, 6, 19));
     }
     ////////////////////////////////////////////////////////////////
     //  UPDATE VISUAL ON REFRESH
@@ -825,6 +826,9 @@ class Visual {
         if (this.verbose) {
             console.log('Visual update()', options);
         }
+        //CSS NOT WORKING, THIS IS A WORKAROUND
+        //TODO FIX
+        // this.divContent.style('height', Lib.px(document.body.clientHeight - Lib.pxToNumber(this.style.getPropertyValue('--headerHeight'))));
         let dataView = options.dataViews[0];
         //options.dataViews[0].metadata.columns.entries
         let acts = this.checkConfiguration(dataView);
@@ -838,6 +842,7 @@ class Visual {
         //  Create body level child elements
         ////////////////////////////////////////////////////////////////
         // help from lines 377 onwards at https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
+        // let wrapper: Selection<HTMLDivElement> = d3.select(options.element).append('div').attr('id', 'div-sizeControllerWorkaround');
         //the header including title, logos etc
         this.divHeader = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys(options.element)
             .append('div')
@@ -851,19 +856,19 @@ class Visual {
         ////////////////////////////////////////////////////////////////
         //  Create elements under the header
         ////////////////////////////////////////////////////////////////
-        //div to contain the act table and chart
-        this.divContent = this.statusAndContent
-            .append('div')
-            .attr('id', 'div-content');
+        // //div to contain the act table and chart
+        // this.divContent = this.statusAndContent
+        //     .append('div')
+        //     .attr('id', 'div-content');
         ////////////////////////////////////////////////////////////////
         //  Create content elements (must set timeline width using selection.style())...
         ////////////////////////////////////////////////////////////////
         //div to hold the activity data in a table
-        this.divActivities = this.divContent
+        this.divActivities = this.statusAndContent
             .append('div')
             .attr('id', 'div-activities');
         //div to hold the chart elements including background, bars, text, controls
-        this.divChartContainer = this.divContent
+        this.divChartContainer = this.statusAndContent
             .append('div')
             .attr('id', 'div-chart');
         this.activityTable = this.divActivities
@@ -1070,7 +1075,21 @@ class Visual {
             .attr('y', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(_this.tlHeight + (_this.rowHeight * i)); })
             .attr('rx', '3px')
             .attr('ry', '3px')
-            .classed('activityBar', true);
+            .classed('activityBar', true)
+            .attr('fill', function (d) {
+            switch (d.getLevel()) {
+                case 0:
+                    return 'red';
+                case 1:
+                    return 'green';
+                case 2:
+                    return 'blue';
+                case 3:
+                    return 'yellow';
+                default:
+                    return 'gray';
+            }
+        });
         console.log('here');
         ////////////////////////////////////////////////////////////////
         //  Draw chart

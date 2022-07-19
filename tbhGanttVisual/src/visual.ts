@@ -136,7 +136,7 @@ export class Visual implements IVisual {
         this.generateBody(options);
         //generatetimeline with default dates
 
-        this.status = dayjs(new Date(2022, 6, 19));
+        this.status = dayjs(new Date(2019, 6, 19));
 
     }
 
@@ -147,6 +147,10 @@ export class Visual implements IVisual {
     public update(options: VisualUpdateOptions) {
         //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
         if (this.verbose) { console.log('Visual update()', options); }
+
+        //CSS NOT WORKING, THIS IS A WORKAROUND
+        //TODO FIX
+        // this.divContent.style('height', Lib.px(document.body.clientHeight - Lib.pxToNumber(this.style.getPropertyValue('--headerHeight'))));
 
         let dataView: DataView = options.dataViews[0];
         //options.dataViews[0].metadata.columns.entries
@@ -168,6 +172,9 @@ export class Visual implements IVisual {
         ////////////////////////////////////////////////////////////////
         // help from lines 377 onwards at https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
 
+
+        // let wrapper: Selection<HTMLDivElement> = d3.select(options.element).append('div').attr('id', 'div-sizeControllerWorkaround');
+
         //the header including title, logos etc
         this.divHeader = d3.select(options.element)
             .append('div')
@@ -184,22 +191,22 @@ export class Visual implements IVisual {
         //  Create elements under the header
         ////////////////////////////////////////////////////////////////
 
-        //div to contain the act table and chart
-        this.divContent = this.statusAndContent
-            .append('div')
-            .attr('id', 'div-content');
+        // //div to contain the act table and chart
+        // this.divContent = this.statusAndContent
+        //     .append('div')
+        //     .attr('id', 'div-content');
 
         ////////////////////////////////////////////////////////////////
         //  Create content elements (must set timeline width using selection.style())...
         ////////////////////////////////////////////////////////////////
 
         //div to hold the activity data in a table
-        this.divActivities = this.divContent
+        this.divActivities = this.statusAndContent
             .append('div')
             .attr('id', 'div-activities');
 
         //div to hold the chart elements including background, bars, text, controls
-        this.divChartContainer = this.divContent
+        this.divChartContainer = this.statusAndContent
             .append('div')
             .attr('id', 'div-chart');
 
@@ -436,7 +443,7 @@ export class Visual implements IVisual {
             .append('g')
             .append('svg')
             .attr('id', 'svg-bars');
-            
+
         console.log('here');
 
         bars.selectAll('rect')
@@ -453,7 +460,22 @@ export class Visual implements IVisual {
             .attr('y', function (d, i) { return Lib.px(_this.tlHeight + (_this.rowHeight * i)) })
             .attr('rx', '3px')
             .attr('ry', '3px')
-            .classed('activityBar', true);
+            .classed('activityBar', true)
+            .attr('fill', function (d) {
+
+                switch (d.getLevel()) {
+                    case 0:
+                        return 'red';
+                    case 1:
+                        return 'green';
+                    case 2:
+                        return 'blue';
+                    case 3:
+                        return 'yellow';
+                    default:
+                        return 'gray';
+                }
+            });
 
         console.log('here');
         ////////////////////////////////////////////////////////////////

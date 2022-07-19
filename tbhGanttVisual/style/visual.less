@@ -13,6 +13,8 @@
     --tbh-blue-background: rgb(35, 45, 64);
     --tbh-blue1: rgb(25, 128, 143);
     --tbh-blue2: rgb(9, 52, 63);
+
+    --headerheight: 50px;
 }
 
 /*begin css reset*/
@@ -67,13 +69,22 @@ h4 {
 div {
     padding: 0px;
     margin: 0px;
-
+    height: 100%;
     //border: 1px dashed black;
+}
+
+#sandbox-host{
+    display: flex;
+    flex-direction: column;
+}
+
+#div-sizeControllerWorkaround {
+    height: 100%;
 }
 
 //div for the header of the graph: title, logo etc.
 #div-header {
-    min-height: 50px;
+    height: var(--headerheight);
 
     border-style: none none solid none;
     border-width: 1px;
@@ -84,19 +95,20 @@ div {
 
     position: relative;
     padding: 10px;
-}
 
-//div that handles the overlapping of the content and status line. Grid.
-#div-content {
-    height: fit-content;
+    flex-shrink: 0;
 }
 
 
 //the div below the above div that contains the activitys table and gantt
 #div-content {
-    height: 100%;
-    width:100%;
+    width: 100%;
     display: flex;
+
+// explantion
+//https://stackoverflow.com/questions/36230944/prevent-flex-items-from-overflowing-a-container
+    min-height: 0;
+
 }
 
 //div that contains the status line and accompanying text.
@@ -207,15 +219,15 @@ td {
 
 .activityBar {
 
-    fill: red;
+    //fill: red;
     stroke: black;
     stroke-width: 1px;
 }
 
 
 ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 20px;
+    height: 20px;
     border: none;
 }
 
@@ -225,7 +237,7 @@ td {
 
 ::-webkit-scrollbar-corner {
     background: var(--tbh-blue-background);
-    
+
 }
 
 ::-webkit-scrollbar-thumb {
