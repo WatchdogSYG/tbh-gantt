@@ -20,12 +20,10 @@ class Activity {
     getEnd() { return this.end; }
     getName() { return this.name; }
     getLevel() { return this.level; }
-    setStart(date) {
-        this.start = date;
-    }
-    setEnd(date) {
-        this.end = date;
-    }
+    getLevelString() { return 'indent'.concat(this.level.toString()); } //required for workaround, search for @indentTypeMismatch in visual.ts
+    getTableText() { return [this.name, this.start.format('DD/MM/YY'), this.end.format('DD/MM/YY')]; }
+    setStart(date) { this.start = date; }
+    setEnd(date) { this.end = date; }
 }
 
 
@@ -834,6 +832,7 @@ class Visual {
         let acts = this.checkConfiguration(dataView);
         this.drawTimeline(acts);
         this.drawChart(acts, this.gantt);
+        this.drawTable(acts);
         // let ops : EnumerateVisualObjectInstancesOptions = new EnumerateVisualObjectInstancesOptions('subTotals')
         // let o: VisualObjectInstanceEnumeration = this.enumerateObjectInstances(EnumerateVisualObjectInstancesOptions);
     }
@@ -863,17 +862,21 @@ class Visual {
         ////////////////////////////////////////////////////////////////
         //  Create content elements (must set timeline width using selection.style())...
         ////////////////////////////////////////////////////////////////
+        var _this = this;
         //div to hold the activity data in a table
         this.divActivities = this.statusAndContent
             .append('div')
-            .attr('id', 'div-activities');
+            .attr('id', 'div-activities')
+            .on('scroll', function () { _this.syncScrollTimelineTop(_this.divActivities); });
         //div to hold the chart elements including background, bars, text, controls
         this.divChartContainer = this.statusAndContent
             .append('div')
-            .attr('id', 'div-chart');
-        this.activityTable = this.divActivities
-            .append('table')
-            .attr('id', 'table-activities');
+            .attr('id', 'div-chart')
+            .on('scroll', function () { _this.syncScrollTimelineTop(_this.divChartContainer); });
+        ;
+        // this.activityTable = this.divActivities
+        //     .append('table')
+        //     .attr('id', 'table-activities');
     }
     /**
      * Returns the configuration of the desired graph to determine which elements to render based on the data in dataView.
@@ -1114,7 +1117,47 @@ class Visual {
     }
     drawTable(acts) {
         console.log('LOG: Drawing Table');
-        console.log('LOG: DONE Drawing Timeline');
+        if (this.verbose) {
+            console.log('LOG: populateActivityTable called with some number of rows.');
+        }
+        d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#div-activities')
+            .append('table')
+            .attr('id', 'table-activityHeader')
+            .append('th')
+            .attr('class', 'highlight');
+        //create the number of trs required.
+        let tr = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#div-activities')
+            .append('table')
+            .attr('id', 'table-activities')
+            .selectAll('tr')
+            .data(acts)
+            .enter()
+            .append('tr')
+            .classed('tr-activity', true);
+        let td = tr.selectAll('.td-name') //select all tds, there are 0
+            .data(function (d) { return [d.getTableText()[0]]; }) //THIS DATA COMES FROM THE TR's _data_ PROPERTY
+            .enter()
+            .append('td')
+            .classed('td-name', true)
+            .text(function (d) { return d; });
+        //this is a workaround since I couldnt get d3.data(acts).classed(function (d) { return d.getLevel().toString();}) working due to an error
+        // (d: any) => string is not compatible with type string...
+        // search for @indentTypeMismatch in activity.ts
+        d3__WEBPACK_IMPORTED_MODULE_0__/* .selectAll */ .td_('.td-name').data(acts).attr('class', function (d) { return d.getLevelString(); });
+        td.classed('td-name', true);
+        // tr.selectAll('.td-start')//select all tds, there are 0
+        //     .data(function (d) { return d.getTableText()[1]; })//THIS DATA COMES FROM THE TR's _data_ PROPERTY
+        //     .enter()
+        //     .append('td')
+        //     .classed('td-start');
+        // tr.selectAll('.td-end')//select all tds, there are 0
+        //     .data(function (d) { return d.getTableText()[2]; })//THIS DATA COMES FROM THE TR's _data_ PROPERTY
+        //     .enter()
+        //     .append('td')
+        //     .classed('td-end');
+        //.text(function (d) { return d.getTableText(); });//we are taking d from the bound data from the trs
+        // .attr('class','style'+d.wbsIndex);
+        console.log('LOG: DONE Drawing Table');
     }
     /*
     * Returns a <table> element based on the Activities from the DataView.
@@ -1127,23 +1170,10 @@ class Visual {
     //     if (data == null) {
     //         if (this.verbose) { console.log('LOG: populateActivityTable called with a null VisualUpdateOptions.'); }
     //     }
-    //     //https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
-    //     //https://www.dashingd3js.com/d3-tutorial/use-d3-js-to-bind-data-to-dom-elements
-    //     //BEWARE: I had to change the types of all these following to var and not Selection<T,T,T,T>. the second function (d)
-    //     //call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
-    //     if (this.verbose) { console.log('LOG: populateActivityTable called with some number of rows.'); }
-    //     //create the number of trs required.
-    //     var tr = d3.select('#' + tableID)//select the table
-    //         .selectAll('tr')//select all tr elements (which there are none)
-    //         .data(data)//select every array element of array myData (there are 7). DATA IS NOW BOUND TO TRs
-    //         .enter()//since we have 0 trs and 7 elements in myData, we stage 7 references
-    //         .append('tr');//append a tr to each reference
-    //     var v = tr.selectAll('td')//select all tds, there are 0
-    //         .data(function (d) { return d; })//THIS DATA COMES FROM THE TR's _data_ PROPERTY
-    //         .enter()
-    //         .append('td')
-    //         .text(function (d) { return d; });//we are taking d from the bound data from the trs
-    //     // .attr('class','style'+d.wbsIndex);
+    //https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
+    //https://www.dashingd3js.com/d3-tutorial/use-d3-js-to-bind-data-to-dom-elements
+    //BEWARE: I had to change the types of all these following to var and not Selection<T,T,T,T>. the second function (d)
+    //call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
     // }
     /**
      * Synchronises the left scrolling of the div-timeline and div-chart depending on which one was scrolled.
@@ -1200,8 +1230,8 @@ class Visual {
             console.log('Synchronising scroll...');
         }
         let id = div.attr('id'); //d3.select(d3.event.currentTarget)
-        let chartID = 'div-chart';
-        let timelineID = 'div-timeline';
+        let chartID = 'div-activities';
+        let timelineID = 'div-chart';
         switch (id) {
             case chartID:
                 document.getElementById(timelineID).scrollTop = document.getElementById(chartID).scrollTop;
@@ -6255,9 +6285,11 @@ function creatorFixed(fullname) {
 
 "use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Ys": () => (/* reexport safe */ _select__WEBPACK_IMPORTED_MODULE_0__.Z)
+/* harmony export */   "Ys": () => (/* reexport safe */ _select__WEBPACK_IMPORTED_MODULE_0__.Z),
+/* harmony export */   "td": () => (/* reexport safe */ _selectAll__WEBPACK_IMPORTED_MODULE_1__.Z)
 /* harmony export */ });
 /* harmony import */ var _select__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4017);
+/* harmony import */ var _selectAll__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(628);
 
 
 
@@ -6350,6 +6382,25 @@ var xhtml = "http://www.w3.org/1999/xhtml";
   return typeof selector === "string"
       ? new _selection_index__WEBPACK_IMPORTED_MODULE_0__/* .Selection */ .Y1([[document.querySelector(selector)]], [document.documentElement])
       : new _selection_index__WEBPACK_IMPORTED_MODULE_0__/* .Selection */ .Y1([[selector]], _selection_index__WEBPACK_IMPORTED_MODULE_0__/* .root */ .Jz);
+}
+
+
+/***/ }),
+
+/***/ 628:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Z": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _selection_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3933);
+
+
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(selector) {
+  return typeof selector === "string"
+      ? new _selection_index__WEBPACK_IMPORTED_MODULE_0__/* .Selection */ .Y1([document.querySelectorAll(selector)], [document.documentElement])
+      : new _selection_index__WEBPACK_IMPORTED_MODULE_0__/* .Selection */ .Y1([selector == null ? [] : selector], _selection_index__WEBPACK_IMPORTED_MODULE_0__/* .root */ .Jz);
 }
 
 
@@ -10756,7 +10807,8 @@ var dependencies = {"d3-array":"1","d3-axis":"1","d3-brush":"1","d3-chord":"1","
 
 "use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Ys": () => (/* reexport safe */ d3_selection__WEBPACK_IMPORTED_MODULE_10__.Ys)
+/* harmony export */   "Ys": () => (/* reexport safe */ d3_selection__WEBPACK_IMPORTED_MODULE_10__.Ys),
+/* harmony export */   "td_": () => (/* reexport safe */ d3_selection__WEBPACK_IMPORTED_MODULE_10__.td)
 /* harmony export */ });
 /* harmony import */ var _dist_package_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2156);
 /* harmony import */ var d3_array__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(91);

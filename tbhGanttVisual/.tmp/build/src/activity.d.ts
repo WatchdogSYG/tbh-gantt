@@ -8,7 +8,9 @@ export declare class Activity {
     getEnd(): dayjs.Dayjs;
     getName(): string;
     getLevel(): number;
-    constructor(name: string, start: dayjs.Dayjs, end: dayjs.Dayjs, level: number);
+    getLevelString(): string;
+    getTableText(): string[];
     setStart(date: dayjs.Dayjs): void;
     setEnd(date: dayjs.Dayjs): void;
+    constructor(name: string, start: dayjs.Dayjs, end: dayjs.Dayjs, level: number);
 }

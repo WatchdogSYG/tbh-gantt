@@ -159,6 +159,7 @@ export class Visual implements IVisual {
 
         this.drawTimeline(acts);
         this.drawChart(acts, this.gantt);
+        this.drawTable(acts);
 
         // let ops : EnumerateVisualObjectInstancesOptions = new EnumerateVisualObjectInstancesOptions('subTotals')
         // let o: VisualObjectInstanceEnumeration = this.enumerateObjectInstances(EnumerateVisualObjectInstancesOptions);
@@ -200,19 +201,23 @@ export class Visual implements IVisual {
         //  Create content elements (must set timeline width using selection.style())...
         ////////////////////////////////////////////////////////////////
 
+        var _this = this;
+
         //div to hold the activity data in a table
         this.divActivities = this.statusAndContent
             .append('div')
-            .attr('id', 'div-activities');
+            .attr('id', 'div-activities')
+            .on('scroll', function () { _this.syncScrollTimelineTop(_this.divActivities) });
 
         //div to hold the chart elements including background, bars, text, controls
         this.divChartContainer = this.statusAndContent
             .append('div')
-            .attr('id', 'div-chart');
+            .attr('id', 'div-chart')
+            .on('scroll', function () { _this.syncScrollTimelineTop(_this.divChartContainer) });;
 
-        this.activityTable = this.divActivities
-            .append('table')
-            .attr('id', 'table-activities');
+        // this.activityTable = this.divActivities
+        //     .append('table')
+        //     .attr('id', 'table-activities');
 
     }
 
@@ -504,9 +509,62 @@ export class Visual implements IVisual {
 
     private drawTable(acts: Activity[]) {
         console.log('LOG: Drawing Table');
+        if (this.verbose) { console.log('LOG: populateActivityTable called with some number of rows.'); }
 
-        console.log('LOG: DONE Drawing Timeline');
-    } Table
+
+        d3.select('#div-activities')
+            .append('table')
+            .attr('id', 'table-activityHeader')
+            .append('th')
+            .attr('class', 'highlight');
+
+        //create the number of trs required.
+        let tr: Selection<HTMLTableRowElement> = d3.select('#div-activities')
+            .append('table')
+            .attr('id', 'table-activities')
+            .selectAll('tr')
+            .data(acts)
+            .enter()
+            .append('tr')
+            .classed('tr-activity', true);
+
+
+
+        let td: Selection<HTMLTableCellElement> = tr.selectAll('.td-name')//select all tds, there are 0
+            .data(function (d) { return [d.getTableText()[0]]; })//THIS DATA COMES FROM THE TR's _data_ PROPERTY
+            .enter()
+            .append('td')
+            .classed('td-name', true)
+            .text(function (d) { return d; });
+
+        //this is a workaround since I couldnt get d3.data(acts).classed(function (d) { return d.getLevel().toString();}) working due to an error
+        // (d: any) => string is not compatible with type string...
+        // search for @indentTypeMismatch in activity.ts
+        d3.selectAll('.td-name').data(acts).attr('class', function (d) { return d.getLevelString(); })
+        td.classed('td-name', true);
+
+
+        // tr.selectAll('.td-start')//select all tds, there are 0
+        //     .data(function (d) { return d.getTableText()[1]; })//THIS DATA COMES FROM THE TR's _data_ PROPERTY
+        //     .enter()
+        //     .append('td')
+        //     .classed('td-start');
+
+        // tr.selectAll('.td-end')//select all tds, there are 0
+        //     .data(function (d) { return d.getTableText()[2]; })//THIS DATA COMES FROM THE TR's _data_ PROPERTY
+        //     .enter()
+        //     .append('td')
+        //     .classed('td-end');
+
+        //.text(function (d) { return d.getTableText(); });//we are taking d from the bound data from the trs
+        // .attr('class','style'+d.wbsIndex);
+
+
+
+
+        console.log('LOG: DONE Drawing Table');
+    }
+
     /*
     * Returns a <table> element based on the Activities from the DataView.
     * Returns an empty table if options is null.
@@ -521,26 +579,12 @@ export class Visual implements IVisual {
 
     //     }
 
-    //     //https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
-    //     //https://www.dashingd3js.com/d3-tutorial/use-d3-js-to-bind-data-to-dom-elements
-    //     //BEWARE: I had to change the types of all these following to var and not Selection<T,T,T,T>. the second function (d)
-    //     //call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
+    //https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
+    //https://www.dashingd3js.com/d3-tutorial/use-d3-js-to-bind-data-to-dom-elements
+    //BEWARE: I had to change the types of all these following to var and not Selection<T,T,T,T>. the second function (d)
+    //call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
 
-    //     if (this.verbose) { console.log('LOG: populateActivityTable called with some number of rows.'); }
 
-    //     //create the number of trs required.
-    //     var tr = d3.select('#' + tableID)//select the table
-    //         .selectAll('tr')//select all tr elements (which there are none)
-    //         .data(data)//select every array element of array myData (there are 7). DATA IS NOW BOUND TO TRs
-    //         .enter()//since we have 0 trs and 7 elements in myData, we stage 7 references
-    //         .append('tr');//append a tr to each reference
-
-    //     var v = tr.selectAll('td')//select all tds, there are 0
-    //         .data(function (d) { return d; })//THIS DATA COMES FROM THE TR's _data_ PROPERTY
-    //         .enter()
-    //         .append('td')
-    //         .text(function (d) { return d; });//we are taking d from the bound data from the trs
-    //     // .attr('class','style'+d.wbsIndex);
     // }
     /**
      * Synchronises the left scrolling of the div-timeline and div-chart depending on which one was scrolled.
@@ -594,8 +638,8 @@ export class Visual implements IVisual {
         if (this.verbose) { console.log('Synchronising scroll...'); }
 
         let id: string = div.attr('id');//d3.select(d3.event.currentTarget)
-        let chartID: string = 'div-chart';
-        let timelineID: string = 'div-timeline';
+        let chartID: string = 'div-activities';
+        let timelineID: string = 'div-chart';
 
         switch (id) {
             case chartID:

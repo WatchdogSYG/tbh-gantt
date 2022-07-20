@@ -109,8 +109,7 @@ div {
 }
 /* ------- TABLE ------- */
 table {
-  width: 100%;
-  border: 1px solid blue;
+  width: fit-content;
 }
 #table-activityHeader {
   width: 25%;
@@ -119,14 +118,33 @@ table {
 }
 th {
   height: var(--timelineHeight);
+  padding: 0;
 }
 tr {
   height: var(--rowHeight);
 }
 td {
-  min-width: 40px;
+  width: fit-content;
   border: 1px #aaaaaa;
   border-style: solid none solid solid;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.indent0 {
+  font-weight: bold;
+  padding-left: 0px;
+}
+.indent1 {
+  font-weight: bold;
+  padding-left: 25px;
+}
+.indent2 {
+  font-weight: normal;
+  padding-left: 50px;
+}
+.indent3 {
+  font-weight: normal;
+  padding-left: 75px;
 }
 /* #table-ganttGrid{
 

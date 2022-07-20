@@ -40,7 +40,6 @@ export declare class Visual implements IVisual {
     private drawTimeline;
     private drawChart;
     private drawTable;
-    Table: any;
     /**
      * Synchronises the left scrolling of the div-timeline and div-chart depending on which one was scrolled.
      *
