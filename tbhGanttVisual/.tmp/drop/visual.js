@@ -830,8 +830,8 @@ class Visual {
         let dataView = options.dataViews[0];
         //options.dataViews[0].metadata.columns.entries
         let acts = this.checkConfiguration(dataView);
-        this.drawTimeline(acts);
-        this.drawChart(acts, this.gantt);
+        let ts = this.drawTimeline(acts);
+        this.drawChart(acts, ts, this.gantt);
         this.drawTable(acts);
         // let ops : EnumerateVisualObjectInstancesOptions = new EnumerateVisualObjectInstancesOptions('subTotals')
         // let o: VisualObjectInstanceEnumeration = this.enumerateObjectInstances(EnumerateVisualObjectInstancesOptions);
@@ -941,14 +941,17 @@ class Visual {
      * @param node
      */
     dfsPreorder(activities, node) {
+        console.log('dfs');
         if (node.children == null) {
-            //console.log("LOG: RECURSION: level = " + node.level + ', start = '+ node.values[0].value);
+            console.log("LOG: RECURSION: level = " + node.level + ', name = ' + node.value.toString() + ', start = ' + node.values[0].value);
             if ((node.values[0] != null) && (node.values[1] != null)) { //every task must have a start and finish
                 activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(node.value.toString(), dayjs__WEBPACK_IMPORTED_MODULE_3__(node.values[0].value), dayjs__WEBPACK_IMPORTED_MODULE_3__(node.values[1].value), node.level));
             }
         }
         else {
-            //console.log("LOG: RECURSION: level = " + node.level);
+            console.log("LOG: RECURSION: level = " + node.level);
+            console.log("LOG:" + node.value.toString());
+            console.log("LOG:" + node.level);
             activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(node.value.toString(), null, null, node.level)); //need to check type?
             for (let i = 0; i < node.children.length; i++) {
                 this.dfsPreorder(activities, node.children[i]);
@@ -961,7 +964,6 @@ class Visual {
         this.tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale()); //cannot be less than div width!
         this.tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_5__/* .pxToNumber */ .F(this.style.getPropertyValue('--timelineHeight'));
         this.rowHeight = _src_lib__WEBPACK_IMPORTED_MODULE_5__/* .pxToNumber */ .F(this.style.getPropertyValue('--rowHeight'));
-        this.chartHeight = this.divChartContainer.node().getBoundingClientRect().height;
         let ts = this.timeline.getTimeScale();
         ////////////////////////////////////////////////////////////////
         //  Create svg timeline
@@ -971,12 +973,12 @@ class Visual {
             .attr('id', 'tl-top')
             .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight + (acts.length * this.rowHeight)))
             .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlWidth));
-        let gMonths = this.gantt.append('g')
+        this.gMonths = this.gantt.append('g')
             .classed('g-tl', true);
-        let gYears = this.gantt.append('g')
+        this.gYears = this.gantt.append('g')
             .classed('g-tl', true);
         //////////////////////////////////////////////////////////////// YearText
-        gYears.selectAll('text')
+        this.gYears.selectAll('text')
             .data(ts.yearScale)
             .enter()
             .append('text')
@@ -989,7 +991,7 @@ class Visual {
             .attr('alignment-baseline', 'hanging')
             .classed('yearText', true);
         //////////////////////////////////////////////////////////////// YearLine
-        gYears.selectAll('line').data(ts.yearScale).enter().append('line')
+        this.gYears.selectAll('line').data(ts.yearScale).enter().append('line')
             .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
             .attr('y1', '0px')
             .attr('x2', function (d) {
@@ -999,7 +1001,7 @@ class Visual {
             .attr('stroke-width', '2px')
             .attr('style', 'stroke:black');
         //////////////////////////////////////////////////////////////// MonthText
-        gMonths.selectAll('text')
+        this.gMonths.selectAll('text')
             .data(ts.monthScale)
             .enter()
             .append('text')
@@ -1013,7 +1015,7 @@ class Visual {
             .attr('text-anchor', 'middle')
             .classed('monthText', true);
         //////////////////////////////////////////////////////////////// YMonthLine
-        gMonths.selectAll('line').data(ts.monthScale).enter().append('line')
+        this.gMonths.selectAll('line').data(ts.monthScale).enter().append('line')
             .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
             .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight / 2))
             .attr('x2', function (d) {
@@ -1021,28 +1023,10 @@ class Visual {
         })
             .attr('y2', this.tlHeight)
             .attr('style', 'stroke:red');
-        //////////////////////////////////////////////////////////////// Grid
-        gMonths.selectAll('.grid-months')
-            .data(ts.monthScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
-            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight))
-            .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
-        })
-            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.chartHeight))
-            .attr('style', 'stroke:green');
-        gYears.selectAll('.grid-years')
-            .data(ts.yearScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
-            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight))
-            .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
-        })
-            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.chartHeight))
-            .attr('style', 'stroke:gray');
         console.log('LOG: DONE Drawing Timeline');
+        return ts;
     }
-    drawChart(acts, gantt) {
+    drawChart(acts, ts, gantt) {
         console.log('LOG: Drawing Chart');
         console.log('here');
         ////////////////////////////////////////////////////////////////
@@ -1071,11 +1055,11 @@ class Visual {
             .attr('x', function (d) {
             return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(_this.timeline.dateLocation(d.getStart()));
         })
-            .attr('height', this.rowHeight)
+            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.rowHeight - 4))
             .attr('width', function (d) {
             return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(_this.timeline.dateLocation(d.getEnd()) - _this.timeline.dateLocation(d.getStart()));
         })
-            .attr('y', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(_this.tlHeight + (_this.rowHeight * i)); })
+            .attr('y', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(_this.tlHeight + (_this.rowHeight * i) + 2); })
             .attr('rx', '3px')
             .attr('ry', '3px')
             .classed('activityBar', true)
@@ -1097,6 +1081,7 @@ class Visual {
         ////////////////////////////////////////////////////////////////
         //  Draw chart
         ////////////////////////////////////////////////////////////////
+        this.chartHeight = bars.node().getBoundingClientRect().height + this.tlHeight;
         //also put this in a fn later for update()
         // getBBox() help here:
         // https://stackoverflow.com/questions/45792692/property-getbbox-does-not-exist-on-type-svgelement
@@ -1107,12 +1092,27 @@ class Visual {
             .attr('x1', '0px')
             .attr('y1', '0px')
             .attr('x2', '0px')
-            .attr('y2', d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#div-chart').node()
-            .getBoundingClientRect()
-            .height
-            .toString()
-            .concat('px'))
+            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.chartHeight))
             .attr('transform', 'translate(' + this.timeline.statusDateLocation() + ')');
+        //////////////////////////////////////////////////////////////// Grid
+        this.gMonths.selectAll('.grid-months')
+            .data(ts.monthScale).enter().append('line')
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
+            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight))
+            .attr('x2', function (d) {
+            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
+        })
+            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.chartHeight))
+            .attr('style', 'stroke:green');
+        this.gYears.selectAll('.grid-years')
+            .data(ts.yearScale).enter().append('line')
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
+            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight))
+            .attr('x2', function (d) {
+            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
+        })
+            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.chartHeight))
+            .attr('style', 'stroke:gray');
         console.log('LOG: DONE Drawing Chart');
     }
     drawTable(acts) {
@@ -6289,7 +6289,7 @@ function creatorFixed(fullname) {
 /* harmony export */   "td": () => (/* reexport safe */ _selectAll__WEBPACK_IMPORTED_MODULE_1__.Z)
 /* harmony export */ });
 /* harmony import */ var _select__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4017);
-/* harmony import */ var _selectAll__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(628);
+/* harmony import */ var _selectAll__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(9628);
 
 
 
@@ -6387,7 +6387,7 @@ var xhtml = "http://www.w3.org/1999/xhtml";
 
 /***/ }),
 
-/***/ 628:
+/***/ 9628:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";

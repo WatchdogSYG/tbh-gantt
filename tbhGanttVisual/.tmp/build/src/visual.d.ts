@@ -23,6 +23,8 @@ export declare class Visual implements IVisual {
     private tlHeight;
     private rowHeight;
     private chartHeight;
+    private gMonths;
+    private gYears;
     constructor(options: VisualConstructorOptions);
     update(options: VisualUpdateOptions): void;
     private generateBody;

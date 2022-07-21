@@ -114,7 +114,6 @@ table {
 #table-activityHeader {
   width: 25%;
   color: #bbbbbb;
-  flex-shrink: 0;
 }
 th {
   height: var(--timelineHeight);
@@ -150,9 +149,6 @@ td {
 
 } */
 /* ------- TIMELINE ------- */
-#svg-statusLine {
-  z-index: 3;
-}
 #statusLine {
   stroke: #00ffff;
   stroke-width: 2px;
@@ -171,6 +167,10 @@ td {
   stroke: black;
   stroke-width: 1px;
 }
+#svg-statusLine {
+  z-index: 3;
+}
+/* ------- SCROLLBAR ------- */
 ::-webkit-scrollbar {
   width: 20px;
   height: 20px;
@@ -192,12 +192,6 @@ td {
 .highlight {
   background-color: rgba(0, 255, 0, 0.25);
   border: 1px solid #00ff00;
-}
-.style1 {
-  padding-left: 0px;
-}
-.style2 {
-  padding-left: 5px;
 }
 
 

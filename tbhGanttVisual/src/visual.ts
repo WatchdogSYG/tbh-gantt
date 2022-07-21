@@ -110,6 +110,9 @@ export class Visual implements IVisual {
     private rowHeight: number;
     private chartHeight: number;
 
+    private gMonths: Selection<SVGGElement>;
+    private gYears: Selection<SVGGElement>;
+
     ////////////////////////////////////////////////////////////////
     //  Constructor
     ////////////////////////////////////////////////////////////////
@@ -157,8 +160,8 @@ export class Visual implements IVisual {
 
         let acts: Activity[] = this.checkConfiguration(dataView);
 
-        this.drawTimeline(acts);
-        this.drawChart(acts, this.gantt);
+        let ts: TimeScale = this.drawTimeline(acts);
+        this.drawChart(acts, ts, this.gantt);
         this.drawTable(acts);
 
         // let ops : EnumerateVisualObjectInstancesOptions = new EnumerateVisualObjectInstancesOptions('subTotals')
@@ -296,8 +299,9 @@ export class Visual implements IVisual {
      * @param node 
      */
     private dfsPreorder(activities: Activity[], node: powerbi.DataViewMatrixNode) {
+        console.log('dfs');
         if (node.children == null) {
-            //console.log("LOG: RECURSION: level = " + node.level + ', start = '+ node.values[0].value);
+            console.log("LOG: RECURSION: level = " + node.level + ', name = ' + node.value.toString() + ', start = ' + node.values[0].value);
             if ((node.values[0] != null) && (node.values[1] != null)) {//every task must have a start and finish
                 activities.push(new Activity(
                     node.value.toString(),
@@ -306,7 +310,9 @@ export class Visual implements IVisual {
                     node.level));
             }
         } else {
-            //console.log("LOG: RECURSION: level = " + node.level);
+            console.log("LOG: RECURSION: level = " + node.level);
+            console.log("LOG:" + node.value.toString());
+            console.log("LOG:" + node.level);
             activities.push(new Activity(
                 node.value.toString(),
                 null,
@@ -318,7 +324,7 @@ export class Visual implements IVisual {
         }
     }
 
-    private drawTimeline(acts: Activity[]) {
+    private drawTimeline(acts: Activity[]): TimeScale {
         console.log('LOG: Drawing Timeline');
 
         this.timeline = new Timeline(this.start, this.end, this.status);
@@ -326,7 +332,6 @@ export class Visual implements IVisual {
         this.tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale());//cannot be less than div width!
         this.tlHeight = Lib.pxToNumber(this.style.getPropertyValue('--timelineHeight'));
         this.rowHeight = Lib.pxToNumber(this.style.getPropertyValue('--rowHeight'));
-        this.chartHeight = this.divChartContainer.node().getBoundingClientRect().height;
 
         let ts: TimeScale = this.timeline.getTimeScale();
 
@@ -340,14 +345,14 @@ export class Visual implements IVisual {
             .attr('height', Lib.px(this.tlHeight + (acts.length * this.rowHeight)))
             .attr('width', Lib.px(this.tlWidth));
 
-        let gMonths: Selection<SVGGElement> = this.gantt.append('g')
+        this.gMonths = this.gantt.append('g')
             .classed('g-tl', true);
 
-        let gYears: Selection<SVGGElement> = this.gantt.append('g')
+        this.gYears = this.gantt.append('g')
             .classed('g-tl', true);
 
         //////////////////////////////////////////////////////////////// YearText
-        gYears.selectAll('text')
+        this.gYears.selectAll('text')
             .data(ts.yearScale)
             .enter()
             .append('text')
@@ -361,7 +366,7 @@ export class Visual implements IVisual {
             .classed('yearText', true);
 
         //////////////////////////////////////////////////////////////// YearLine
-        gYears.selectAll('line').data(ts.yearScale).enter().append('line')
+        this.gYears.selectAll('line').data(ts.yearScale).enter().append('line')
             .attr('x1', function (d) { return Lib.px(d.offset); })
             .attr('y1', '0px')
             .attr('x2', function (d) {
@@ -372,7 +377,7 @@ export class Visual implements IVisual {
             .attr('style', 'stroke:black');
 
         //////////////////////////////////////////////////////////////// MonthText
-        gMonths.selectAll('text')
+        this.gMonths.selectAll('text')
             .data(ts.monthScale)
             .enter()
             .append('text')
@@ -387,7 +392,7 @@ export class Visual implements IVisual {
             .classed('monthText', true);
 
         //////////////////////////////////////////////////////////////// YMonthLine
-        gMonths.selectAll('line').data(ts.monthScale).enter().append('line')
+        this.gMonths.selectAll('line').data(ts.monthScale).enter().append('line')
             .attr('x1', function (d) { return Lib.px(d.offset); })
             .attr('y1', Lib.px(this.tlHeight / 2))
             .attr('x2', function (d) {
@@ -396,32 +401,11 @@ export class Visual implements IVisual {
             .attr('y2', this.tlHeight)
             .attr('style', 'stroke:red');
 
-        //////////////////////////////////////////////////////////////// Grid
-
-        gMonths.selectAll('.grid-months')
-            .data(ts.monthScale).enter().append('line')
-            .attr('x1', function (d) { return Lib.px(d.offset); })
-            .attr('y1', Lib.px(this.tlHeight))
-            .attr('x2', function (d) {
-                return Lib.px(d.offset);
-            })
-            .attr('y2', Lib.px(this.chartHeight))
-            .attr('style', 'stroke:green');
-
-        gYears.selectAll('.grid-years')
-            .data(ts.yearScale).enter().append('line')
-            .attr('x1', function (d) { return Lib.px(d.offset); })
-            .attr('y1', Lib.px(this.tlHeight))
-            .attr('x2', function (d) {
-                return Lib.px(d.offset);
-            })
-            .attr('y2', Lib.px(this.chartHeight))
-            .attr('style', 'stroke:gray');
-
         console.log('LOG: DONE Drawing Timeline');
+        return ts;
     }
 
-    private drawChart(acts: Activity[], gantt: Selection<SVGSVGElement>) {
+    private drawChart(acts: Activity[], ts: TimeScale, gantt: Selection<SVGSVGElement>) {
 
         console.log('LOG: Drawing Chart');
 
@@ -458,11 +442,11 @@ export class Visual implements IVisual {
             .attr('x', function (d) {
                 return Lib.px(_this.timeline.dateLocation(d.getStart()));
             })
-            .attr('height', this.rowHeight)
+            .attr('height', Lib.px(this.rowHeight - 4))
             .attr('width', function (d) {
                 return Lib.px(_this.timeline.dateLocation(d.getEnd()) - _this.timeline.dateLocation(d.getStart()));
             })
-            .attr('y', function (d, i) { return Lib.px(_this.tlHeight + (_this.rowHeight * i)) })
+            .attr('y', function (d, i) { return Lib.px(_this.tlHeight + (_this.rowHeight * i) + 2) })
             .attr('rx', '3px')
             .attr('ry', '3px')
             .classed('activityBar', true)
@@ -487,6 +471,8 @@ export class Visual implements IVisual {
         //  Draw chart
         ////////////////////////////////////////////////////////////////
 
+        this.chartHeight = bars.node().getBoundingClientRect().height + this.tlHeight;
+
         //also put this in a fn later for update()
         // getBBox() help here:
         // https://stackoverflow.com/questions/45792692/property-getbbox-does-not-exist-on-type-svgelement
@@ -497,12 +483,32 @@ export class Visual implements IVisual {
             .attr('x1', '0px')
             .attr('y1', '0px')
             .attr('x2', '0px')
-            .attr('y2', (d3.select('#div-chart').node() as HTMLDivElement)
-                .getBoundingClientRect()
-                .height
-                .toString()
-                .concat('px'))
+            .attr('y2', Lib.px(this.chartHeight))
             .attr('transform', 'translate(' + this.timeline.statusDateLocation() + ')');
+
+        //////////////////////////////////////////////////////////////// Grid
+
+        this.gMonths.selectAll('.grid-months')
+            .data(ts.monthScale).enter().append('line')
+            .attr('x1', function (d) { return Lib.px(d.offset); })
+            .attr('y1', Lib.px(this.tlHeight))
+            .attr('x2', function (d) {
+                return Lib.px(d.offset);
+            })
+            .attr('y2', Lib.px(this.chartHeight))
+            .attr('style', 'stroke:green');
+
+        this.gYears.selectAll('.grid-years')
+            .data(ts.yearScale).enter().append('line')
+            .attr('x1', function (d) { return Lib.px(d.offset); })
+            .attr('y1', Lib.px(this.tlHeight))
+            .attr('x2', function (d) {
+                return Lib.px(d.offset);
+            })
+            .attr('y2', Lib.px(this.chartHeight))
+            .attr('style', 'stroke:gray');
+
+
 
         console.log('LOG: DONE Drawing Chart');
     }
