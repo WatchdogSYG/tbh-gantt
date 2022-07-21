@@ -159,7 +159,6 @@ export class Visual implements IVisual {
         //options.dataViews[0].metadata.columns.entries
 
         let acts: Activity[] = this.checkConfiguration(dataView);
-
         let ts: TimeScale = this.drawTimeline(acts);
         this.drawChart(acts, ts, this.gantt);
         this.drawTable(acts);
@@ -256,9 +255,9 @@ export class Visual implements IVisual {
             if (l < currentLevel) {// going up indents, summarise
                 acts[acts.length - i - 1].setStart(Time.minDayjs(aggregateBuffer));
                 currentLevel = l;
-            } else if (l > currentLevel) {//going down andents, clear buffer
-                aggregateBuffer = [];
+            } else if (l > currentLevel) {//going down indents, clear buffer, add self
                 currentLevel = l;
+                aggregateBuffer=[(acts[acts.length - i - 1].getStart())];
             } else {//same indent, add to buffer
                 aggregateBuffer.push(acts[acts.length - i - 1].getStart());
             }
@@ -266,6 +265,8 @@ export class Visual implements IVisual {
             if (l == 0) {
                 globalStart.push(acts[acts.length - i - 1].getStart());
             }
+
+            console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(),acts.length - i - 1,aggregateBuffer);
         }
 
         for (let i = 0; i < acts.length; i++) {
@@ -275,8 +276,8 @@ export class Visual implements IVisual {
                 acts[acts.length - i - 1].setEnd(Time.maxDayjs(aggregateBuffer));
                 currentLevel = l;
             } else if (l > currentLevel) {//going down andents, clear buffer
-                aggregateBuffer = [];
                 currentLevel = l;
+                aggregateBuffer=[(acts[acts.length - i - 1].getEnd())];
             } else {//same indent, add to buffer
                 aggregateBuffer.push(acts[acts.length - i - 1].getEnd());
             }
@@ -288,6 +289,7 @@ export class Visual implements IVisual {
         this.start = Time.minDayjs(globalStart);
         this.end = Time.minDayjs(globalEnd);
 
+        console.log(acts);
         console.log('LOG: DONE Checking Configuration');
 
         return acts;
@@ -301,26 +303,34 @@ export class Visual implements IVisual {
     private dfsPreorder(activities: Activity[], node: powerbi.DataViewMatrixNode) {
         console.log('dfs');
         if (node.children == null) {
-            console.log("LOG: RECURSION: level = " + node.level + ', name = ' + node.value.toString() + ', start = ' + node.values[0].value);
+            console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
             if ((node.values[0] != null) && (node.values[1] != null)) {//every task must have a start and finish
                 activities.push(new Activity(
-                    node.value.toString(),
+                    this.nodeName(node),
                     dayjs(node.values[0].value as Date),
                     dayjs(node.values[1].value as Date),
                     node.level));
             }
         } else {
             console.log("LOG: RECURSION: level = " + node.level);
-            console.log("LOG:" + node.value.toString());
+            console.log("LOG:" + this.nodeName(node));
             console.log("LOG:" + node.level);
             activities.push(new Activity(
-                node.value.toString(),
+                this.nodeName(node),
                 null,
                 null,
                 node.level));//need to check type?
             for (let i = 0; i < node.children.length; i++) {
                 this.dfsPreorder(activities, node.children[i]);
             }
+        }
+    }
+
+    private nodeName(node: powerbi.DataViewMatrixNode): string {
+        if (node.value == null) {
+            return '';
+        } else {
+            return node.value.toString();
         }
     }
 

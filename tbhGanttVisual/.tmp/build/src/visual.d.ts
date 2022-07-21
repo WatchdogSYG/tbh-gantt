@@ -39,6 +39,7 @@ export declare class Visual implements IVisual {
      * @param node
      */
     private dfsPreorder;
+    private nodeName;
     private drawTimeline;
     private drawChart;
     private drawTable;

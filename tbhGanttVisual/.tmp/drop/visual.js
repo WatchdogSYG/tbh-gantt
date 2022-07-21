@@ -902,9 +902,9 @@ class Visual {
                 acts[acts.length - i - 1].setStart(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA(aggregateBuffer));
                 currentLevel = l;
             }
-            else if (l > currentLevel) { //going down andents, clear buffer
-                aggregateBuffer = [];
+            else if (l > currentLevel) { //going down indents, clear buffer, add self
                 currentLevel = l;
+                aggregateBuffer = [(acts[acts.length - i - 1].getStart())];
             }
             else { //same indent, add to buffer
                 aggregateBuffer.push(acts[acts.length - i - 1].getStart());
@@ -912,6 +912,7 @@ class Visual {
             if (l == 0) {
                 globalStart.push(acts[acts.length - i - 1].getStart());
             }
+            console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
         }
         for (let i = 0; i < acts.length; i++) {
             let l = acts[acts.length - i - 1].getLevel();
@@ -920,8 +921,8 @@ class Visual {
                 currentLevel = l;
             }
             else if (l > currentLevel) { //going down andents, clear buffer
-                aggregateBuffer = [];
                 currentLevel = l;
+                aggregateBuffer = [(acts[acts.length - i - 1].getEnd())];
             }
             else { //same indent, add to buffer
                 aggregateBuffer.push(acts[acts.length - i - 1].getEnd());
@@ -932,6 +933,7 @@ class Visual {
         }
         this.start = _src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA(globalStart);
         this.end = _src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA(globalEnd);
+        console.log(acts);
         console.log('LOG: DONE Checking Configuration');
         return acts;
     }
@@ -943,19 +945,27 @@ class Visual {
     dfsPreorder(activities, node) {
         console.log('dfs');
         if (node.children == null) {
-            console.log("LOG: RECURSION: level = " + node.level + ', name = ' + node.value.toString() + ', start = ' + node.values[0].value);
+            console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
             if ((node.values[0] != null) && (node.values[1] != null)) { //every task must have a start and finish
-                activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(node.value.toString(), dayjs__WEBPACK_IMPORTED_MODULE_3__(node.values[0].value), dayjs__WEBPACK_IMPORTED_MODULE_3__(node.values[1].value), node.level));
+                activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(this.nodeName(node), dayjs__WEBPACK_IMPORTED_MODULE_3__(node.values[0].value), dayjs__WEBPACK_IMPORTED_MODULE_3__(node.values[1].value), node.level));
             }
         }
         else {
             console.log("LOG: RECURSION: level = " + node.level);
-            console.log("LOG:" + node.value.toString());
+            console.log("LOG:" + this.nodeName(node));
             console.log("LOG:" + node.level);
-            activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(node.value.toString(), null, null, node.level)); //need to check type?
+            activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(this.nodeName(node), null, null, node.level)); //need to check type?
             for (let i = 0; i < node.children.length; i++) {
                 this.dfsPreorder(activities, node.children[i]);
             }
+        }
+    }
+    nodeName(node) {
+        if (node.value == null) {
+            return '';
+        }
+        else {
+            return node.value.toString();
         }
     }
     drawTimeline(acts) {
