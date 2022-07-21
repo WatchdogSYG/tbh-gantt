@@ -136,6 +136,10 @@ export class Timeline {
         this.updateScaleFactors()
     }
 
+    public setDayScaleByContainerWidth(containerWidth: number){
+        
+    }
+
     ////////////////////////////////////////////////////////////////
     //  Timeline Style Functions
     ////////////////////////////////////////////////////////////////

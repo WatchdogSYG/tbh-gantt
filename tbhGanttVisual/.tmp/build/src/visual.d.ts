@@ -33,6 +33,8 @@ export declare class Visual implements IVisual {
      * @param dataView The DataView object to configure the visual against.
      */
     private checkConfiguration;
+    private summariseDates;
+    private reduceHeirarchy;
     /**
      *
      * @param activities

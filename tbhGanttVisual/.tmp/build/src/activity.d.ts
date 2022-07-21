@@ -12,5 +12,6 @@ export declare class Activity {
     getTableText(): string[];
     setStart(date: dayjs.Dayjs): void;
     setEnd(date: dayjs.Dayjs): void;
+    setLevel(level: number): void;
     constructor(name: string, start: dayjs.Dayjs, end: dayjs.Dayjs, level: number);
 }

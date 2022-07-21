@@ -240,14 +240,29 @@ export class Visual implements IVisual {
         console.log(dataView.matrix.rows.root);
 
         let acts: Activity[] = [];
+        let dt: dayjs.Dayjs[];
 
         this.dfsPreorder(acts, dataView.matrix.rows.root.children[0]);
 
+        dt = this.summariseDates(acts);
+        this.start = dt[0];
+        this.end = dt[1];
+
+        acts = this.reduceHeirarchy(acts);
+
+        console.log(acts);
+        console.log('LOG: DONE Checking Configuration');
+
+        return acts;
+    }
+
+    private summariseDates(acts: Activity[]): dayjs.Dayjs[] {
+
         let aggregateBuffer: dayjs.Dayjs[] = [];
         let currentLevel: number = acts[acts.length - 1].getLevel();
-
         let globalStart: dayjs.Dayjs[] = [];
         let globalEnd: dayjs.Dayjs[] = [];
+
 
         for (let i = 0; i < acts.length; i++) {
             let l: number = acts[acts.length - i - 1].getLevel();
@@ -257,7 +272,7 @@ export class Visual implements IVisual {
                 currentLevel = l;
             } else if (l > currentLevel) {//going down indents, clear buffer, add self
                 currentLevel = l;
-                aggregateBuffer=[(acts[acts.length - i - 1].getStart())];
+                aggregateBuffer = [(acts[acts.length - i - 1].getStart())];
             } else {//same indent, add to buffer
                 aggregateBuffer.push(acts[acts.length - i - 1].getStart());
             }
@@ -265,8 +280,7 @@ export class Visual implements IVisual {
             if (l == 0) {
                 globalStart.push(acts[acts.length - i - 1].getStart());
             }
-
-            console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(),acts.length - i - 1,aggregateBuffer);
+            // console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
         }
 
         for (let i = 0; i < acts.length; i++) {
@@ -277,33 +291,64 @@ export class Visual implements IVisual {
                 currentLevel = l;
             } else if (l > currentLevel) {//going down andents, clear buffer
                 currentLevel = l;
-                aggregateBuffer=[(acts[acts.length - i - 1].getEnd())];
+                aggregateBuffer = [(acts[acts.length - i - 1].getEnd())];
             } else {//same indent, add to buffer
                 aggregateBuffer.push(acts[acts.length - i - 1].getEnd());
             }
+
             if (l == 0) {
                 globalEnd.push(acts[acts.length - i - 1].getEnd());
             }
         }
 
-        this.start = Time.minDayjs(globalStart);
-        this.end = Time.minDayjs(globalEnd);
-
-        console.log(acts);
-        console.log('LOG: DONE Checking Configuration');
-
-        return acts;
+        return [Time.minDayjs(globalStart), Time.minDayjs(globalEnd)];
     }
 
+    private reduceHeirarchy(acts: Activity[]): Activity[] {
+        console.log("LOG: Reducing heiracrchy");
+        let a: Activity[] = [];
+        let l: number;
+        let target: number;
+
+        // console.log(acts[0]);
+
+        for (let i = 0; i < acts.length; i++) {
+            l = acts[i].getLevel();
+
+            console.log('LOG: i=' + i + ', level = ' + l +
+                ', target = ' + target +
+                ', name? = ' + (acts[i].getName() != '') +
+                ', target? = ' + (target != null) +
+                ', name = ' + acts[i].getName());
+
+                //no target, no name
+            if ((target == null) && (acts[i].getName() == '')) {
+                target = acts[i].getLevel();
+            }
+
+            //has target, has name
+            if ((target != null) && (acts[i].getName() != '')) {
+                acts[i].setLevel(target);
+                target = null;
+            }
+
+            if(acts[i].getName() != ''){
+                a.push(acts[i]);
+            }
+
+        }
+
+        return a;
+    }
     /**
      * 
      * @param activities 
      * @param node 
      */
     private dfsPreorder(activities: Activity[], node: powerbi.DataViewMatrixNode) {
-        console.log('dfs');
+
         if (node.children == null) {
-            console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
+            // console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
             if ((node.values[0] != null) && (node.values[1] != null)) {//every task must have a start and finish
                 activities.push(new Activity(
                     this.nodeName(node),
@@ -312,9 +357,9 @@ export class Visual implements IVisual {
                     node.level));
             }
         } else {
-            console.log("LOG: RECURSION: level = " + node.level);
-            console.log("LOG:" + this.nodeName(node));
-            console.log("LOG:" + node.level);
+            // console.log("LOG: RECURSION: level = " + node.level);
+            // console.log("LOG:" + this.nodeName(node));
+            // console.log("LOG:" + node.level);
             activities.push(new Activity(
                 this.nodeName(node),
                 null,
@@ -419,7 +464,7 @@ export class Visual implements IVisual {
 
         console.log('LOG: Drawing Chart');
 
-        console.log('here');
+
         ////////////////////////////////////////////////////////////////
         //  Create #table-activities
         ////////////////////////////////////////////////////////////////
@@ -437,13 +482,12 @@ export class Visual implements IVisual {
         ////////////////////////////////////////////////////////////////
         //  Prepare for chart drawing
         ////////////////////////////////////////////////////////////////
-        console.log('here');
+
         let bars: Selection<SVGSVGElement> = gantt
             .append('g')
             .append('svg')
             .attr('id', 'svg-bars');
 
-        console.log('here');
 
         bars.selectAll('rect')
             .data(acts)
@@ -476,7 +520,6 @@ export class Visual implements IVisual {
                 }
             });
 
-        console.log('here');
         ////////////////////////////////////////////////////////////////
         //  Draw chart
         ////////////////////////////////////////////////////////////////
@@ -574,8 +617,6 @@ export class Visual implements IVisual {
 
         //.text(function (d) { return d.getTableText(); });//we are taking d from the bound data from the trs
         // .attr('class','style'+d.wbsIndex);
-
-
 
 
         console.log('LOG: DONE Drawing Table');

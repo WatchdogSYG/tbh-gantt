@@ -24,6 +24,7 @@ class Activity {
     getTableText() { return [this.name, this.start.format('DD/MM/YY'), this.end.format('DD/MM/YY')]; }
     setStart(date) { this.start = date; }
     setEnd(date) { this.end = date; }
+    setLevel(level) { this.level = level; }
 }
 
 
@@ -547,6 +548,8 @@ class Timeline {
         this.dayScale = daysPerPixel;
         this.updateScaleFactors();
     }
+    setDayScaleByContainerWidth(containerWidth) {
+    }
     ////////////////////////////////////////////////////////////////
     //  Timeline Style Functions
     ////////////////////////////////////////////////////////////////
@@ -891,7 +894,17 @@ class Visual {
         //check verbose
         console.log(dataView.matrix.rows.root);
         let acts = [];
+        let dt;
         this.dfsPreorder(acts, dataView.matrix.rows.root.children[0]);
+        dt = this.summariseDates(acts);
+        this.start = dt[0];
+        this.end = dt[1];
+        acts = this.reduceHeirarchy(acts);
+        console.log(acts);
+        console.log('LOG: DONE Checking Configuration');
+        return acts;
+    }
+    summariseDates(acts) {
         let aggregateBuffer = [];
         let currentLevel = acts[acts.length - 1].getLevel();
         let globalStart = [];
@@ -912,7 +925,7 @@ class Visual {
             if (l == 0) {
                 globalStart.push(acts[acts.length - i - 1].getStart());
             }
-            console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
+            // console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
         }
         for (let i = 0; i < acts.length; i++) {
             let l = acts[acts.length - i - 1].getLevel();
@@ -931,11 +944,35 @@ class Visual {
                 globalEnd.push(acts[acts.length - i - 1].getEnd());
             }
         }
-        this.start = _src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA(globalStart);
-        this.end = _src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA(globalEnd);
-        console.log(acts);
-        console.log('LOG: DONE Checking Configuration');
-        return acts;
+        return [_src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA(globalStart), _src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA(globalEnd)];
+    }
+    reduceHeirarchy(acts) {
+        console.log("LOG: Reducing heiracrchy");
+        let a = [];
+        let l;
+        let target;
+        // console.log(acts[0]);
+        for (let i = 0; i < acts.length; i++) {
+            l = acts[i].getLevel();
+            console.log('LOG: i=' + i + ', level = ' + l +
+                ', target = ' + target +
+                ', name? = ' + (acts[i].getName() != '') +
+                ', target? = ' + (target != null) +
+                ', name = ' + acts[i].getName());
+            //no target, no name
+            if ((target == null) && (acts[i].getName() == '')) {
+                target = acts[i].getLevel();
+            }
+            //has target, has name
+            if ((target != null) && (acts[i].getName() != '')) {
+                acts[i].setLevel(target);
+                target = null;
+            }
+            if (acts[i].getName() != '') {
+                a.push(acts[i]);
+            }
+        }
+        return a;
     }
     /**
      *
@@ -943,17 +980,16 @@ class Visual {
      * @param node
      */
     dfsPreorder(activities, node) {
-        console.log('dfs');
         if (node.children == null) {
-            console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
+            // console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
             if ((node.values[0] != null) && (node.values[1] != null)) { //every task must have a start and finish
                 activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(this.nodeName(node), dayjs__WEBPACK_IMPORTED_MODULE_3__(node.values[0].value), dayjs__WEBPACK_IMPORTED_MODULE_3__(node.values[1].value), node.level));
             }
         }
         else {
-            console.log("LOG: RECURSION: level = " + node.level);
-            console.log("LOG:" + this.nodeName(node));
-            console.log("LOG:" + node.level);
+            // console.log("LOG: RECURSION: level = " + node.level);
+            // console.log("LOG:" + this.nodeName(node));
+            // console.log("LOG:" + node.level);
             activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(this.nodeName(node), null, null, node.level)); //need to check type?
             for (let i = 0; i < node.children.length; i++) {
                 this.dfsPreorder(activities, node.children[i]);
@@ -1038,7 +1074,6 @@ class Visual {
     }
     drawChart(acts, ts, gantt) {
         console.log('LOG: Drawing Chart');
-        console.log('here');
         ////////////////////////////////////////////////////////////////
         //  Create #table-activities
         ////////////////////////////////////////////////////////////////
@@ -1052,12 +1087,10 @@ class Visual {
         ////////////////////////////////////////////////////////////////
         //  Prepare for chart drawing
         ////////////////////////////////////////////////////////////////
-        console.log('here');
         let bars = gantt
             .append('g')
             .append('svg')
             .attr('id', 'svg-bars');
-        console.log('here');
         bars.selectAll('rect')
             .data(acts)
             .enter()
@@ -1087,7 +1120,6 @@ class Visual {
                     return 'gray';
             }
         });
-        console.log('here');
         ////////////////////////////////////////////////////////////////
         //  Draw chart
         ////////////////////////////////////////////////////////////////

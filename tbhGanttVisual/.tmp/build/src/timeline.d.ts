@@ -37,6 +37,7 @@ export declare class Timeline {
      * @param daysPerPixel the desired scale factor
      */
     setDayScale(daysPerPixel: number): void;
+    setDayScaleByContainerWidth(containerWidth: number): void;
     /**
      * Returns an array of YearSeparators based on the start and finish dates of the timeline.
      * The text is currently left aligned only. (text-align: start;)
