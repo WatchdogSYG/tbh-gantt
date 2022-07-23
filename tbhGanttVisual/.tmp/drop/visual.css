@@ -1,8 +1,6 @@
-/* -------- VAR -------- */
 :root {
   --rowHeight: 20px;
   --timelineHeight: 60px;
-  --timelineWidth: 1000px;
   --chartPortionPct: 75%;
   --chartPortionFr: 75fr;
   --tbh-blue-background: #232d40;
@@ -10,7 +8,6 @@
   --tbh-blue2: #09343f;
   --headerheight: 50px;
 }
-/*begin css reset*/
 body {
   line-height: 1;
   font-family: Helvetica, Arial, sans-serif;
@@ -34,7 +31,6 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
-/*end css reset*/
 body {
   margin: 0px;
 }
@@ -46,18 +42,14 @@ h4 {
   top: 50%;
   transform: translateY(-50%);
 }
-/* -------- DIV -------- */
 div {
+  height: 100%;
   padding: 0px;
   margin: 0px;
-  height: 100%;
 }
 #sandbox-host {
   display: flex;
   flex-direction: column;
-}
-#div-sizeControllerWorkaround {
-  height: 100%;
 }
 #div-header {
   height: var(--headerheight);
@@ -71,28 +63,34 @@ div {
   flex-shrink: 0;
 }
 #div-content {
+  min-height: 0;
   width: 100%;
   display: flex;
-  min-height: 0;
 }
-#div-statusLine {
+#div-activities {
+  width: 25%;
+  flex-shrink: 0;
   height: 100%;
-  z-index: 1;
-  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+}
+.div-content-header {
+  height: fit-content;
+  width: fit-content;
+  flex-shrink: 0;
+}
+.div-content-body {
+  min-height: 0px;
+  flex-grow: 1;
+  overflow: scroll;
 }
 #div-chart {
   width: var(--chartPortionPct);
   border-style: none none none solid;
   border-width: 2px;
   border-color: black;
-  overflow: scroll;
-}
-#div-activities {
-  width: 25%;
-  flex-shrink: 0;
-  overflow-x: scroll;
-  overflow-y: scroll;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 #div-chart::-webkit-scrollbar {
   height: 20px;
@@ -186,6 +184,9 @@ td {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #c8c8c8;
+}
+#div-activityTable::-webkit-scrollbar {
+  width: 0px;
 }
 /* ------- DEBUG ------- */
 .highlight {

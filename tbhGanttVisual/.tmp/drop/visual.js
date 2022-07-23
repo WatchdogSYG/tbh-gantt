@@ -779,6 +779,32 @@ class TimeScale {
 *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 *  THE SOFTWARE.
 */
+//Feature TODO list:
+// sortable dataview + ids
+// Legend
+// 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 ////////////////////////////////////////////////////////////////
 //  Imports
@@ -798,7 +824,7 @@ class Visual {
     //  Constructor
     ////////////////////////////////////////////////////////////////
     constructor(options) {
-        this.verbose = false; //verbose logging?
+        this.verbose = true; //verbose logging?
         if (this.verbose) {
             console.log('LOG: Constructing Visual Object', options);
         }
@@ -816,8 +842,6 @@ class Visual {
         //         this.target.appendChild(new_p);
         //      }
         this.generateBody(options);
-        //generatetimeline with default dates
-        this.status = dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2019, 6, 19));
     }
     ////////////////////////////////////////////////////////////////
     //  UPDATE VISUAL ON REFRESH
@@ -832,9 +856,11 @@ class Visual {
         // this.divContent.style('height', Lib.px(document.body.clientHeight - Lib.pxToNumber(this.style.getPropertyValue('--headerHeight'))));
         let dataView = options.dataViews[0];
         //options.dataViews[0].metadata.columns.entries
+        //generatetimeline with default dates
+        this.status = dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2019, 6, 19));
         let acts = this.checkConfiguration(dataView);
         let ts = this.drawTimeline(acts);
-        this.drawChart(acts, ts, this.gantt);
+        this.drawChart(acts, ts, this.timelineSVG);
         this.drawTable(acts);
         // let ops : EnumerateVisualObjectInstancesOptions = new EnumerateVisualObjectInstancesOptions('subTotals')
         // let o: VisualObjectInstanceEnumeration = this.enumerateObjectInstances(EnumerateVisualObjectInstancesOptions);
@@ -844,15 +870,14 @@ class Visual {
         //  Create body level child elements
         ////////////////////////////////////////////////////////////////
         // help from lines 377 onwards at https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
-        // let wrapper: Selection<HTMLDivElement> = d3.select(options.element).append('div').attr('id', 'div-sizeControllerWorkaround');
         //the header including title, logos etc
         this.divHeader = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys(options.element)
             .append('div')
             .attr('id', 'div-header')
             .append('h4')
-            .text('TBH Gantt Chart Visual (WIP)');
+            .text('TBH Gantt Chart Visual v0.1 (in development)');
         //structure of the content below the header
-        this.statusAndContent = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys(options.element)
+        this.content = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys(options.element)
             .append('div')
             .attr('id', 'div-content');
         ////////////////////////////////////////////////////////////////
@@ -867,19 +892,31 @@ class Visual {
         ////////////////////////////////////////////////////////////////
         var _this = this;
         //div to hold the activity data in a table
-        this.divActivities = this.statusAndContent
+        this.divActivities = this.content
             .append('div')
-            .attr('id', 'div-activities')
-            .on('scroll', function () { _this.syncScrollTimelineTop(_this.divActivities); });
+            .attr('id', 'div-activities');
+        this.divActivityHeader = this.divActivities
+            .append('div')
+            .classed('div-content-header', true);
+        this.divActivityBody = this.divActivities
+            .append('div')
+            .classed('div-content-body', true)
+            .attr('id', 'div-activityTable')
+            .on('scroll', function () { _this.syncScrollTimelineTop('div-activityTable', false); })
+            .on('wheel', function () { _this.syncScrollTimelineTop('div-activityTable', true); });
         //div to hold the chart elements including background, bars, text, controls
-        this.divChartContainer = this.statusAndContent
+        this.divChartContainer = this.content
             .append('div')
-            .attr('id', 'div-chart')
-            .on('scroll', function () { _this.syncScrollTimelineTop(_this.divChartContainer); });
-        ;
-        // this.activityTable = this.divActivities
-        //     .append('table')
-        //     .attr('id', 'table-activities');
+            .attr('id', 'div-chart');
+        this.divChartHeader = this.divChartContainer
+            .append('div')
+            .classed('div-content-header', true);
+        this.divChartBody = this.divChartContainer
+            .append('div')
+            .classed('div-content-body', true)
+            .attr('id', 'div-ganttChart')
+            .on('scroll', function (d) { _this.syncScrollTimelineTop('div-ganttChart', false); })
+            .on('wheel', function () { _this.syncScrollTimelineTop('div-ganttChart', true); });
     }
     /**
      * Returns the configuration of the desired graph to determine which elements to render based on the data in dataView.
@@ -1070,14 +1107,13 @@ class Visual {
         ////////////////////////////////////////////////////////////////
         //  Create svg timeline
         ////////////////////////////////////////////////////////////////
-        this.gantt = this.divChartContainer
+        this.timelineSVG = this.divChartHeader
             .append('svg')
-            .attr('id', 'tl-top')
-            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight + (acts.length * this.rowHeight)))
+            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight))
             .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlWidth));
-        this.gMonths = this.gantt.append('g')
+        this.gMonths = this.timelineSVG.append('g')
             .classed('g-tl', true);
-        this.gYears = this.gantt.append('g')
+        this.gYears = this.timelineSVG.append('g')
             .classed('g-tl', true);
         //////////////////////////////////////////////////////////////// YearText
         this.gYears.selectAll('text')
@@ -1125,6 +1161,13 @@ class Visual {
         })
             .attr('y2', this.tlHeight)
             .attr('style', 'stroke:red');
+        this.timelineSVG
+            .append('line')
+            .attr('x1', '0px')
+            .attr('y1', this.tlHeight)
+            .attr('x2', this.tlWidth)
+            .attr('y2', this.tlHeight)
+            .attr('style', 'stroke:black');
         console.log('LOG: DONE Drawing Timeline');
         return ts;
     }
@@ -1143,10 +1186,12 @@ class Visual {
         ////////////////////////////////////////////////////////////////
         //  Prepare for chart drawing
         ////////////////////////////////////////////////////////////////
-        let bars = gantt
+        let bars = this.divChartBody
             .append('g')
             .append('svg')
-            .attr('id', 'svg-bars');
+            .attr('id', 'svg-bars')
+            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlWidth))
+            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.rowHeight * acts.length));
         bars.selectAll('rect')
             .data(acts)
             .enter()
@@ -1158,7 +1203,7 @@ class Visual {
             .attr('width', function (d) {
             return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(_this.timeline.dateLocation(d.getEnd()) - _this.timeline.dateLocation(d.getStart()));
         })
-            .attr('y', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(_this.tlHeight + (_this.rowHeight * i) + 2); })
+            .attr('y', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px((_this.rowHeight * i) + 2); })
             .attr('rx', '3px')
             .attr('ry', '3px')
             .classed('activityBar', true)
@@ -1184,7 +1229,7 @@ class Visual {
         // getBBox() help here:
         // https://stackoverflow.com/questions/45792692/property-getbbox-does-not-exist-on-type-svgelement
         // https://stackoverflow.com/questions/24534988/d3-get-the-bounding-box-of-a-selected-element
-        gantt.append('g')
+        this.divChartBody.append('g')
             .attr('id', 'statusLine').attr('width', '100%').attr('height', '100%')
             .append('line')
             .attr('x1', '0px')
@@ -1218,13 +1263,13 @@ class Visual {
         if (this.verbose) {
             console.log('LOG: populateActivityTable called with some number of rows.');
         }
-        d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#div-activities')
+        this.divActivityHeader
             .append('table')
             .attr('id', 'table-activityHeader')
             .append('th')
             .attr('class', 'highlight');
         //create the number of trs required.
-        let tr = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys('#div-activities')
+        let tr = this.divActivityBody
             .append('table')
             .attr('id', 'table-activities')
             .selectAll('tr')
@@ -1312,11 +1357,14 @@ class Visual {
     /**
     * Synchronises the top scrolling of the div-timeline and div-chart depending on which one was scrolled.
     *
-    * KNOWN ISSUE: since the event listener that fires this callback is on both div-timeline and div-chart,
+    * KNOWN BUG: since the event listener that fires this callback is on both div-timeline and div-chart,
     * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
+    *
+    * KNOWN BUG: scrolling near scrollTop = 0 and scrollTop = max slows down the scroll per mousewheel tick.
+    * Possibly due to the above bug. I could use the d3.event method to use scroll events and their dy direction but its not working.
     * @param div the div that was scrolled by the user.
     */
-    syncScrollTimelineTop(div) {
+    syncScrollTimelineTop(scrollID, wheel) {
         //links i used to understand ts callbacks, d3 event handling
         //https://hstefanski.wordpress.com/2015/10/25/responding-to-d3-events-in-typescript/
         //https://rollbar.com/blog/javascript-typeerror-cannot-read-property-of-undefined/
@@ -1327,18 +1375,17 @@ class Visual {
         if (this.verbose) {
             console.log('Synchronising scroll...');
         }
-        let id = div.attr('id'); //d3.select(d3.event.currentTarget)
-        let chartID = 'div-activities';
-        let timelineID = 'div-chart';
-        switch (id) {
+        let chartID = 'div-ganttChart';
+        let activityTableID = 'div-activityTable';
+        switch (scrollID) {
             case chartID:
-                document.getElementById(timelineID).scrollTop = document.getElementById(chartID).scrollTop;
+                document.getElementById(activityTableID).scrollTop = document.getElementById(chartID).scrollTop;
                 if (this.verbose) {
                     console.log('LOG: Sync timeline scroll to chart scroll');
                 }
                 ;
-            case timelineID:
-                document.getElementById(chartID).scrollTop = document.getElementById(timelineID).scrollTop;
+            case activityTableID:
+                document.getElementById(chartID).scrollTop = document.getElementById(activityTableID).scrollTop;
                 if (this.verbose) {
                     console.log('LOG: Sync chart scroll to timeline scroll');
                 }

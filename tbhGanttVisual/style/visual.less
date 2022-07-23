@@ -1,284 +1,317 @@
-/* -------- VAR -------- */
-:root {
-    --rowHeight: 20px;
-    --timelineHeight: 60px;
+    ////////////////////////////////////////////////////////////////
+    //  VARIABLES
+    ////////////////////////////////////////////////////////////////
 
-    --timelineWidth: 1000px;
+    :root {
+        --rowHeight: 20px;
+        --timelineHeight: 60px;
 
-    //the horizontal portion of the container that should be 
-    //taken up by the gantt chart
-    --chartPortionPct: 75%; //for flex
-    --chartPortionFr: 75fr; //for grid
+        //the horizontal portion of the container that should be 
+        //taken up by the gantt chart
+        --chartPortionPct: 75%; //for flex
+        --chartPortionFr: 75fr; //for grid
 
-    --tbh-blue-background: rgb(35, 45, 64);
-    --tbh-blue1: rgb(25, 128, 143);
-    --tbh-blue2: rgb(9, 52, 63);
+        --tbh-blue-background: rgb(35, 45, 64);
+        --tbh-blue1: rgb(25, 128, 143);
+        --tbh-blue2: rgb(9, 52, 63);
 
-    --headerheight: 50px;
-}
+        --headerheight: 50px;
+    }
 
-/*begin css reset*/
+    ////////////////////////////////////////////////////////////////
+    //  CSS RESET
+    ////////////////////////////////////////////////////////////////
 
-body {
-    line-height: 1;
-    font-family: Helvetica, Arial, sans-serif;
-}
+    body {
+        line-height: 1;
+        font-family: Helvetica, Arial, sans-serif;
+    }
 
-ol,
-ul {
-    list-style: none;
-}
+    ol,
+    ul {
+        list-style: none;
+    }
 
-blockquote,
-q {
-    quotes: none;
-}
+    blockquote,
+    q {
+        quotes: none;
+    }
 
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
-    content: '';
-    content: none;
-}
+    blockquote:before,
+    blockquote:after,
+    q:before,
+    q:after {
+        content: '';
+        content: none;
+    }
 
-table {
-    border-collapse: collapse;
-    border-spacing: 0;
-}
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
 
-/*end css reset*/
+    ////////////////////////////////////////////////////////////////
+    //  HTML DEFAULTS
+    ////////////////////////////////////////////////////////////////
 
-body {
-    margin: 0px;
-    // font-family: 'Segoe UI Semibold',wf_segoe-ui_semibold,helvetica,arial,sans-serif;
-}
+    body {
+        margin: 0px;
+        // font-family: 'Segoe UI Semibold',wf_segoe-ui_semibold,helvetica,arial,sans-serif;
+    }
 
-h4 {
-    font-size: larger;
-    font-weight: 500;
-    margin: 0px;
+    h4 {
+        font-size: larger;
+        font-weight: 500;
+        margin: 0px;
 
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-}
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
 
-/* -------- DIV -------- */
+    div {
+        height: 100%;
+        padding: 0px;
+        margin: 0px;
 
-div {
-    padding: 0px;
-    margin: 0px;
-    height: 100%;
-    //border: 1px dashed black;
-}
+        //border: 1px dashed black;
+    }
 
-#sandbox-host{
-    display: flex;
-    flex-direction: column;
-}
+    //a powerbi.com induced class
+    #sandbox-host {
+        display: flex;
+        flex-direction: column;
+    }
 
-#div-sizeControllerWorkaround {
-    height: 100%;
-}
+    ////////////////////////////////////////////////////////////////
+    //  DIVS
+    ////////////////////////////////////////////////////////////////
 
-//div for the header of the graph: title, logo etc.
-#div-header {
-    height: var(--headerheight);
+    // #div-sizeControllerWorkaround {
+    //     height: 100%;
+    // }
 
-    border-style: none none solid none;
-    border-width: 1px;
-    border-color: black;
+    //div for the header of the graph: title, logo etc.
+    #div-header {
+        height: var(--headerheight);
 
-    background: var(--tbh-blue-background);
-    color: white;
+        border-style: none none solid none;
+        border-width: 1px;
+        border-color: black;
 
-    position: relative;
-    padding: 10px;
+        background: var(--tbh-blue-background);
+        color: white;
 
-    flex-shrink: 0;
-}
+        position: relative;
+        padding: 10px;
 
-
-//the div below the above div that contains the activitys table and gantt
-#div-content {
-    width: 100%;
-    display: flex;
-
-// explantion
-//https://stackoverflow.com/questions/36230944/prevent-flex-items-from-overflowing-a-container
-    min-height: 0;
-
-}
-
-//div that contains the status line and accompanying text.
-//Overlaps gantt and timeline but is one level up in the DOM heirachy,
-#div-statusLine {
-    height: 100%;
-    z-index: 1;
-
-    pointer-events: none;
-}
-
-#div-chart {
-    width: var(--chartPortionPct);
-    border-style: none none none solid;
-    border-width: 2px;
-    border-color: black;
-
-    overflow: scroll;
-}
-
-//div that contains the activities table
-#div-activities {
-    width: 25%;
-    flex-shrink: 0;
-    overflow-x: scroll;
-    overflow-y: scroll;
-    height: 100%;
-}
-
-#div-chart::-webkit-scrollbar {
-    height: 20px;
-}
-
-#div-timeline {
-    height: 100%;
-
-    border-bottom: 1px gray;
-    width: 75%;
-    overflow-x: scroll;
-    overflow-y: clip;
-}
-
-#div-timeline::-webkit-scrollbar {
-    height: 0px;
-}
+        flex-shrink: 0;
+    }
 
 
-/* ------- TABLE ------- */
+    //the div below the above div that contains the activities and gantt
+    #div-content {
+        // explantion of min height
+        //https://stackoverflow.com/questions/36230944/prevent-flex-items-from-overflowing-a-container
+        min-height: 0;
+        width: 100%;
 
-table {
-    width: fit-content;
-}
+        display: flex;
+    }
 
-#table-activityHeader {
-    width: 25%;
-    color: #bbbbbb;
-}
+    //div that contains the status line and accompanying text.
+    //Overlaps gantt and timeline but is one level up in the DOM heirachy,
+    // #div-statusLine {
+    //     height: 100%;
+    //     z-index: 1;
 
-th {
-    height: var(--timelineHeight);
-    padding:0;
-}
+    //     pointer-events: none;
+    // }
 
-tr {
-    height: var(--rowHeight);
-}
+    // #div-content -> #div-activities
+    //div that contains the activities table
+    #div-activities {
+        width: 25%;
+        flex-shrink: 0;
+        height: 100%;
 
-td {
-    width: fit-content;
+        display: flex;
+        flex-direction: column;
+    }
 
-    border: 1px #aaaaaa;
-    border-style: solid none solid solid;
-    white-space: nowrap;
-    overflow: hidden;
-}
+    .div-content-header {
+        height: fit-content;
+        width: fit-content;
+        flex-shrink: 0;
+    }
 
-.td-name{
-    
-}
+    .div-content-body {
+        // explantion of min height
+        //https://stackoverflow.com/questions/36230944/prevent-flex-items-from-overflowing-a-container
+        min-height: 0px;
+        flex-grow: 1;
 
-.indent0{
-    padding-left: 0px;
-}
+        overflow: scroll;
+    }
 
-.indent1{
-    padding-left: 25px;
-}
+    //#div-content -> #div-chart
+    //the div that contains the chart
+    #div-chart {
+        width: var(--chartPortionPct);
+        border-style: none none none solid;
+        border-width: 2px;
+        border-color: black;
 
-.indent2{
-    padding-left: 50px;
-}
-
-.indent3{
-    padding-left: 75px;
-}
-.indent4{
-    padding-left: 100px;
-}
+        display: flex;
+        flex-direction: column;
+    }
 
 
-/* #table-ganttGrid{
+
+    #div-chart::-webkit-scrollbar {
+        height: 20px;
+    }
+
+    #div-timeline {
+        height: 100%;
+
+        border-bottom: 1px gray;
+        width: 75%;
+        overflow-x: scroll;
+        overflow-y: clip;
+    }
+
+    #div-timeline::-webkit-scrollbar {
+        height: 0px;
+    }
+
+
+    /* ------- TABLE ------- */
+
+    table {
+        width: fit-content;
+    }
+
+    #table-activityHeader {
+        width: 25%;
+        color: #bbbbbb;
+    }
+
+    th {
+        height: var(--timelineHeight);
+        padding: 0;
+    }
+
+    tr {
+        height: var(--rowHeight);
+    }
+
+    td {
+        width: fit-content;
+
+        border: 1px #aaaaaa;
+        border-style: solid none solid solid;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .td-name {}
+
+    .indent0 {
+        padding-left: 0px;
+    }
+
+    .indent1 {
+        padding-left: 25px;
+    }
+
+    .indent2 {
+        padding-left: 50px;
+    }
+
+    .indent3 {
+        padding-left: 75px;
+    }
+
+    .indent4 {
+        padding-left: 100px;
+    }
+
+
+    /* #table-ganttGrid{
 
 } */
 
-/* ------- TIMELINE ------- */
+    /* ------- TIMELINE ------- */
 
 
-#statusLine {
-    stroke: rgb(0, 255, 255);
-    stroke-width: 2px;
-}
+    #statusLine {
+        stroke: rgb(0, 255, 255);
+        stroke-width: 2px;
+    }
 
-.g-tl {
-    border: 1px solid black;
-    //color:#00ff00;
-}
+    .g-tl {
+        border: 1px solid black;
+        //color:#00ff00;
+    }
 
-.yearText {
-    font-size: 26px;
-    //height: 1em;
-}
+    .yearText {
+        font-size: 26px;
+        //height: 1em;
+    }
 
-.monthText {
-    text-anchor: middle;
-}
+    .monthText {
+        text-anchor: middle;
+    }
 
-/* ------- CHART ------- */
+    /* ------- CHART ------- */
 
-.activityBar {
+    .activityBar {
 
-    //fill: red;
-    stroke: black;
-    stroke-width: 1px;
-}
+        //fill: red;
+        stroke: black;
+        stroke-width: 1px;
+    }
 
-//check these
-#svg-statusLine {
-    z-index: 3;
-}
+    //check these
+    #svg-statusLine {
+        z-index: 3;
+    }
 
 
-/* ------- SCROLLBAR ------- */
+    /* ------- SCROLLBAR ------- */
 
-::-webkit-scrollbar {
-    width: 20px;
-    height: 20px;
-    border: none;
-}
+    ::-webkit-scrollbar {
+        width: 20px;
+        height: 20px;
+        border: none;
+    }
 
-::-webkit-scrollbar-track {
-    background: var(--tbh-blue-background);
-}
+    ::-webkit-scrollbar-track {
+        background: var(--tbh-blue-background);
+    }
 
-::-webkit-scrollbar-corner {
-    background: var(--tbh-blue-background);
+    ::-webkit-scrollbar-corner {
+        background: var(--tbh-blue-background);
 
-}
+    }
 
-::-webkit-scrollbar-thumb {
-    background: var(--tbh-blue1);
+    ::-webkit-scrollbar-thumb {
+        background: var(--tbh-blue1);
 
-}
+    }
 
-::-webkit-scrollbar-thumb:hover {
-    background: rgb(200, 200, 200);
-}
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgb(200, 200, 200);
+    }
 
-/* ------- DEBUG ------- */
+    #div-activityTable::-webkit-scrollbar {
+        width: 0px;
+    }
 
-.highlight {
-    background-color: rgba(0, 255, 0, 0.25);
-    border: 1px solid #00ff00;
-}
+    /* ------- DEBUG ------- */
+
+    .highlight {
+        background-color: rgba(0, 255, 0, 0.25);
+        border: 1px solid #00ff00;
+    }

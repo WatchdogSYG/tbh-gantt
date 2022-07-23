@@ -8,11 +8,16 @@ export declare class Visual implements IVisual {
     private body;
     private divHeader;
     private divContent;
-    private statusAndContent;
+    private content;
     private divActivities;
+    private divActivityHeader;
+    private divActivityBody;
+    private divChartHeader;
+    private divChartBody;
     private divChartContainer;
     private activityTable;
-    private gantt;
+    private timelineSVG;
+    private ganttSVG;
     private style;
     private timeline;
     private verbose;
@@ -89,8 +94,11 @@ export declare class Visual implements IVisual {
     /**
     * Synchronises the top scrolling of the div-timeline and div-chart depending on which one was scrolled.
     *
-    * KNOWN ISSUE: since the event listener that fires this callback is on both div-timeline and div-chart,
+    * KNOWN BUG: since the event listener that fires this callback is on both div-timeline and div-chart,
     * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
+    *
+    * KNOWN BUG: scrolling near scrollTop = 0 and scrollTop = max slows down the scroll per mousewheel tick.
+    * Possibly due to the above bug. I could use the d3.event method to use scroll events and their dy direction but its not working.
     * @param div the div that was scrolled by the user.
     */
     private syncScrollTimelineTop;
