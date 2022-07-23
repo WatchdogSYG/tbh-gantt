@@ -33,6 +33,11 @@ export declare class Visual implements IVisual {
      * @param dataView The DataView object to configure the visual against.
      */
     private checkConfiguration;
+    /**
+     * Summarises the higher level matrix elements by taking its childrens' minimum start dates and maximum end dates.
+     * @param acts the the DFS-derived Activity array to summarise
+     * @returns the earliest start date and the latest finish date of the schedule
+     */
     private summariseDates;
     /**
      * This function takes the Activity array derived from a Depth-First Search of the DataView matrix data structure (tree)
@@ -57,11 +62,18 @@ export declare class Visual implements IVisual {
      */
     private trimHeirarchy;
     /**
-     *
-     * @param activities
-     * @param node
+     * Performs a Pre-order Depth-First Search of the DataViewMatrixNode tree structure assuming a general tree structure.
+     * The nodes are arranged into a linear array based on the DFS traversal algorithm, mimicking the view observed in a Gantt chart
+     * and in other Scheduling software.
+     * @param activities The Activity array to output the list of nodes in
+     * @param node the DataViewMatrixNode to consider as the root node of the tree
      */
     private dfsPreorder;
+    /**
+     * Returns the node's name if it is not null, and returns an empty string otherwise.
+     * @param node the node to extract the name from
+     * @returns an empty string if the node's value member is null, and the string representation of node.value if it is not null.
+     */
     private nodeName;
     private drawTimeline;
     private drawChart;

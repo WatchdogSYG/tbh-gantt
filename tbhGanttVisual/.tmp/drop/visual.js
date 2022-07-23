@@ -904,6 +904,11 @@ class Visual {
         console.log('LOG: DONE Checking Configuration');
         return acts;
     }
+    /**
+     * Summarises the higher level matrix elements by taking its childrens' minimum start dates and maximum end dates.
+     * @param acts the the DFS-derived Activity array to summarise
+     * @returns the earliest start date and the latest finish date of the schedule
+     */
     summariseDates(acts) {
         let aggregateBuffer = [];
         let currentLevel = acts[acts.length - 1].getLevel();
@@ -1019,9 +1024,11 @@ class Visual {
         return a;
     }
     /**
-     *
-     * @param activities
-     * @param node
+     * Performs a Pre-order Depth-First Search of the DataViewMatrixNode tree structure assuming a general tree structure.
+     * The nodes are arranged into a linear array based on the DFS traversal algorithm, mimicking the view observed in a Gantt chart
+     * and in other Scheduling software.
+     * @param activities The Activity array to output the list of nodes in
+     * @param node the DataViewMatrixNode to consider as the root node of the tree
      */
     dfsPreorder(activities, node) {
         if (node.children == null) {
@@ -1040,6 +1047,11 @@ class Visual {
             }
         }
     }
+    /**
+     * Returns the node's name if it is not null, and returns an empty string otherwise.
+     * @param node the node to extract the name from
+     * @returns an empty string if the node's value member is null, and the string representation of node.value if it is not null.
+     */
     nodeName(node) {
         if (node.value == null) {
             return '';

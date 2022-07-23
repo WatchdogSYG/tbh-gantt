@@ -256,6 +256,11 @@ export class Visual implements IVisual {
         return acts;
     }
 
+    /**
+     * Summarises the higher level matrix elements by taking its childrens' minimum start dates and maximum end dates.
+     * @param acts the the DFS-derived Activity array to summarise
+     * @returns the earliest start date and the latest finish date of the schedule
+     */
     private summariseDates(acts: Activity[]): dayjs.Dayjs[] {
 
         let aggregateBuffer: dayjs.Dayjs[] = [];
@@ -389,9 +394,11 @@ export class Visual implements IVisual {
 
 
     /**
-     * 
-     * @param activities 
-     * @param node 
+     * Performs a Pre-order Depth-First Search of the DataViewMatrixNode tree structure assuming a general tree structure.
+     * The nodes are arranged into a linear array based on the DFS traversal algorithm, mimicking the view observed in a Gantt chart
+     * and in other Scheduling software.
+     * @param activities The Activity array to output the list of nodes in
+     * @param node the DataViewMatrixNode to consider as the root node of the tree
      */
     private dfsPreorder(activities: Activity[], node: powerbi.DataViewMatrixNode) {
 
@@ -419,6 +426,11 @@ export class Visual implements IVisual {
         }
     }
 
+    /**
+     * Returns the node's name if it is not null, and returns an empty string otherwise.
+     * @param node the node to extract the name from
+     * @returns an empty string if the node's value member is null, and the string representation of node.value if it is not null.
+     */
     private nodeName(node: powerbi.DataViewMatrixNode): string {
         if (node.value == null) {
             return '';
@@ -688,9 +700,8 @@ export class Visual implements IVisual {
     //https://www.dashingd3js.com/d3-tutorial/use-d3-js-to-bind-data-to-dom-elements
     //BEWARE: I had to change the types of all these following to var and not Selection<T,T,T,T>. the second function (d)
     //call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
-
-
     // }
+    
     /**
      * Synchronises the left scrolling of the div-timeline and div-chart depending on which one was scrolled.
      * 
