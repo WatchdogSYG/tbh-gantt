@@ -248,7 +248,7 @@ export class Visual implements IVisual {
         this.start = dt[0];
         this.end = dt[1];
 
-        acts = this.reduceHeirarchy(acts);
+        acts = this.trimHeirarchy(acts);
 
         console.log(acts);
         console.log('LOG: DONE Checking Configuration');
@@ -304,24 +304,32 @@ export class Visual implements IVisual {
         return [Time.minDayjs(globalStart), Time.minDayjs(globalEnd)];
     }
 
+    /**
+     * This function takes the Activity array derived from a Depth-First Search of the DataView matrix data structure (tree) 
+     * and moves deeper elements to the branch position of the first element on the branch with an empty name string.
+     * 
+     * Use this function to reduce a tree when the leaf activity is always at a certain depth, regardless of what its true 
+     * WBS Outline Level is.
+     * 
+     * @param acts the DFS-derived Activity array to reduce
+     * @returns the reduced Activity array
+     */
     private reduceHeirarchy(acts: Activity[]): Activity[] {
         console.log("LOG: Reducing heiracrchy");
         let a: Activity[] = [];
         let l: number;
         let target: number;
 
-        // console.log(acts[0]);
-
         for (let i = 0; i < acts.length; i++) {
             l = acts[i].getLevel();
 
-            console.log('LOG: i=' + i + ', level = ' + l +
-                ', target = ' + target +
-                ', name? = ' + (acts[i].getName() != '') +
-                ', target? = ' + (target != null) +
-                ', name = ' + acts[i].getName());
+            // console.log('LOG: i=' + i + ', level = ' + l +
+            //     ', target = ' + target +
+            //     ', name? = ' + (acts[i].getName() != '') +
+            //     ', target? = ' + (target != null) +
+            //     ', name = ' + acts[i].getName());
 
-                //no target, no name
+            //no target, no name
             if ((target == null) && (acts[i].getName() == '')) {
                 target = acts[i].getLevel();
             }
@@ -332,14 +340,54 @@ export class Visual implements IVisual {
                 target = null;
             }
 
-            if(acts[i].getName() != ''){
+            if (acts[i].getName() != '') {
                 a.push(acts[i]);
             }
-
         }
 
         return a;
     }
+
+    /**
+     * This function takes the Activity array derived from a Depth-First Search of the DataView matrix data structure (tree) 
+     * and trims invalid branches. An invalid branch is defined as a branch of the tree with a relative root node that has an empty
+     * name string.
+     * 
+     * Use this function to rim branches off the tree and eliminate anything under a blank WBS heading, and eliminate empty activities.
+     * 
+     * @param acts the DFS-derived Activity array to trim
+     * @returns the reduced Activity array
+     */
+    private trimHeirarchy(acts: Activity[]): Activity[] {
+        console.log("LOG: Trimming heiracrchy");
+        let a: Activity[] = [];
+        let onInvalidBranch: boolean = false;
+        let target: number;
+
+        for (let i = 0; i < acts.length; i++) {
+            // console.log('LOG: i=' + i + ', level = ' + acts[i].getLevel() +
+            //     ', target = ' + onInvalidBranch +
+            //     ', name? = ' + (acts[i].getName() != '') +
+            //     ', onInvalidBranch? = ' + onInvalidBranch +
+            //     ', name = ' + acts[i].getName());
+
+            //we have reached another node of the same level as the faulty node
+            if (onInvalidBranch && (acts[i].getLevel() <= target)) { onInvalidBranch = false; }
+
+            if (acts[i].getName() == '') { //we have an invalid node. trim the branch by ignoring everything until we reach a node of the same level
+                onInvalidBranch = true;
+                target = acts[i].getLevel();
+            }
+
+            if (!onInvalidBranch) {
+                a.push(acts[i]);
+            }
+        }
+
+        return a;
+    }
+
+
     /**
      * 
      * @param activities 

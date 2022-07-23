@@ -34,7 +34,28 @@ export declare class Visual implements IVisual {
      */
     private checkConfiguration;
     private summariseDates;
+    /**
+     * This function takes the Activity array derived from a Depth-First Search of the DataView matrix data structure (tree)
+     * and moves deeper elements to the branch position of the first element on the branch with an empty name string.
+     *
+     * Use this function to reduce a tree when the leaf activity is always at a certain depth, regardless of what its true
+     * WBS Outline Level is.
+     *
+     * @param acts the DFS-derived Activity array to reduce
+     * @returns the reduced Activity array
+     */
     private reduceHeirarchy;
+    /**
+     * This function takes the Activity array derived from a Depth-First Search of the DataView matrix data structure (tree)
+     * and trims invalid branches. An invalid branch is defined as a branch of the tree with a relative root node that has an empty
+     * name string.
+     *
+     * Use this function to rim branches off the tree and eliminate anything under a blank WBS heading, and eliminate empty activities.
+     *
+     * @param acts the DFS-derived Activity array to trim
+     * @returns the reduced Activity array
+     */
+    private trimHeirarchy;
     /**
      *
      * @param activities
