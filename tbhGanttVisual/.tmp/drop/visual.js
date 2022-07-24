@@ -976,6 +976,7 @@ class Visual {
             console.log('LOG: Constructing Visual Object', options);
         }
         //jsUnit.allTests();
+        this.maxDepth = 0;
         this.style = getComputedStyle(document.querySelector(':root'));
         this.setDefaultTimelineParams();
         this.generateBody(options);
@@ -1144,7 +1145,7 @@ class Visual {
         this.dfsPreorder(acts, dataView.matrix.rows.root.children[0]);
         acts = this.trimHeirarchy(acts);
         if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_3__/* .ValueFields.START */ .$.START) && this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_3__/* .ValueFields.END */ .$.END)) {
-            let dt = this.summariseDates(acts);
+            let dt = this.summariseDates(acts, dataView);
             this.start = dt[0];
             this.end = dt[1];
         }
@@ -1160,12 +1161,13 @@ class Visual {
      * @param acts the the DFS-derived Activity array to summarise
      * @returns the earliest start date and the latest finish date of the schedule
      */
-    summariseDates(acts) {
+    summariseDates(acts, dataView) {
         let aggregateBuffer = [];
         let currentLevel = acts[acts.length - 1].getLevel();
         let globalStart = [];
         let globalEnd = [];
-        aggregateBuffer = [[], [], [], [], []];
+        console.log(this.resetAggregateBuffer(dataView));
+        aggregateBuffer = this.resetAggregateBuffer(dataView);
         for (let i = 0; i < acts.length; i++) {
             let l = acts[acts.length - i - 1].getLevel();
             if (l < currentLevel) { // going up indents, summarise, add self to higher buffer
@@ -1188,7 +1190,7 @@ class Visual {
             console.log(aggregateBuffer[l]);
             //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
         }
-        aggregateBuffer = [[], [], [], [], []];
+        aggregateBuffer = this.resetAggregateBuffer(dataView);
         for (let i = 0; i < acts.length; i++) {
             let l = acts[acts.length - i - 1].getLevel();
             if (l < currentLevel) { // going up indents, summarise, add self to higher buffer
@@ -1213,6 +1215,13 @@ class Visual {
         console.log(globalStart);
         console.log(globalEnd);
         return [_src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA(globalStart), _src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA(globalEnd)];
+    }
+    resetAggregateBuffer(dataView) {
+        let x = [];
+        for (let i = 0; i <= this.maxDepth; i++) {
+            x[i] = [];
+        }
+        return x;
     }
     /**
      * This function takes the Activity array derived from a Depth-First Search of the DataView matrix data structure (tree)
@@ -1294,6 +1303,7 @@ class Visual {
      * @param node the DataViewMatrixNode to consider as the root node of the tree
      */
     dfsPreorder(activities, node) {
+        this.updateMaxDepth(node.level);
         if (node.children == null) {
             // console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
             if ((node.values[0] != null) && (node.values[1] != null)) { //every task must have a start and finish, unless the config contradicts
@@ -1309,6 +1319,12 @@ class Visual {
                 this.dfsPreorder(activities, node.children[i]);
             }
         }
+    }
+    updateMaxDepth(d) {
+        if (d > this.maxDepth) {
+            this.maxDepth = d;
+        }
+        ;
     }
     /**
      * Returns the node's name if it is not null, and returns an empty string otherwise.

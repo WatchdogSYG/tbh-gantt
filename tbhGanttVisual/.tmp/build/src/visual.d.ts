@@ -32,6 +32,7 @@ export declare class Visual implements IVisual {
     private chartHeight;
     private gMonths;
     private gYears;
+    private maxDepth;
     constructor(options: VisualConstructorOptions);
     /**
      * Sets the member variables start, end, and status to the beginning of this year, the end of this year, and now, respectively.
@@ -50,6 +51,7 @@ export declare class Visual implements IVisual {
      * @returns the earliest start date and the latest finish date of the schedule
      */
     private summariseDates;
+    private resetAggregateBuffer;
     /**
      * This function takes the Activity array derived from a Depth-First Search of the DataView matrix data structure (tree)
      * and moves deeper elements to the branch position of the first element on the branch with an empty name string.
@@ -80,6 +82,7 @@ export declare class Visual implements IVisual {
      * @param node the DataViewMatrixNode to consider as the root node of the tree
      */
     private dfsPreorder;
+    private updateMaxDepth;
     /**
      * Returns the node's name if it is not null, and returns an empty string otherwise.
      * @param node the node to extract the name from

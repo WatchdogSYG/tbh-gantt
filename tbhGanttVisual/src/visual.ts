@@ -149,6 +149,8 @@ export class Visual implements IVisual {
     private gMonths: Selection<SVGGElement>;
     private gYears: Selection<SVGGElement>;
 
+    private maxDepth: number;
+
     ////////////////////////////////////////////////////////////////
     //  Constructor
     ////////////////////////////////////////////////////////////////
@@ -158,6 +160,7 @@ export class Visual implements IVisual {
 
         //jsUnit.allTests();
 
+        this.maxDepth = 0;
         this.style = getComputedStyle(document.querySelector(':root'));
         this.setDefaultTimelineParams();
         this.generateBody(options);
@@ -364,7 +367,7 @@ export class Visual implements IVisual {
         acts = this.trimHeirarchy(acts);
 
         if (this.configuration.field(ValueFields.START) && this.configuration.field(ValueFields.END)) {
-            let dt: dayjs.Dayjs[] = this.summariseDates(acts);
+            let dt: dayjs.Dayjs[] = this.summariseDates(acts, dataView);
             this.start = dt[0];
             this.end = dt[1];
         } else {
@@ -381,22 +384,24 @@ export class Visual implements IVisual {
      * @param acts the the DFS-derived Activity array to summarise
      * @returns the earliest start date and the latest finish date of the schedule
      */
-    private summariseDates(acts: Activity[]): dayjs.Dayjs[] {
+    private summariseDates(acts: Activity[], dataView: DataView): dayjs.Dayjs[] {
 
         let aggregateBuffer: dayjs.Dayjs[][] = [];
         let currentLevel: number = acts[acts.length - 1].getLevel();
         let globalStart: dayjs.Dayjs[] = [];
         let globalEnd: dayjs.Dayjs[] = [];
+console.log(this.resetAggregateBuffer(dataView));
 
-        aggregateBuffer = [[], [], [], [], []];
+
+        aggregateBuffer = this.resetAggregateBuffer(dataView);
 
         for (let i = 0; i < acts.length; i++) {
             let l: number = acts[acts.length - i - 1].getLevel();
 
             if (l < currentLevel) {// going up indents, summarise, add self to higher buffer
-                acts[acts.length - i - 1].setStart(Time.minDayjs(aggregateBuffer[l+1]));
-                console.log(l,aggregateBuffer[l+1]);
-                console.log(l,'Summarise Start', Time.minDayjs(aggregateBuffer[l+1]).format('DD/MM/YY'));
+                acts[acts.length - i - 1].setStart(Time.minDayjs(aggregateBuffer[l + 1]));
+                console.log(l, aggregateBuffer[l + 1]);
+                console.log(l, 'Summarise Start', Time.minDayjs(aggregateBuffer[l + 1]).format('DD/MM/YY'));
                 aggregateBuffer[l].push(acts[acts.length - i - 1].getStart());
                 currentLevel = l;
             } else if (l > currentLevel) {//going down indents, clear buffer, add self
@@ -406,7 +411,7 @@ export class Visual implements IVisual {
                 aggregateBuffer[l].push(acts[acts.length - i - 1].getStart());
             }
             if (l == 0) {
-                
+
 
                 globalStart.push(acts[acts.length - i - 1].getStart());
             }
@@ -415,13 +420,14 @@ export class Visual implements IVisual {
             //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
         }
 
-        aggregateBuffer = [[], [], [], [], []];
+        aggregateBuffer = this.resetAggregateBuffer(dataView);
+
         for (let i = 0; i < acts.length; i++) {
             let l: number = acts[acts.length - i - 1].getLevel();
 
             if (l < currentLevel) {// going up indents, summarise, add self to higher buffer
-                acts[acts.length - i - 1].setEnd(Time.maxDayjs(aggregateBuffer[l+1]));
-                console.log(l,'Summarise End', Time.maxDayjs(aggregateBuffer[l+1]).format('DD/MM/YY'));
+                acts[acts.length - i - 1].setEnd(Time.maxDayjs(aggregateBuffer[l + 1]));
+                console.log(l, 'Summarise End', Time.maxDayjs(aggregateBuffer[l + 1]).format('DD/MM/YY'));
                 aggregateBuffer[l].push(acts[acts.length - i - 1].getEnd());
                 currentLevel = l;
             } else if (l > currentLevel) {//going down indents, clear buffer, add self
@@ -432,12 +438,12 @@ export class Visual implements IVisual {
             }
 
             if (l == 0) {
-             
+
                 globalEnd.push(acts[acts.length - i - 1].getEnd());
             }
 
-   console.log(aggregateBuffer[l]);
-           //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
+            console.log(aggregateBuffer[l]);
+            //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
         }
 
         console.log(globalStart);
@@ -445,6 +451,12 @@ export class Visual implements IVisual {
 
 
         return [Time.minDayjs(globalStart), Time.minDayjs(globalEnd)];
+    }
+
+    private resetAggregateBuffer(dataView: DataView): dayjs.Dayjs[][] {
+        let x: dayjs.Dayjs[][] = [];
+        for (let i = 0; i <= this.maxDepth; i++) { x[i] = []; }
+        return x;
     }
 
     /**
@@ -539,7 +551,7 @@ export class Visual implements IVisual {
      * @param node the DataViewMatrixNode to consider as the root node of the tree
      */
     private dfsPreorder(activities: Activity[], node: powerbi.DataViewMatrixNode) {
-
+        this.updateMaxDepth(node.level);
         if (node.children == null) {
             // console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
             if ((node.values[0] != null) && (node.values[1] != null)) {//every task must have a start and finish, unless the config contradicts
@@ -562,6 +574,10 @@ export class Visual implements IVisual {
                 this.dfsPreorder(activities, node.children[i]);
             }
         }
+    }
+
+    private updateMaxDepth(d: number) {
+        if (d > this.maxDepth) { this.maxDepth = d };
     }
 
     /**
