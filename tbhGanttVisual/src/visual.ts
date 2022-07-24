@@ -390,18 +390,15 @@ export class Visual implements IVisual {
         let currentLevel: number = acts[acts.length - 1].getLevel();
         let globalStart: dayjs.Dayjs[] = [];
         let globalEnd: dayjs.Dayjs[] = [];
-console.log(this.resetAggregateBuffer(dataView));
-
+        // console.log(this.resetAggregateBuffer(dataView));
 
         aggregateBuffer = this.resetAggregateBuffer(dataView);
-
         for (let i = 0; i < acts.length; i++) {
             let l: number = acts[acts.length - i - 1].getLevel();
-
             if (l < currentLevel) {// going up indents, summarise, add self to higher buffer
                 acts[acts.length - i - 1].setStart(Time.minDayjs(aggregateBuffer[l + 1]));
-                console.log(l, aggregateBuffer[l + 1]);
-                console.log(l, 'Summarise Start', Time.minDayjs(aggregateBuffer[l + 1]).format('DD/MM/YY'));
+                //console.log(l, aggregateBuffer[l + 1]);
+                //console.log(l, 'Summarise Start', Time.minDayjs(aggregateBuffer[l + 1]).format('DD/MM/YY'));
                 aggregateBuffer[l].push(acts[acts.length - i - 1].getStart());
                 currentLevel = l;
             } else if (l > currentLevel) {//going down indents, clear buffer, add self
@@ -411,23 +408,19 @@ console.log(this.resetAggregateBuffer(dataView));
                 aggregateBuffer[l].push(acts[acts.length - i - 1].getStart());
             }
             if (l == 0) {
-
-
                 globalStart.push(acts[acts.length - i - 1].getStart());
             }
-            console.log(aggregateBuffer[l]);
-
+            //console.log(aggregateBuffer[l]);
             //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
         }
 
         aggregateBuffer = this.resetAggregateBuffer(dataView);
-
         for (let i = 0; i < acts.length; i++) {
             let l: number = acts[acts.length - i - 1].getLevel();
 
             if (l < currentLevel) {// going up indents, summarise, add self to higher buffer
                 acts[acts.length - i - 1].setEnd(Time.maxDayjs(aggregateBuffer[l + 1]));
-                console.log(l, 'Summarise End', Time.maxDayjs(aggregateBuffer[l + 1]).format('DD/MM/YY'));
+                //console.log(l, 'Summarise End', Time.maxDayjs(aggregateBuffer[l + 1]).format('DD/MM/YY'));
                 aggregateBuffer[l].push(acts[acts.length - i - 1].getEnd());
                 currentLevel = l;
             } else if (l > currentLevel) {//going down indents, clear buffer, add self
@@ -436,19 +429,15 @@ console.log(this.resetAggregateBuffer(dataView));
             } else {//same indent, add to buffer
                 aggregateBuffer[l].push(acts[acts.length - i - 1].getEnd());
             }
-
             if (l == 0) {
-
                 globalEnd.push(acts[acts.length - i - 1].getEnd());
             }
-
-            console.log(aggregateBuffer[l]);
+            //console.log(aggregateBuffer[l]);
             //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
         }
 
-        console.log(globalStart);
-        console.log(globalEnd);
-
+        //console.log(globalStart);
+        //console.log(globalEnd);
 
         return [Time.minDayjs(globalStart), Time.minDayjs(globalEnd)];
     }
@@ -541,7 +530,6 @@ console.log(this.resetAggregateBuffer(dataView));
 
         return a;
     }
-
 
     /**
      * Performs a Pre-order Depth-First Search of the DataViewMatrixNode tree structure assuming a general tree structure.

@@ -792,9 +792,9 @@ class Timeline {
             }
             else if (i == (this.span_months - 1)) { //this is the last year, take the last proportion to the beginning of the year. Same todo as above
                 proportion = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInMonth */ .tp(this.d2);
-                proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(this.d2.month(), this.d1.year());
+                proportion = proportion / _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(this.d2.month(), this.d2.year());
                 if (this.verbose) {
-                    console.log('LOG: last proportion = ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInMonth */ .tp(this.d2) + '/' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(this.d2.month(), this.d1.year()) + ' = ' + proportion);
+                    console.log('LOG: last proportion = ' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysElapsedInMonth */ .tp(this.d2) + '/' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(this.d2.month(), this.d2.year()) + ' = ' + proportion);
                 }
             }
             else { //somewhere in the middle
@@ -803,11 +803,12 @@ class Timeline {
                     console.log('LOG: proportion = ' + proportion);
                 }
             }
-            result[i] = new MonthSeparator(_src_time__WEBPACK_IMPORTED_MODULE_0__.m(this.d1.month() + i), cumulativeOffset, _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(this.d1.month() + i, this.d1.year()) / 2);
+            let d = this.d1.add(i, 'month');
+            result[i] = new MonthSeparator(_src_time__WEBPACK_IMPORTED_MODULE_0__.m(d.month()), cumulativeOffset, _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(d.month() + i, d.year()) / 2);
             if (this.verbose) {
-                console.log('LOG: created new MonthSeparator(' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .month */ .iL(this.d1.month() + i) + ', ' + cumulativeOffset + ') at this.ts.monthScale[' + i + '] with dOffset ' + (_src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(this.d1.month() + i, this.d1.year()) * this.dayScale * proportion) + 'px');
+                console.log('LOG: created new MonthSeparator(' + _src_time__WEBPACK_IMPORTED_MODULE_0__/* .month */ .iL(d.month()) + ', ' + cumulativeOffset + ') at this.ts.monthScale[' + i + '] with dOffset ' + (_src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(d.month() + i, d.year()) * this.dayScale * proportion) + 'px');
             }
-            cumulativeOffset += _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(this.d1.month() + i, this.d1.year()) * this.dayScale * proportion;
+            cumulativeOffset += _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(d.month(), d.year()) * this.dayScale * proportion;
         }
         //check small month dimension
         if (result[1].offset < (0.75 * this.dayScale * _src_time__WEBPACK_IMPORTED_MODULE_0__/* .daysInMonth */ .Km(this.d1.month() + 1, this.d1.year()))) {
@@ -1166,14 +1167,14 @@ class Visual {
         let currentLevel = acts[acts.length - 1].getLevel();
         let globalStart = [];
         let globalEnd = [];
-        console.log(this.resetAggregateBuffer(dataView));
+        // console.log(this.resetAggregateBuffer(dataView));
         aggregateBuffer = this.resetAggregateBuffer(dataView);
         for (let i = 0; i < acts.length; i++) {
             let l = acts[acts.length - i - 1].getLevel();
             if (l < currentLevel) { // going up indents, summarise, add self to higher buffer
                 acts[acts.length - i - 1].setStart(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA(aggregateBuffer[l + 1]));
-                console.log(l, aggregateBuffer[l + 1]);
-                console.log(l, 'Summarise Start', _src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA(aggregateBuffer[l + 1]).format('DD/MM/YY'));
+                //console.log(l, aggregateBuffer[l + 1]);
+                //console.log(l, 'Summarise Start', Time.minDayjs(aggregateBuffer[l + 1]).format('DD/MM/YY'));
                 aggregateBuffer[l].push(acts[acts.length - i - 1].getStart());
                 currentLevel = l;
             }
@@ -1187,7 +1188,7 @@ class Visual {
             if (l == 0) {
                 globalStart.push(acts[acts.length - i - 1].getStart());
             }
-            console.log(aggregateBuffer[l]);
+            //console.log(aggregateBuffer[l]);
             //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
         }
         aggregateBuffer = this.resetAggregateBuffer(dataView);
@@ -1195,7 +1196,7 @@ class Visual {
             let l = acts[acts.length - i - 1].getLevel();
             if (l < currentLevel) { // going up indents, summarise, add self to higher buffer
                 acts[acts.length - i - 1].setEnd(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .maxDayjs */ .AY(aggregateBuffer[l + 1]));
-                console.log(l, 'Summarise End', _src_time__WEBPACK_IMPORTED_MODULE_1__/* .maxDayjs */ .AY(aggregateBuffer[l + 1]).format('DD/MM/YY'));
+                //console.log(l, 'Summarise End', Time.maxDayjs(aggregateBuffer[l + 1]).format('DD/MM/YY'));
                 aggregateBuffer[l].push(acts[acts.length - i - 1].getEnd());
                 currentLevel = l;
             }
@@ -1209,11 +1210,11 @@ class Visual {
             if (l == 0) {
                 globalEnd.push(acts[acts.length - i - 1].getEnd());
             }
-            console.log(aggregateBuffer[l]);
+            //console.log(aggregateBuffer[l]);
             //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
         }
-        console.log(globalStart);
-        console.log(globalEnd);
+        //console.log(globalStart);
+        //console.log(globalEnd);
         return [_src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA(globalStart), _src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA(globalEnd)];
     }
     resetAggregateBuffer(dataView) {

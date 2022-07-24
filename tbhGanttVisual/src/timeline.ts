@@ -255,8 +255,8 @@ export class Timeline {
             } else if (i == (this.span_months - 1)) { //this is the last year, take the last proportion to the beginning of the year. Same todo as above
 
                 proportion = Time.daysElapsedInMonth(this.d2);
-                proportion = proportion / Time.daysInMonth(this.d2.month(), this.d1.year());
-                if (this.verbose) { console.log('LOG: last proportion = ' + Time.daysElapsedInMonth(this.d2) + '/' + Time.daysInMonth(this.d2.month(), this.d1.year()) + ' = ' + proportion); }
+                proportion = proportion / Time.daysInMonth(this.d2.month(), this.d2.year());
+                if (this.verbose) { console.log('LOG: last proportion = ' + Time.daysElapsedInMonth(this.d2) + '/' + Time.daysInMonth(this.d2.month(), this.d2.year()) + ' = ' + proportion); }
 
             } else { //somewhere in the middle
 
@@ -265,14 +265,17 @@ export class Timeline {
 
             }
 
-            result[i] = new MonthSeparator(
-                Time.m(this.d1.month() + i),
-                cumulativeOffset,
-                Time.daysInMonth(this.d1.month() + i, this.d1.year()) / 2
-            );
-            if (this.verbose) { console.log('LOG: created new MonthSeparator(' + Time.month(this.d1.month() + i) + ', ' + cumulativeOffset + ') at this.ts.monthScale[' + i + '] with dOffset ' + (Time.daysInMonth(this.d1.month() + i, this.d1.year()) * this.dayScale * proportion) + 'px'); }
+            let d: dayjs.Dayjs = this.d1.add(i,'month');
 
-            cumulativeOffset += Time.daysInMonth(this.d1.month() + i, this.d1.year()) * this.dayScale * proportion;
+            result[i] = new MonthSeparator(
+                Time.m(d.month()),
+                cumulativeOffset,
+                Time.daysInMonth(d.month() + i, d.year()) / 2
+            );
+            if (this.verbose) { console.log('LOG: created new MonthSeparator(' + Time.month(d.month()) + ', ' + cumulativeOffset + ') at this.ts.monthScale[' + i + '] with dOffset ' + (Time.daysInMonth(d.month() + i, d.year()) * this.dayScale * proportion) + 'px'); }
+
+           
+            cumulativeOffset += Time.daysInMonth(d.month(), d.year()) * this.dayScale * proportion;
         }
 
         //check small month dimension
