@@ -32,6 +32,7 @@ export declare class Visual implements IVisual {
     private gMonths;
     private gYears;
     constructor(options: VisualConstructorOptions);
+    private setDefaultTimelineParams;
     update(options: VisualUpdateOptions): void;
     private generateBody;
     /**
@@ -85,17 +86,17 @@ export declare class Visual implements IVisual {
     private drawChart;
     private drawTable;
     /**
-     * Synchronises the left scrolling of the div-timeline and div-chart depending on which one was scrolled.
+     * Synchronises the left scrolling of the div-timeline and div-ganttChart depending on which one was scrolled.
      *
-     * KNOWN ISSUE: since the event listener that fires this callback is on both div-timeline and div-chart,
+     * KNOWN ISSUE: since the event listener that fires this callback is on both div-timeline and div-ganttChart,
      * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
      * @param div the div that was scrolled by the user.
      */
     private syncScrollTimelineLeft;
     /**
-    * Synchronises the top scrolling of the div-timeline and div-chart depending on which one was scrolled.
+    * Synchronises the top scrolling of the div-activityTable and div-ganttChart depending on which one was scrolled.
     *
-    * KNOWN BUG: since the event listener that fires this callback is on both div-timeline and div-chart,
+    * KNOWN BUG: since the event listener that fires this callback is on both div-activityTable and div-ganttChart,
     * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
     *
     * KNOWN BUG: scrolling near scrollTop = 0 and scrollTop = max slows down the scroll per mousewheel tick.

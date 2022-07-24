@@ -73,9 +73,12 @@ export class Timeline {
     ////////////////////////////////////////////////////////////////
 
     constructor(start: dayjs.Dayjs, end: dayjs.Dayjs, status: dayjs.Dayjs) {
-
         if (this.verbose) { console.log('LOG: Constructing Timeline Object'); }
+        this.defineTimeline(start, end, status);
+    }
 
+
+    public defineTimeline(start: dayjs.Dayjs, end: dayjs.Dayjs, status: dayjs.Dayjs) {
         //check which date is larger and round to nearest day
         if (start > end) {
             this.d1 = end.startOf('d');
@@ -121,7 +124,7 @@ export class Timeline {
         this.ts.yearScale = this.generateYears();
         this.ts.monthScale = this.generateMonths();
     }
-
+    
     ////////////////////////////////////////////////////////////////
     //  Timeline Manipulation Functions
     ////////////////////////////////////////////////////////////////
@@ -136,8 +139,8 @@ export class Timeline {
         this.updateScaleFactors()
     }
 
-    public setDayScaleByContainerWidth(containerWidth: number){
-        
+    public setDayScaleByContainerWidth(containerWidth: number) {
+
     }
 
     ////////////////////////////////////////////////////////////////

@@ -32,6 +32,7 @@ export declare class Timeline {
     private yearPadding;
     private monthPadding;
     constructor(start: dayjs.Dayjs, end: dayjs.Dayjs, status: dayjs.Dayjs);
+    defineTimeline(start: dayjs.Dayjs, end: dayjs.Dayjs, status: dayjs.Dayjs): void;
     /**
      * Not yet implemented
      * @param daysPerPixel the desired scale factor

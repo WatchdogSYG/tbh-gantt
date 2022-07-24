@@ -1,22 +1,22 @@
 //TODO
 
 /**
- * Handle more fields than roles
+ * Handle when more fields than roles
  * 
  */
 
-
+import * as dayjs from "dayjs";
 import powerbi from "powerbi-visuals-api";
 
 export class Configuration {
 
     private verbose = false;
+
     private bool_start: boolean; //start      
     private bool_end: boolean; //end        
     private bool_isMilestone: boolean; //isMilestone
     private bool_isCritical: boolean; //isCritical 
     private bool_statusDate: boolean; //statusDate 
-
 
     constructor() {
         this.bool_start = false;
@@ -36,7 +36,6 @@ export class Configuration {
                 case ValueFields.STATUSDATE: this.bool_statusDate = set; break;
             }
         }
-
         switch (field) {
             case ValueFields.START: return this.bool_start;
             case ValueFields.END: return this.bool_end;
@@ -59,18 +58,21 @@ export class Configuration {
             if (vs[valueSourceIndex].roles[r[i]] == true) {
                 this.field(r[i], true);
                 valueSourceIndex++;
+            } else {
+                this.field(r[i], false);//must explicitly set in case a field is removed
             }
             //this.logConfig();
         }
 
         return this;
     }
+
     public printConfig(): string {
-        return 'START       = ' + this.bool_start + '\n' +
-            'FINISH      = ' + this.bool_end + '\n' +
-            'ISMILESTONE = ' + this.bool_isMilestone + '\n' +
-            'ISCRITICAL  = ' + this.bool_isCritical + '\n' +
-            'STATUSDATE  = ' + this.bool_statusDate;
+        return ValueFields.START + this.bool_start + '\n' +
+            ValueFields.END + this.bool_end + '\n' +
+            ValueFields.ISMILESTONE + this.bool_isMilestone + '\n' +
+            ValueFields.ISCRITICAL + this.bool_isCritical + '\n' +
+            ValueFields.STATUSDATE + this.bool_statusDate;
     }
 
     public logConfig() {
@@ -93,6 +95,14 @@ export class Configuration {
         }
         return false;
     }
+
+    public startFilter(start: dayjs.Dayjs): dayjs.Dayjs {
+        if (this.bool_start) { return start; }
+    }
+
+    public endFilter(end: dayjs.Dayjs): dayjs.Dayjs {
+        if (this.bool_end) { return end; }
+    }
 }
 
 export enum ValueFields {
@@ -102,7 +112,6 @@ export enum ValueFields {
     ISCRITICAL = 'IsCritical',
     STATUSDATE = 'StatusDate'
 }
-
 
 /**
  * 1

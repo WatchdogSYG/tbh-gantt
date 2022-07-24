@@ -4,7 +4,7 @@
 
     :root {
         --rowHeight: 20px;
-        --timelineHeight: 60px;
+        --timelineHeight: 50px;
 
         //the horizontal portion of the container that should be 
         //taken up by the gantt chart
@@ -142,13 +142,17 @@
     .div-content-header {
         height: fit-content;
         width: fit-content;
+        min-width: 100%;
         flex-shrink: 0;
+
+        border-bottom: 1px solid black;
     }
 
     .div-content-body {
         // explantion of min height
         //https://stackoverflow.com/questions/36230944/prevent-flex-items-from-overflowing-a-container
         min-height: 0px;
+        min-width: 100%;
         flex-grow: 1;
 
         overflow: scroll;
@@ -166,19 +170,13 @@
         flex-direction: column;
     }
 
-
-
     #div-chart::-webkit-scrollbar {
         height: 20px;
     }
 
     #div-timeline {
-        height: 100%;
-
-        border-bottom: 1px gray;
-        width: 75%;
+        max-width: 100%;
         overflow-x: scroll;
-        overflow-y: clip;
     }
 
     #div-timeline::-webkit-scrollbar {

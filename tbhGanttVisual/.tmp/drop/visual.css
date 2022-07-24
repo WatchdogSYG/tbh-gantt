@@ -1,6 +1,6 @@
 :root {
   --rowHeight: 20px;
-  --timelineHeight: 60px;
+  --timelineHeight: 50px;
   --chartPortionPct: 75%;
   --chartPortionFr: 75fr;
   --tbh-blue-background: #232d40;
@@ -77,10 +77,13 @@ div {
 .div-content-header {
   height: fit-content;
   width: fit-content;
+  min-width: 100%;
   flex-shrink: 0;
+  border-bottom: 1px solid black;
 }
 .div-content-body {
   min-height: 0px;
+  min-width: 100%;
   flex-grow: 1;
   overflow: scroll;
 }
@@ -96,11 +99,8 @@ div {
   height: 20px;
 }
 #div-timeline {
-  height: 100%;
-  border-bottom: 1px gray;
-  width: 75%;
+  max-width: 100%;
   overflow-x: scroll;
-  overflow-y: clip;
 }
 #div-timeline::-webkit-scrollbar {
   height: 0px;

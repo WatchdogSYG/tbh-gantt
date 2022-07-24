@@ -33,6 +33,9 @@
 //
 //tell the user if key fields are not valid
 //
+//dont draw the first year or month separator line if it is up against the table-chart separator
+//
+//lock scrolling to discrete steps (row height)
 //
 //
 //
@@ -48,10 +51,6 @@
 //
 //
 //
-//
-//
-//
-
 
 'use strict';
 
@@ -170,9 +169,21 @@ export class Visual implements IVisual {
         //         new_p.appendChild(new_em);
         //         this.target.appendChild(new_p);
         //      }
+        this.setDefaultTimelineParams();
 
         this.generateBody(options);
+
+
         this.configuration = new Configuration();
+
+    }
+
+    private setDefaultTimelineParams() {
+        let now: dayjs.Dayjs = dayjs(new Date());
+
+        this.start = now.startOf('year');
+        this.end = now.endOf('year');
+        this.status = now;
     }
 
     ////////////////////////////////////////////////////////////////
@@ -180,9 +191,10 @@ export class Visual implements IVisual {
     ////////////////////////////////////////////////////////////////
 
     public update(options: VisualUpdateOptions) {
+
         //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
         if (this.verbose) { console.log('Visual update()', options); }
-
+        console.log('Visual update()', options);
         //CSS NOT WORKING, THIS IS A WORKAROUND
         //TODO FIX
         // this.divContent.style('height', Lib.px(document.body.clientHeight - Lib.pxToNumber(this.style.getPropertyValue('--headerHeight'))));
@@ -195,9 +207,14 @@ export class Visual implements IVisual {
         this.status = dayjs(new Date(2019, 6, 19));
         let acts: Activity[] = this.checkConfiguration(dataView);
         let ts: TimeScale = this.drawTimeline(acts);
-        
+
+        this.configuration.logConfig();
         if (this.configuration.field(ValueFields.START) && this.configuration.field(ValueFields.END)) {
             this.drawChart(acts, ts, this.timelineSVG);
+            console.log('not null');
+        } else {
+            console.log('nuill');
+            this.divChartBody.html(null);
         }
         this.drawTable(acts);
 
@@ -263,14 +280,40 @@ export class Visual implements IVisual {
 
         this.divChartHeader = this.divChartContainer
             .append('div')
-            .classed('div-content-header', true);
+            .attr('id', 'div-timeline')
+            .classed('div-content-header', true)
+            .on('scroll', function () { _this.syncScrollTimelineLeft('div-timeline', false) })
+            .on('wheel', function () { _this.syncScrollTimelineLeft('div-timeline', true) });
 
         this.divChartBody = this.divChartContainer
             .append('div')
             .classed('div-content-body', true)
             .attr('id', 'div-ganttChart')
-            .on('scroll', function (d) { _this.syncScrollTimelineTop('div-ganttChart', false); })
-            .on('wheel', function () { _this.syncScrollTimelineTop('div-ganttChart', true); });
+            .on('scroll', function () { _this.syncScrollTimelineTop('div-ganttChart', false); })
+            .on('wheel', function () { _this.syncScrollTimelineTop('div-ganttChart', true); })
+            .on('scroll', function () { _this.syncScrollTimelineLeft('div-ganttChart', false); })
+            .on('wheel', function () { _this.syncScrollTimelineLeft('div-ganttChart', true); });
+
+        ////////////////////////////////////////////////////////////////
+        //  Create svg timeline
+        ////////////////////////////////////////////////////////////////
+
+        this.timeline = new Timeline(this.start, this.end, this.status);
+
+        this.tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale());//cannot be less than div width!
+        this.tlHeight = Lib.pxToNumber(this.style.getPropertyValue('--timelineHeight'));
+        this.rowHeight = Lib.pxToNumber(this.style.getPropertyValue('--rowHeight'));
+
+        this.timelineSVG = this.divChartHeader
+            .append('svg')
+            .attr('height', Lib.px(this.tlHeight))
+            .attr('width', Lib.px(this.tlWidth));
+
+        this.gMonths = this.timelineSVG.append('g')
+            .classed('g-tl', true);
+
+        this.gYears = this.timelineSVG.append('g')
+            .classed('g-tl', true);
     }
 
     /**
@@ -286,28 +329,33 @@ export class Visual implements IVisual {
             console.log('LOG: number of heirachy levels: ' + dataView.matrix.rows.levels.length);
         }
 
-        console.log('LOG: number of valuesource items: ' + dataView.matrix.valueSources.length);
-
         this.configuration.checkRoles(dataView.matrix.valueSources);
-        this.configuration.logConfig();
+        //this.configuration.logConfig();
 
         //check verbose
-        console.log(dataView.matrix.rows.root);
+        console.log('dataView.matrix.rows.root', dataView.matrix.rows.root);
+        console.log('a');
 
         let acts: Activity[] = [];
-        let dt: dayjs.Dayjs[];
-
+        console.log('a');
         this.dfsPreorder(acts, dataView.matrix.rows.root.children[0]);
+        console.log('a');
+        if (this.configuration.field(ValueFields.START) && this.configuration.field(ValueFields.END)) {
+            let dt: dayjs.Dayjs[] = this.summariseDates(acts);
+            console.log('b');
+            this.start = dt[0];
+            this.end = dt[1];
+        } else {
+            this.setDefaultTimelineParams();
+            console.log('c');
+        }
 
-        dt = this.summariseDates(acts);
-        this.start = dt[0];
-        this.end = dt[1];
-
+        console.log('a');
         acts = this.trimHeirarchy(acts);
-
-        console.log(acts);
+        console.log('a');
+        console.log('Activity array', acts);
         console.log('LOG: DONE Checking Configuration');
-
+        console.log('a');
         return acts;
     }
 
@@ -459,11 +507,11 @@ export class Visual implements IVisual {
 
         if (node.children == null) {
             // console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
-            if ((node.values[0] != null) && (node.values[1] != null)) {//every task must have a start and finish
+            if ((node.values[0] != null) && (node.values[1] != null)) {//every task must have a start and finish, unless the config contradicts
                 activities.push(new Activity(
                     this.nodeName(node),
-                    dayjs(node.values[0].value as Date),
-                    dayjs(node.values[1].value as Date),
+                    this.configuration.startFilter(dayjs(node.values[0].value as Date)),
+                    this.configuration.endFilter(dayjs(node.values[1].value as Date)),
                     node.level));
             }
         } else {
@@ -497,28 +545,16 @@ export class Visual implements IVisual {
     private drawTimeline(acts: Activity[]): TimeScale {
         console.log('LOG: Drawing Timeline');
 
-        this.timeline = new Timeline(this.start, this.end, this.status);
+        this.timeline.defineTimeline(this.start, this.end, this.status);
 
+        //todo reduce duplicate code vvv
         this.tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale());//cannot be less than div width!
-        this.tlHeight = Lib.pxToNumber(this.style.getPropertyValue('--timelineHeight'));
-        this.rowHeight = Lib.pxToNumber(this.style.getPropertyValue('--rowHeight'));
 
         let ts: TimeScale = this.timeline.getTimeScale();
 
-        ////////////////////////////////////////////////////////////////
-        //  Create svg timeline
-        ////////////////////////////////////////////////////////////////
-
-        this.timelineSVG = this.divChartHeader
-            .append('svg')
+        this.timelineSVG
             .attr('height', Lib.px(this.tlHeight))
             .attr('width', Lib.px(this.tlWidth));
-
-        this.gMonths = this.timelineSVG.append('g')
-            .classed('g-tl', true);
-
-        this.gYears = this.timelineSVG.append('g')
-            .classed('g-tl', true);
 
         //////////////////////////////////////////////////////////////// YearText
         this.gYears.selectAll('text')
@@ -570,13 +606,6 @@ export class Visual implements IVisual {
             .attr('y2', this.tlHeight)
             .attr('style', 'stroke:red');
 
-        this.timelineSVG
-            .append('line')
-            .attr('x1', '0px')
-            .attr('y1', this.tlHeight)
-            .attr('x2', this.tlWidth)
-            .attr('y2', this.tlHeight)
-            .attr('style', 'stroke:black');
 
         console.log('LOG: DONE Drawing Timeline');
         return ts;
@@ -764,13 +793,13 @@ export class Visual implements IVisual {
     // }
 
     /**
-     * Synchronises the left scrolling of the div-timeline and div-chart depending on which one was scrolled.
+     * Synchronises the left scrolling of the div-timeline and div-ganttChart depending on which one was scrolled.
      * 
-     * KNOWN ISSUE: since the event listener that fires this callback is on both div-timeline and div-chart, 
+     * KNOWN ISSUE: since the event listener that fires this callback is on both div-timeline and div-ganttChart, 
      * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
      * @param div the div that was scrolled by the user.
      */
-    private syncScrollTimelineLeft(div: Selection<HTMLDivElement>) {
+    private syncScrollTimelineLeft(scrollID: string, wheel: boolean) {
         //links i used to understand ts callbacks, d3 event handling
         //https://hstefanski.wordpress.com/2015/10/25/responding-to-d3-events-in-typescript/
         //https://rollbar.com/blog/javascript-typeerror-cannot-read-property-of-undefined/
@@ -781,11 +810,10 @@ export class Visual implements IVisual {
 
         if (this.verbose) { console.log('Synchronising scroll...'); }
 
-        let id: string = div.attr('id');//d3.select(d3.event.currentTarget)
-        let chartID: string = 'div-chart';
+        let chartID: string = 'div-ganttChart';
         let timelineID: string = 'div-timeline';
 
-        switch (id) {
+        switch (scrollID) {
             case chartID:
                 document.getElementById(timelineID).scrollLeft = document.getElementById(chartID).scrollLeft;
                 if (this.verbose) { console.log('LOG: Sync timeline scroll to chart scroll'); };
@@ -797,9 +825,9 @@ export class Visual implements IVisual {
     }
 
     /**
-    * Synchronises the top scrolling of the div-timeline and div-chart depending on which one was scrolled.
+    * Synchronises the top scrolling of the div-activityTable and div-ganttChart depending on which one was scrolled.
     * 
-    * KNOWN BUG: since the event listener that fires this callback is on both div-timeline and div-chart, 
+    * KNOWN BUG: since the event listener that fires this callback is on both div-activityTable and div-ganttChart, 
     * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
     * 
     * KNOWN BUG: scrolling near scrollTop = 0 and scrollTop = max slows down the scroll per mousewheel tick.

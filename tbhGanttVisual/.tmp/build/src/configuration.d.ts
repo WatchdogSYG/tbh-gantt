@@ -1,7 +1,8 @@
 /**
- * Handle more fields than roles
+ * Handle when more fields than roles
  *
  */
+import * as dayjs from "dayjs";
 import powerbi from "powerbi-visuals-api";
 export declare class Configuration {
     private verbose;
@@ -17,6 +18,8 @@ export declare class Configuration {
     logConfig(): void;
     valueRoles(): ValueFields[];
     drawGraph(): boolean;
+    startFilter(start: dayjs.Dayjs): dayjs.Dayjs;
+    endFilter(end: dayjs.Dayjs): dayjs.Dayjs;
 }
 export declare enum ValueFields {
     START = "Start",
