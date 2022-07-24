@@ -130,7 +130,7 @@ export class Visual implements IVisual {
     private bars: Selection<SVGSVGElement>;
 
     ////////////////DEV VARS\\\\\\\\\\\\\\\\
-    private verbose: boolean = false; //verbose logging
+    private verbose: boolean = true; //verbose logging
 
     private style: CSSStyleDeclaration;//should be a CSSStyleDeclaration
 
@@ -184,43 +184,6 @@ export class Visual implements IVisual {
         this.start = now.startOf('year');
         this.end = now.endOf('year');
         this.status = now;
-    }
-
-    ////////////////////////////////////////////////////////////////
-    //  UPDATE VISUAL ON REFRESH
-    ////////////////////////////////////////////////////////////////
-
-    public update(options: VisualUpdateOptions) {
-
-        //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
-        if (this.verbose) { console.log('Visual update()', options); }
-        console.log('Visual update()', options);
-        //CSS NOT WORKING, THIS IS A WORKAROUND
-        //TODO FIX
-        // this.divContent.style('height', Lib.px(document.body.clientHeight - Lib.pxToNumber(this.style.getPropertyValue('--headerHeight'))));
-
-        let dataView: DataView = options.dataViews[0];
-        //options.dataViews[0].metadata.columns.entries
-
-        //generatetimeline with default dates
-
-        this.status = dayjs(new Date(2019, 6, 19));
-        let acts: Activity[] = this.checkConfiguration(dataView);
-        let ts: TimeScale = this.drawTimeline();
-
-        this.configuration.logConfig();
-        if (this.configuration.field(ValueFields.START) && this.configuration.field(ValueFields.END)) {
-            this.drawChart(acts, ts, this.timelineSVG);
-            console.log('not null');
-        } else {
-            console.log('nuill');
-            this.divChartBody.html(null);
-        }
-        this.drawTable(acts);
-
-        // let ops : EnumerateVisualObjectInstancesOptions = new EnumerateVisualObjectInstancesOptions('subTotals')
-        // let o: VisualObjectInstanceEnumeration = this.enumerateObjectInstances(EnumerateVisualObjectInstancesOptions);
-
     }
 
     private generateBody(options: VisualConstructorOptions) {
@@ -320,6 +283,58 @@ export class Visual implements IVisual {
             .append('g')
             .append('svg')
             .attr('id', 'svg-bars');
+
+        ////////////////////////////////////////////////////////////////
+        //  Create activities table
+        ////////////////////////////////////////////////////////////////
+
+        this.divActivityHeader
+            .append('table')
+            .attr('id', 'table-activityHeader')
+            .append('tr')
+            .attr('class', 'highlight');
+
+        this.divActivityBody
+            .append('table')
+            .attr('id', 'table-activities');
+    }
+
+
+    ////////////////////////////////////////////////////////////////
+    //  UPDATE VISUAL ON REFRESH
+    ////////////////////////////////////////////////////////////////
+
+    public update(options: VisualUpdateOptions) {
+
+        //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
+        if (this.verbose) { console.log('Visual update()', options); }
+        console.log('Visual update()', options);
+        //CSS NOT WORKING, THIS IS A WORKAROUND
+        //TODO FIX
+        // this.divContent.style('height', Lib.px(document.body.clientHeight - Lib.pxToNumber(this.style.getPropertyValue('--headerHeight'))));
+
+        let dataView: DataView = options.dataViews[0];
+        //options.dataViews[0].metadata.columns.entries
+
+        //generatetimeline with default dates
+
+        this.status = dayjs(new Date(2019, 6, 19));
+        let acts: Activity[] = this.checkConfiguration(dataView);
+        let ts: TimeScale = this.drawTimeline();
+
+        this.configuration.logConfig();
+        if (this.configuration.field(ValueFields.START) && this.configuration.field(ValueFields.END)) {
+            this.drawChart(acts, ts, this.timelineSVG);
+            console.log('not null');
+        } else {
+            console.log('nuill');
+            this.divChartBody.html(null);
+        }
+        this.drawTable(acts);
+
+        // let ops : EnumerateVisualObjectInstancesOptions = new EnumerateVisualObjectInstancesOptions('subTotals')
+        // let o: VisualObjectInstanceEnumeration = this.enumerateObjectInstances(EnumerateVisualObjectInstancesOptions);
+
     }
 
     /**
@@ -708,26 +723,21 @@ export class Visual implements IVisual {
         console.log('LOG: Drawing Table');
         if (this.verbose) { console.log('LOG: populateActivityTable called with some number of rows.'); }
 
-        this.divActivityHeader
-            .append('table')
-            .attr('id', 'table-activityHeader')
-            .append('th')
-            .attr('class', 'highlight');
+        var s = ['1', '2', '3', '4'];
+        this.divActivityHeader.select('tr').selectAll('th').data(s).join('th').text(d => d);
 
         //create the number of trs required.
-        let tr: Selection<HTMLTableRowElement> = this.divActivityBody
-            .append('table')
-            .attr('id', 'table-activities')
+        this.divActivityBody
+            .select('table')
             .selectAll('tr')
             .data(acts)
-            .enter()
-            .append('tr')
+            .join('tr')
             .classed('tr-activity', true);
 
-        let td: Selection<HTMLTableCellElement> = tr.selectAll('.td-name')//select all tds, there are 0
-            .data(function (d) { return [d.getTableText()[0]]; })//THIS DATA COMES FROM THE TR's _data_ PROPERTY
-            .enter()
-            .append('td')
+        var td = this.divActivityBody.selectAll('.tr-activity')
+        .selectAll('.td-name')//select all tds, there are 0
+            .data(function (d: Activity) { return [d.getTableText()[0]]; })//THIS DATA COMES FROM THE TR's _data_ PROPERTY
+            .join('td')
             .classed('td-name', true)
             .text(function (d) { return d; });
 
@@ -836,11 +846,11 @@ export class Visual implements IVisual {
         switch (scrollID) {
             case chartID:
                 document.getElementById(activityTableID).scrollTop = document.getElementById(chartID).scrollTop;
-                if (this.verbose) { console.log('LOG: Sync timeline scroll to chart scroll'); };
+                if (this.verbose) { console.log('LOG: Sync timeline scroll to chart scroll = ', document.getElementById(activityTableID).scrollTop); };
 
             case activityTableID:
                 document.getElementById(chartID).scrollTop = document.getElementById(activityTableID).scrollTop;
-                if (this.verbose) { console.log('LOG: Sync chart scroll to timeline scroll'); };
+                if (this.verbose) { console.log('LOG: Sync chart scroll to avtivityTable scroll = ', document.getElementById(chartID).scrollTop); };
         }
 
 

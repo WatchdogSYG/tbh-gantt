@@ -186,7 +186,7 @@ td {
   background: #c8c8c8;
 }
 #div-activityTable::-webkit-scrollbar {
-  width: 0px;
+  width: 10px;
 }
 /* ------- DEBUG ------- */
 .highlight {

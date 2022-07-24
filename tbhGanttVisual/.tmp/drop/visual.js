@@ -964,7 +964,7 @@ class Visual {
     ////////////////////////////////////////////////////////////////
     constructor(options) {
         ////////////////DEV VARS\\\\\\\\\\\\\\\\
-        this.verbose = false; //verbose logging
+        this.verbose = true; //verbose logging
         if (this.verbose) {
             console.log('LOG: Constructing Visual Object', options);
         }
@@ -993,37 +993,6 @@ class Visual {
         this.start = now.startOf('year');
         this.end = now.endOf('year');
         this.status = now;
-    }
-    ////////////////////////////////////////////////////////////////
-    //  UPDATE VISUAL ON REFRESH
-    ////////////////////////////////////////////////////////////////
-    update(options) {
-        //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
-        if (this.verbose) {
-            console.log('Visual update()', options);
-        }
-        console.log('Visual update()', options);
-        //CSS NOT WORKING, THIS IS A WORKAROUND
-        //TODO FIX
-        // this.divContent.style('height', Lib.px(document.body.clientHeight - Lib.pxToNumber(this.style.getPropertyValue('--headerHeight'))));
-        let dataView = options.dataViews[0];
-        //options.dataViews[0].metadata.columns.entries
-        //generatetimeline with default dates
-        this.status = dayjs__WEBPACK_IMPORTED_MODULE_4__(new Date(2019, 6, 19));
-        let acts = this.checkConfiguration(dataView);
-        let ts = this.drawTimeline();
-        this.configuration.logConfig();
-        if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_3__/* .ValueFields.START */ .$.START) && this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_3__/* .ValueFields.END */ .$.END)) {
-            this.drawChart(acts, ts, this.timelineSVG);
-            console.log('not null');
-        }
-        else {
-            console.log('nuill');
-            this.divChartBody.html(null);
-        }
-        this.drawTable(acts);
-        // let ops : EnumerateVisualObjectInstancesOptions = new EnumerateVisualObjectInstancesOptions('subTotals')
-        // let o: VisualObjectInstanceEnumeration = this.enumerateObjectInstances(EnumerateVisualObjectInstancesOptions);
     }
     generateBody(options) {
         ////////////////////////////////////////////////////////////////
@@ -1101,6 +1070,48 @@ class Visual {
             .append('g')
             .append('svg')
             .attr('id', 'svg-bars');
+        ////////////////////////////////////////////////////////////////
+        //  Create activities table
+        ////////////////////////////////////////////////////////////////
+        this.divActivityHeader
+            .append('table')
+            .attr('id', 'table-activityHeader')
+            .append('tr')
+            .attr('class', 'highlight');
+        this.divActivityBody
+            .append('table')
+            .attr('id', 'table-activities');
+    }
+    ////////////////////////////////////////////////////////////////
+    //  UPDATE VISUAL ON REFRESH
+    ////////////////////////////////////////////////////////////////
+    update(options) {
+        //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
+        if (this.verbose) {
+            console.log('Visual update()', options);
+        }
+        console.log('Visual update()', options);
+        //CSS NOT WORKING, THIS IS A WORKAROUND
+        //TODO FIX
+        // this.divContent.style('height', Lib.px(document.body.clientHeight - Lib.pxToNumber(this.style.getPropertyValue('--headerHeight'))));
+        let dataView = options.dataViews[0];
+        //options.dataViews[0].metadata.columns.entries
+        //generatetimeline with default dates
+        this.status = dayjs__WEBPACK_IMPORTED_MODULE_4__(new Date(2019, 6, 19));
+        let acts = this.checkConfiguration(dataView);
+        let ts = this.drawTimeline();
+        this.configuration.logConfig();
+        if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_3__/* .ValueFields.START */ .$.START) && this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_3__/* .ValueFields.END */ .$.END)) {
+            this.drawChart(acts, ts, this.timelineSVG);
+            console.log('not null');
+        }
+        else {
+            console.log('nuill');
+            this.divChartBody.html(null);
+        }
+        this.drawTable(acts);
+        // let ops : EnumerateVisualObjectInstancesOptions = new EnumerateVisualObjectInstancesOptions('subTotals')
+        // let o: VisualObjectInstanceEnumeration = this.enumerateObjectInstances(EnumerateVisualObjectInstancesOptions);
     }
     /**
      * Returns the configuration of the desired graph to determine which elements to render based on the data in dataView.
@@ -1428,24 +1439,19 @@ class Visual {
         if (this.verbose) {
             console.log('LOG: populateActivityTable called with some number of rows.');
         }
-        this.divActivityHeader
-            .append('table')
-            .attr('id', 'table-activityHeader')
-            .append('th')
-            .attr('class', 'highlight');
+        var s = ['1', '2', '3', '4'];
+        this.divActivityHeader.select('tr').selectAll('th').data(s).join('th').text(d => d);
         //create the number of trs required.
-        let tr = this.divActivityBody
-            .append('table')
-            .attr('id', 'table-activities')
+        this.divActivityBody
+            .select('table')
             .selectAll('tr')
             .data(acts)
-            .enter()
-            .append('tr')
+            .join('tr')
             .classed('tr-activity', true);
-        let td = tr.selectAll('.td-name') //select all tds, there are 0
+        var td = this.divActivityBody.selectAll('.tr-activity')
+            .selectAll('.td-name') //select all tds, there are 0
             .data(function (d) { return [d.getTableText()[0]]; }) //THIS DATA COMES FROM THE TR's _data_ PROPERTY
-            .enter()
-            .append('td')
+            .join('td')
             .classed('td-name', true)
             .text(function (d) { return d; });
         //this is a workaround since I couldnt get d3.data(acts).classed(function (d) { return d.getLevel().toString();}) working due to an error
@@ -1545,13 +1551,13 @@ class Visual {
             case chartID:
                 document.getElementById(activityTableID).scrollTop = document.getElementById(chartID).scrollTop;
                 if (this.verbose) {
-                    console.log('LOG: Sync timeline scroll to chart scroll');
+                    console.log('LOG: Sync timeline scroll to chart scroll = ', document.getElementById(activityTableID).scrollTop);
                 }
                 ;
             case activityTableID:
                 document.getElementById(chartID).scrollTop = document.getElementById(activityTableID).scrollTop;
                 if (this.verbose) {
-                    console.log('LOG: Sync chart scroll to timeline scroll');
+                    console.log('LOG: Sync chart scroll to avtivityTable scroll = ', document.getElementById(chartID).scrollTop);
                 }
                 ;
         }

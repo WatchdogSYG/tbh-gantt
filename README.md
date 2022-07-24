@@ -120,6 +120,13 @@ New div layout:
 
 ![New div layout](readme-assets/013-blockout2.jpg)
 
+The `enter().append()` method chain can be replaced by `join()` to handle updating without replacement or duplicatio of elements. Details below.
+
+https://programmer.group/the-concept-of-enter-exit-and-update-in-d3.html#:~:text=d3%20is%20based%20on%20the,or%20less%20elements%20than%20data.
+https://observablehq.com/@d3/selection-join
+https://observablehq.com/@d3/general-update-pattern
+https://stackoverflow.com/questions/14422198/how-do-i-remove-all-children-elements-from-a-node-and-then-apply-them-again-with
+
 ## Requirements Definition
 
 ### Primary

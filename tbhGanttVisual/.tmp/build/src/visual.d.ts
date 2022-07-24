@@ -37,8 +37,8 @@ export declare class Visual implements IVisual {
      * Sets the member variables start, end, and status to the beginning of this year, the end of this year, and now, respectively.
      */
     private setDefaultTimelineParams;
-    update(options: VisualUpdateOptions): void;
     private generateBody;
+    update(options: VisualUpdateOptions): void;
     /**
      * Returns the configuration of the desired graph to determine which elements to render based on the data in dataView.
      * @param dataView The DataView object to configure the visual against.
