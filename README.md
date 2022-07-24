@@ -13,6 +13,43 @@ LinkedIn: https://www.linkedin.com/in/brandonlu001/
 The aim of this project is to produce a prototype of a gantt chart that is easily extensible.
 The gantt chart should have featuers that allow for some customisation of the bars, and configuraiton of the layout so the visual can be used for different purposes at different levels of fidelity.
 
+## Usage and Development Guidelines
+
+#### Data Roles
+
+The order of the measure data roles defined in `capabilities.json` is important. Modifications to the  number of measure roles changes the number of elements in `Dataview.matrix.valueSources`. These elements are always displayed in the field and bucket order in the Visualisations pane and are checked using the name of the `roles` index signature member in the `valueSources`. ie:
+
+```
+//more DataView members
+
+"matrix: {
+    "rows:" {...},
+    "columns": {...},
+        "valueSources": [
+            {
+                "roles": { "Start": true } //we check this name "Start"
+                "type": {...},
+                "format": "G",
+                "displayName": "Start",
+                "queryName": "Tasks.Start",
+                "expr": {...},
+                "sort": 1,
+                "sortOrder": 0,
+                "rolesIndex": {...},
+                "index": 1,
+                "isMeasure": true,
+            },
+            {...}, //Finish
+            {...}, //IsMilestone
+            {...}, //IsCritical
+        ]
+}
+
+//more DataView members...
+```
+
+Therefore, the order of the Measure role elements in the capabilities file must match the order that the `Configuration` object checks for fields, and vice versa. Custom fields in the `Custom Fields` bucket will be assigned using their `displayName`.
+
 ## Procedure
 ### Setup
 1. Download Power BI Desktop.

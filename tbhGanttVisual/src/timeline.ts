@@ -155,7 +155,7 @@ export class Timeline {
     private generateYears(): YearSeparator[] {
         if (this.verbose) { console.log('LOG: Generating YearSeparator array for timeline.'); }
 
-        console.log(document.body.clientHeight);
+        //console.log(document.body.clientHeight);
         let result: YearSeparator[];
         let cumulativeOffset: number = 0;
         let proportion: number;

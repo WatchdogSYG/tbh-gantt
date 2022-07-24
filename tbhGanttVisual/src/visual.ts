@@ -29,9 +29,9 @@
 // sortable dataview + ids
 // Legend
 // 
+// statusdate is today if none provided?
 //
-//
-//
+//tell the user if key fields are not valid
 //
 //
 //
@@ -82,6 +82,7 @@ import * as Lib from './../src/lib';
 import * as Time from './../src/time';
 import { Timeline, TimeScale } from './../src/timeline';
 import { Activity } from './../src/activity';
+import { Configuration, ValueFields } from './../src/configuration';
 
 import * as dayjs from 'dayjs';
 
@@ -128,9 +129,12 @@ export class Visual implements IVisual {
     //text
 
     ////////////////DEV VARS\\\\\\\\\\\\\\\\
+    private verbose: boolean = false; //verbose logging
+
     private style: CSSStyleDeclaration;//should be a CSSStyleDeclaration
+
     private timeline: Timeline;
-    private verbose: boolean = true; //verbose logging?
+    private configuration: Configuration;
 
     private start: dayjs.Dayjs;
     private end: dayjs.Dayjs;
@@ -168,7 +172,7 @@ export class Visual implements IVisual {
         //      }
 
         this.generateBody(options);
-
+        this.configuration = new Configuration();
     }
 
     ////////////////////////////////////////////////////////////////
@@ -191,7 +195,10 @@ export class Visual implements IVisual {
         this.status = dayjs(new Date(2019, 6, 19));
         let acts: Activity[] = this.checkConfiguration(dataView);
         let ts: TimeScale = this.drawTimeline(acts);
-        this.drawChart(acts, ts, this.timelineSVG);
+        
+        if (this.configuration.field(ValueFields.START) && this.configuration.field(ValueFields.END)) {
+            this.drawChart(acts, ts, this.timelineSVG);
+        }
         this.drawTable(acts);
 
         // let ops : EnumerateVisualObjectInstancesOptions = new EnumerateVisualObjectInstancesOptions('subTotals')
@@ -252,8 +259,7 @@ export class Visual implements IVisual {
         //div to hold the chart elements including background, bars, text, controls
         this.divChartContainer = this.content
             .append('div')
-            .attr('id', 'div-chart')
-            ;
+            .attr('id', 'div-chart');
 
         this.divChartHeader = this.divChartContainer
             .append('div')
@@ -279,6 +285,11 @@ export class Visual implements IVisual {
             console.log('LOG: DATAVIEW CONFIGURATION');
             console.log('LOG: number of heirachy levels: ' + dataView.matrix.rows.levels.length);
         }
+
+        console.log('LOG: number of valuesource items: ' + dataView.matrix.valueSources.length);
+
+        this.configuration.checkRoles(dataView.matrix.valueSources);
+        this.configuration.logConfig();
 
         //check verbose
         console.log(dataView.matrix.rows.root);
@@ -795,7 +806,7 @@ export class Visual implements IVisual {
     * Possibly due to the above bug. I could use the d3.event method to use scroll events and their dy direction but its not working.
     * @param div the div that was scrolled by the user.
     */
-    private syncScrollTimelineTop(scrollID:string, wheel: boolean) {
+    private syncScrollTimelineTop(scrollID: string, wheel: boolean) {
         //links i used to understand ts callbacks, d3 event handling
         //https://hstefanski.wordpress.com/2015/10/25/responding-to-d3-events-in-typescript/
         //https://rollbar.com/blog/javascript-typeerror-cannot-read-property-of-undefined/

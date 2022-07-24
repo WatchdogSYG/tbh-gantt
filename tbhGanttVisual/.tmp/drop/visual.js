@@ -30,6 +30,127 @@ class Activity {
 
 /***/ }),
 
+/***/ 747:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "$": () => (/* binding */ ValueFields),
+/* harmony export */   "V": () => (/* binding */ Configuration)
+/* harmony export */ });
+//TODO
+class Configuration {
+    constructor() {
+        this.verbose = false;
+        this.bool_start = false;
+        this.bool_end = false;
+        this.bool_isMilestone = false;
+        this.bool_isCritical = false;
+        this.bool_statusDate = false;
+    }
+    field(field, set) {
+        if (set != null) {
+            switch (field) {
+                case ValueFields.START:
+                    this.bool_start = set;
+                    break;
+                case ValueFields.END:
+                    this.bool_end = set;
+                    break;
+                case ValueFields.ISMILESTONE:
+                    this.bool_isMilestone = set;
+                    break;
+                case ValueFields.ISCRITICAL:
+                    this.bool_isCritical = set;
+                    break;
+                case ValueFields.STATUSDATE:
+                    this.bool_statusDate = set;
+                    break;
+            }
+        }
+        switch (field) {
+            case ValueFields.START: return this.bool_start;
+            case ValueFields.END: return this.bool_end;
+            case ValueFields.ISMILESTONE: return this.bool_isMilestone;
+            case ValueFields.ISCRITICAL: return this.bool_isCritical;
+            case ValueFields.STATUSDATE: return this.bool_statusDate;
+        }
+    }
+    checkRoles(vs) {
+        if (this.verbose) {
+            console.log('LOG: number of valuesource items: ' + vs.length);
+        }
+        let r = this.valueRoles();
+        let valueSourceIndex = 0;
+        for (let i = 0; (i < r.length) && (valueSourceIndex < vs.length); i++) {
+            //console.log('vs[' + valueSourceIndex + '] = ' + vs[valueSourceIndex].roles + ', r[' + i + '] = ' + r[i]);
+            if (vs[valueSourceIndex].roles[r[i]] == true) {
+                this.field(r[i], true);
+                valueSourceIndex++;
+            }
+            //this.logConfig();
+        }
+        return this;
+    }
+    printConfig() {
+        return 'START       = ' + this.bool_start + '\n' +
+            'FINISH      = ' + this.bool_end + '\n' +
+            'ISMILESTONE = ' + this.bool_isMilestone + '\n' +
+            'ISCRITICAL  = ' + this.bool_isCritical + '\n' +
+            'STATUSDATE  = ' + this.bool_statusDate;
+    }
+    logConfig() {
+        console.log(this.printConfig());
+    }
+    valueRoles() {
+        return [
+            ValueFields.START,
+            ValueFields.END,
+            ValueFields.ISMILESTONE,
+            ValueFields.ISCRITICAL,
+            ValueFields.STATUSDATE
+        ];
+    }
+    drawGraph() {
+        if (this.bool_start && this.bool_end) {
+            return true;
+        }
+        return false;
+    }
+}
+var ValueFields;
+(function (ValueFields) {
+    ValueFields["START"] = "Start";
+    ValueFields["END"] = "Finish";
+    ValueFields["ISMILESTONE"] = "IsMilestone";
+    ValueFields["ISCRITICAL"] = "IsCritical";
+    ValueFields["STATUSDATE"] = "StatusDate";
+})(ValueFields || (ValueFields = {}));
+/**
+ * 1
+ * 2
+ * 3
+ * 4
+ * 5
+ * 6
+ *
+ * 1
+ * 2
+ * 4
+ * 5
+ *
+ * 11Y
+ * 22Y
+ * 34N
+ * 44Y
+ *
+ * Always tick the r index
+ * Tick the valueSourcesIndex when match
+ */ 
+
+
+/***/ }),
+
 /***/ 809:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -565,7 +686,7 @@ class Timeline {
         if (this.verbose) {
             console.log('LOG: Generating YearSeparator array for timeline.');
         }
-        console.log(document.body.clientHeight);
+        //console.log(document.body.clientHeight);
         let result;
         let cumulativeOffset = 0;
         let proportion;
@@ -748,12 +869,13 @@ class TimeScale {
 /* harmony export */   "u": () => (/* binding */ Visual)
 /* harmony export */ });
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(662);
-/* harmony import */ var _src_lib__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(809);
+/* harmony import */ var _src_lib__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(809);
 /* harmony import */ var _src_time__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4734);
 /* harmony import */ var _src_timeline__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(1092);
-/* harmony import */ var _src_activity__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(8944);
-/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(9665);
-/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _src_activity__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(8944);
+/* harmony import */ var _src_configuration__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(747);
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(9665);
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_4__);
 /*
 *  Power BI Visual CLI
 *
@@ -783,9 +905,9 @@ class TimeScale {
 // sortable dataview + ids
 // Legend
 // 
+// statusdate is today if none provided?
 //
-//
-//
+//tell the user if key fields are not valid
 //
 //
 //
@@ -816,6 +938,7 @@ class TimeScale {
 
 
 
+
 ////////////////////////////////////////////////////////////////
 //  Begin class definition
 ////////////////////////////////////////////////////////////////
@@ -824,7 +947,9 @@ class Visual {
     //  Constructor
     ////////////////////////////////////////////////////////////////
     constructor(options) {
-        this.verbose = true; //verbose logging?
+        //text
+        ////////////////DEV VARS\\\\\\\\\\\\\\\\
+        this.verbose = false; //verbose logging
         if (this.verbose) {
             console.log('LOG: Constructing Visual Object', options);
         }
@@ -842,6 +967,7 @@ class Visual {
         //         this.target.appendChild(new_p);
         //      }
         this.generateBody(options);
+        this.configuration = new _src_configuration__WEBPACK_IMPORTED_MODULE_3__/* .Configuration */ .V();
     }
     ////////////////////////////////////////////////////////////////
     //  UPDATE VISUAL ON REFRESH
@@ -857,10 +983,12 @@ class Visual {
         let dataView = options.dataViews[0];
         //options.dataViews[0].metadata.columns.entries
         //generatetimeline with default dates
-        this.status = dayjs__WEBPACK_IMPORTED_MODULE_3__(new Date(2019, 6, 19));
+        this.status = dayjs__WEBPACK_IMPORTED_MODULE_4__(new Date(2019, 6, 19));
         let acts = this.checkConfiguration(dataView);
         let ts = this.drawTimeline(acts);
-        this.drawChart(acts, ts, this.timelineSVG);
+        if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_3__/* .ValueFields.START */ .$.START) && this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_3__/* .ValueFields.END */ .$.END)) {
+            this.drawChart(acts, ts, this.timelineSVG);
+        }
         this.drawTable(acts);
         // let ops : EnumerateVisualObjectInstancesOptions = new EnumerateVisualObjectInstancesOptions('subTotals')
         // let o: VisualObjectInstanceEnumeration = this.enumerateObjectInstances(EnumerateVisualObjectInstancesOptions);
@@ -928,6 +1056,9 @@ class Visual {
             console.log('LOG: DATAVIEW CONFIGURATION');
             console.log('LOG: number of heirachy levels: ' + dataView.matrix.rows.levels.length);
         }
+        console.log('LOG: number of valuesource items: ' + dataView.matrix.valueSources.length);
+        this.configuration.checkRoles(dataView.matrix.valueSources);
+        this.configuration.logConfig();
         //check verbose
         console.log(dataView.matrix.rows.root);
         let acts = [];
@@ -1071,14 +1202,14 @@ class Visual {
         if (node.children == null) {
             // console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
             if ((node.values[0] != null) && (node.values[1] != null)) { //every task must have a start and finish
-                activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(this.nodeName(node), dayjs__WEBPACK_IMPORTED_MODULE_3__(node.values[0].value), dayjs__WEBPACK_IMPORTED_MODULE_3__(node.values[1].value), node.level));
+                activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_5__/* .Activity */ .c(this.nodeName(node), dayjs__WEBPACK_IMPORTED_MODULE_4__(node.values[0].value), dayjs__WEBPACK_IMPORTED_MODULE_4__(node.values[1].value), node.level));
             }
         }
         else {
             // console.log("LOG: RECURSION: level = " + node.level);
             // console.log("LOG:" + this.nodeName(node));
             // console.log("LOG:" + node.level);
-            activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_4__/* .Activity */ .c(this.nodeName(node), null, null, node.level)); //need to check type?
+            activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_5__/* .Activity */ .c(this.nodeName(node), null, null, node.level)); //need to check type?
             for (let i = 0; i < node.children.length; i++) {
                 this.dfsPreorder(activities, node.children[i]);
             }
@@ -1101,16 +1232,16 @@ class Visual {
         console.log('LOG: Drawing Timeline');
         this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_2__/* .Timeline */ .TY(this.start, this.end, this.status);
         this.tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale()); //cannot be less than div width!
-        this.tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_5__/* .pxToNumber */ .F(this.style.getPropertyValue('--timelineHeight'));
-        this.rowHeight = _src_lib__WEBPACK_IMPORTED_MODULE_5__/* .pxToNumber */ .F(this.style.getPropertyValue('--rowHeight'));
+        this.tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_6__/* .pxToNumber */ .F(this.style.getPropertyValue('--timelineHeight'));
+        this.rowHeight = _src_lib__WEBPACK_IMPORTED_MODULE_6__/* .pxToNumber */ .F(this.style.getPropertyValue('--rowHeight'));
         let ts = this.timeline.getTimeScale();
         ////////////////////////////////////////////////////////////////
         //  Create svg timeline
         ////////////////////////////////////////////////////////////////
         this.timelineSVG = this.divChartHeader
             .append('svg')
-            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight))
-            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlWidth));
+            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlHeight))
+            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlWidth));
         this.gMonths = this.timelineSVG.append('g')
             .classed('g-tl', true);
         this.gYears = this.timelineSVG.append('g')
@@ -1121,7 +1252,7 @@ class Visual {
             .enter()
             .append('text')
             .attr('x', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset + d.textAnchorOffset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset + d.textAnchorOffset);
         })
             .attr('y', '0px')
             .text(function (d) { return d.text; })
@@ -1130,10 +1261,10 @@ class Visual {
             .classed('yearText', true);
         //////////////////////////////////////////////////////////////// YearLine
         this.gYears.selectAll('line').data(ts.yearScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset); })
             .attr('y1', '0px')
             .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset);
         })
             .attr('y2', this.tlHeight)
             .attr('stroke-width', '2px')
@@ -1144,9 +1275,9 @@ class Visual {
             .enter()
             .append('text')
             .attr('x', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset + d.textAnchorOffset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset + d.textAnchorOffset);
         })
-            .attr('y', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight / 2))
+            .attr('y', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlHeight / 2))
             .text(function (d) { return d.text; })
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
@@ -1154,10 +1285,10 @@ class Visual {
             .classed('monthText', true);
         //////////////////////////////////////////////////////////////// YMonthLine
         this.gMonths.selectAll('line').data(ts.monthScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
-            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight / 2))
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset); })
+            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlHeight / 2))
             .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset);
         })
             .attr('y2', this.tlHeight)
             .attr('style', 'stroke:red');
@@ -1190,20 +1321,20 @@ class Visual {
             .append('g')
             .append('svg')
             .attr('id', 'svg-bars')
-            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlWidth))
-            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.rowHeight * acts.length));
+            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlWidth))
+            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.rowHeight * acts.length));
         bars.selectAll('rect')
             .data(acts)
             .enter()
             .append('rect')
             .attr('x', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(_this.timeline.dateLocation(d.getStart()));
+            return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(_this.timeline.dateLocation(d.getStart()));
         })
-            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.rowHeight - 4))
+            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.rowHeight - 4))
             .attr('width', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(_this.timeline.dateLocation(d.getEnd()) - _this.timeline.dateLocation(d.getStart()));
+            return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(_this.timeline.dateLocation(d.getEnd()) - _this.timeline.dateLocation(d.getStart()));
         })
-            .attr('y', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px((_this.rowHeight * i) + 2); })
+            .attr('y', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px((_this.rowHeight * i) + 2); })
             .attr('rx', '3px')
             .attr('ry', '3px')
             .classed('activityBar', true)
@@ -1235,26 +1366,26 @@ class Visual {
             .attr('x1', '0px')
             .attr('y1', '0px')
             .attr('x2', '0px')
-            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.chartHeight))
+            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.chartHeight))
             .attr('transform', 'translate(' + this.timeline.statusDateLocation() + ')');
         //////////////////////////////////////////////////////////////// Grid
         this.gMonths.selectAll('.grid-months')
             .data(ts.monthScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
-            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight))
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset); })
+            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlHeight))
             .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset);
         })
-            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.chartHeight))
+            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.chartHeight))
             .attr('style', 'stroke:green');
         this.gYears.selectAll('.grid-years')
             .data(ts.yearScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
-            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight))
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset); })
+            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlHeight))
             .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset);
         })
-            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.chartHeight))
+            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.chartHeight))
             .attr('style', 'stroke:gray');
         console.log('LOG: DONE Drawing Chart');
     }

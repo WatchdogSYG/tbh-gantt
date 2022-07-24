@@ -18,9 +18,10 @@ export declare class Visual implements IVisual {
     private activityTable;
     private timelineSVG;
     private ganttSVG;
+    private verbose;
     private style;
     private timeline;
-    private verbose;
+    private configuration;
     private start;
     private end;
     private status;
