@@ -130,7 +130,7 @@ export class Visual implements IVisual {
     private bars: Selection<SVGSVGElement>;
 
     ////////////////DEV VARS\\\\\\\\\\\\\\\\
-    private verbose: boolean = true; //verbose logging
+    private verbose: boolean = false; //verbose logging
 
     private style: CSSStyleDeclaration;//should be a CSSStyleDeclaration
 
@@ -233,8 +233,9 @@ export class Visual implements IVisual {
             .append('div')
             .classed('div-content-body', true)
             .attr('id', 'div-activityTable')
-            .on('scroll', function () { _this.syncScrollTimelineTop('div-activityTable', false) })
-            .on('wheel', function () { _this.syncScrollTimelineTop('div-activityTable', true) });
+            .on('scroll', function () { _this.syncScroll('div-activityTable'); });
+        // .on('scroll', function () { _this.syncScrollTimelineTop('div-activityTable', false) })
+        // .on('wheel', function () { _this.syncScrollTimelineTop('div-activityTable', true) });
 
         //div to hold the chart elements including background, bars, text, controls
         this.divChartContainer = this.content
@@ -245,17 +246,19 @@ export class Visual implements IVisual {
             .append('div')
             .attr('id', 'div-timeline')
             .classed('div-content-header', true)
-            .on('scroll', function () { _this.syncScrollTimelineLeft('div-timeline', false) })
-            .on('wheel', function () { _this.syncScrollTimelineLeft('div-timeline', true) });
+            .on('scroll', function () { _this.syncScroll('div-content-header'); });
+        // .on('scroll', function () { _this.syncScrollTimelineLeft('div-timeline', false) })
+        // .on('wheel', function () { _this.syncScrollTimelineLeft('div-timeline', true) });
 
         this.divChartBody = this.divChartContainer
             .append('div')
             .classed('div-content-body', true)
             .attr('id', 'div-ganttChart')
-            .on('scroll', function () { _this.syncScrollTimelineTop('div-ganttChart', false); })
-            .on('wheel', function () { _this.syncScrollTimelineTop('div-ganttChart', true); })
-            .on('scroll', function () { _this.syncScrollTimelineLeft('div-ganttChart', false); })
-            .on('wheel', function () { _this.syncScrollTimelineLeft('div-ganttChart', true); });
+            .on('scroll', function () { _this.syncScroll('div-ganttChart'); });
+        // .on('scroll', function () { _this.syncScrollTimelineTop('div-ganttChart', false); })
+        // .on('wheel', function () { _this.syncScrollTimelineTop('div-ganttChart', true); })
+        // .on('scroll', function () { _this.syncScrollTimelineLeft('div-ganttChart', false); })
+        // .on('wheel', function () { _this.syncScrollTimelineLeft('div-ganttChart', true); });
 
         ////////////////////////////////////////////////////////////////
         //  Create svg timeline
@@ -270,7 +273,8 @@ export class Visual implements IVisual {
         this.timelineSVG = this.divChartHeader
             .append('svg')
             .attr('height', Lib.px(this.tlHeight))
-            .attr('width', Lib.px(this.tlWidth));
+            .attr('width', Lib.px(this.tlWidth))
+            .attr('id', 'svg-tl');
 
         this.gMonths = this.timelineSVG.append('g')
             .classed('g-tl', true);
@@ -308,16 +312,14 @@ export class Visual implements IVisual {
 
         //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
         if (this.verbose) { console.log('Visual update()', options); }
-        console.log('Visual update()', options);
-        //CSS NOT WORKING, THIS IS A WORKAROUND
-        //TODO FIX
-        // this.divContent.style('height', Lib.px(document.body.clientHeight - Lib.pxToNumber(this.style.getPropertyValue('--headerHeight'))));
 
         let dataView: DataView = options.dataViews[0];
-        //options.dataViews[0].metadata.columns.entries
+
+        //manually destroy unjoin()ed items (i know its not the best way to do it ...)
+        if (document.getElementById('statusLine-tl') != null) { document.getElementById('statusLine-tl').remove(); }
+        if (document.getElementById('statusLine-chart') != null) { document.getElementById('statusLine-chart').remove(); }
 
         //generatetimeline with default dates
-
         this.status = dayjs(new Date(2019, 6, 19));
         let acts: Activity[] = this.checkConfiguration(dataView);
         let ts: TimeScale = this.drawTimeline();
@@ -358,6 +360,9 @@ export class Visual implements IVisual {
 
         let acts: Activity[] = [];
         this.dfsPreorder(acts, dataView.matrix.rows.root.children[0]);
+
+        acts = this.trimHeirarchy(acts);
+
         if (this.configuration.field(ValueFields.START) && this.configuration.field(ValueFields.END)) {
             let dt: dayjs.Dayjs[] = this.summariseDates(acts);
             this.start = dt[0];
@@ -366,7 +371,6 @@ export class Visual implements IVisual {
             this.setDefaultTimelineParams();
         }
 
-        acts = this.trimHeirarchy(acts);
         console.log('Activity array', acts);
         console.log('LOG: DONE Checking Configuration');
         return acts;
@@ -379,48 +383,66 @@ export class Visual implements IVisual {
      */
     private summariseDates(acts: Activity[]): dayjs.Dayjs[] {
 
-        let aggregateBuffer: dayjs.Dayjs[] = [];
+        let aggregateBuffer: dayjs.Dayjs[][] = [];
         let currentLevel: number = acts[acts.length - 1].getLevel();
         let globalStart: dayjs.Dayjs[] = [];
         let globalEnd: dayjs.Dayjs[] = [];
 
+        aggregateBuffer = [[], [], [], [], []];
 
         for (let i = 0; i < acts.length; i++) {
             let l: number = acts[acts.length - i - 1].getLevel();
 
-            if (l < currentLevel) {// going up indents, summarise
-                acts[acts.length - i - 1].setStart(Time.minDayjs(aggregateBuffer));
+            if (l < currentLevel) {// going up indents, summarise, add self to higher buffer
+                acts[acts.length - i - 1].setStart(Time.minDayjs(aggregateBuffer[l+1]));
+                console.log(l,aggregateBuffer[l+1]);
+                console.log(l,'Summarise Start', Time.minDayjs(aggregateBuffer[l+1]).format('DD/MM/YY'));
+                aggregateBuffer[l].push(acts[acts.length - i - 1].getStart());
                 currentLevel = l;
             } else if (l > currentLevel) {//going down indents, clear buffer, add self
                 currentLevel = l;
-                aggregateBuffer = [(acts[acts.length - i - 1].getStart())];
+                aggregateBuffer[l] = [(acts[acts.length - i - 1].getStart())];
             } else {//same indent, add to buffer
-                aggregateBuffer.push(acts[acts.length - i - 1].getStart());
+                aggregateBuffer[l].push(acts[acts.length - i - 1].getStart());
             }
-
             if (l == 0) {
+                
+
                 globalStart.push(acts[acts.length - i - 1].getStart());
             }
-            // console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
+            console.log(aggregateBuffer[l]);
+
+            //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
         }
 
+        aggregateBuffer = [[], [], [], [], []];
         for (let i = 0; i < acts.length; i++) {
             let l: number = acts[acts.length - i - 1].getLevel();
 
-            if (l < currentLevel) {// going up indents, summarise
-                acts[acts.length - i - 1].setEnd(Time.maxDayjs(aggregateBuffer));
+            if (l < currentLevel) {// going up indents, summarise, add self to higher buffer
+                acts[acts.length - i - 1].setEnd(Time.maxDayjs(aggregateBuffer[l+1]));
+                console.log(l,'Summarise End', Time.maxDayjs(aggregateBuffer[l+1]).format('DD/MM/YY'));
+                aggregateBuffer[l].push(acts[acts.length - i - 1].getEnd());
                 currentLevel = l;
-            } else if (l > currentLevel) {//going down andents, clear buffer
+            } else if (l > currentLevel) {//going down indents, clear buffer, add self
                 currentLevel = l;
-                aggregateBuffer = [(acts[acts.length - i - 1].getEnd())];
+                aggregateBuffer[l] = [(acts[acts.length - i - 1].getEnd())];
             } else {//same indent, add to buffer
-                aggregateBuffer.push(acts[acts.length - i - 1].getEnd());
+                aggregateBuffer[l].push(acts[acts.length - i - 1].getEnd());
             }
 
             if (l == 0) {
+             
                 globalEnd.push(acts[acts.length - i - 1].getEnd());
             }
+
+   console.log(aggregateBuffer[l]);
+           //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
         }
+
+        console.log(globalStart);
+        console.log(globalEnd);
+
 
         return [Time.minDayjs(globalStart), Time.minDayjs(globalEnd)];
     }
@@ -556,7 +578,7 @@ export class Visual implements IVisual {
     }
 
     private drawTimeline(): TimeScale {
-        console.log('LOG: Drawing Timeline');
+        console.log('LOG: Drawing Timeline from ' + this.start.format('DD/MM/YY') + ' to ' + this.end.format('DD/MM/YY'));
 
         this.timeline.defineTimeline(this.start, this.end, this.status);
 
@@ -683,14 +705,14 @@ export class Visual implements IVisual {
         // getBBox() help here:
         // https://stackoverflow.com/questions/45792692/property-getbbox-does-not-exist-on-type-svgelement
         // https://stackoverflow.com/questions/24534988/d3-get-the-bounding-box-of-a-selected-element
-        this.divChartBody.append('g')
-            .attr('id', 'statusLine').attr('width', '100%').attr('height', '100%')
-            .append('line')
-            .attr('x1', '0px')
-            .attr('y1', '0px')
-            .attr('x2', '0px')
-            .attr('y2', Lib.px(this.chartHeight))
-            .attr('transform', 'translate(' + this.timeline.statusDateLocation() + ')');
+        // this.divChartBody.append('g')
+        //     .attr('id', 'statusLine').attr('width', '100%').attr('height', '100%')
+        //     .append('line')
+        //     .attr('x1', '0px')
+        //     .attr('y1', '0px')
+        //     .attr('x2', '0px')
+        //     .attr('y2', Lib.px(this.chartHeight))
+        //     .attr('transform', 'translate(' + this.timeline.statusDateLocation() + ')');
 
         //////////////////////////////////////////////////////////////// Grid
 
@@ -714,7 +736,32 @@ export class Visual implements IVisual {
             .attr('y2', Lib.px(this.chartHeight))
             .attr('style', 'stroke:gray');
 
+        //////////////////////////////////////////////////////////////// Status
 
+        // this.status = dayjs(new Date(2019, 3, 15));
+        this.status = dayjs(new Date(2020, 10, 15));
+        this.timeline.setStatus(this.status);
+
+        //the status lines are destroyed and recreated every update(). I could'nt find a way to use .join or .update
+        this.timelineSVG
+            .append('line')
+            .attr('x1', '0px')
+            .attr('x2', '0px')
+            .attr('y1', '0px')
+            .attr('y2', Lib.px(this.tlHeight))
+            .attr('id', 'statusLine-tl')
+            .attr('transform', this.timeline.statusDateTranslation())
+            .attr('style', 'stroke: red');
+
+        this.bars
+            .append('line')
+            .attr('x1', '0px')
+            .attr('x2', '0px')
+            .attr('y1', '0px')
+            .attr('y2', Lib.px(this.chartHeight))
+            .attr('id', 'statusLine-chart')
+            .attr('transform', this.timeline.statusDateTranslation())
+            .attr('style', 'stroke: red');
 
         console.log('LOG: DONE Drawing Chart');
     }
@@ -735,7 +782,7 @@ export class Visual implements IVisual {
             .classed('tr-activity', true);
 
         var td = this.divActivityBody.selectAll('.tr-activity')
-        .selectAll('.td-name')//select all tds, there are 0
+            .selectAll('.td-name')//select all tds, there are 0
             .data(function (d: Activity) { return [d.getTableText()[0]]; })//THIS DATA COMES FROM THE TR's _data_ PROPERTY
             .join('td')
             .classed('td-name', true)
@@ -767,25 +814,12 @@ export class Visual implements IVisual {
         console.log('LOG: DONE Drawing Table');
     }
 
-    /*
-    * Returns a <table> element based on the Activities from the DataView.
-    * Returns an empty table if options is null.
-    * TODO change this to a d3 arg
-    */
-    // private populateActivityTable(data, headerID: string, tableID: string) {
-    //     //check number of data elements and number of tr and tds to determine
-    //     //whether to enter(), update() or exit()
 
-    //     if (data == null) {
-    //         if (this.verbose) { console.log('LOG: populateActivityTable called with a null VisualUpdateOptions.'); }
-
-    //     }
 
     //https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
     //https://www.dashingd3js.com/d3-tutorial/use-d3-js-to-bind-data-to-dom-elements
     //BEWARE: I had to change the types of all these following to var and not Selection<T,T,T,T>. the second function (d)
     //call returned a type that wasnt compatible with Selction<T,T,T,T> and I couldn't figure out which type to use.
-    // }
 
     /**
      * Synchronises the left scrolling of the div-timeline and div-ganttChart depending on which one was scrolled.
@@ -852,8 +886,31 @@ export class Visual implements IVisual {
                 document.getElementById(chartID).scrollTop = document.getElementById(activityTableID).scrollTop;
                 if (this.verbose) { console.log('LOG: Sync chart scroll to avtivityTable scroll = ', document.getElementById(chartID).scrollTop); };
         }
+    }
 
+    private syncScroll(controllerID: string) {
+        let verticals: string[] = ['div-ganttChart', 'div-activityTable'];
+        let horizontals: string[] = ['div-ganttChart', 'div-timeline'];
 
+        switch (controllerID) {
+            case verticals[0]:
+                document.getElementById(verticals[1]).scrollTop = document.getElementById(controllerID).scrollTop;
+                document.getElementById(horizontals[1]).scrollLeft = document.getElementById(controllerID).scrollLeft;
+                if (this.verbose) { 'Set ' + verticals[1] + ' & ' + horizontals[1] + ' to ' + controllerID + '\'s position.' };
+                break;
+            case verticals[1]://require activity table scrolling using wheel and not track
+                document.getElementById(verticals[0]).scrollTop = document.getElementById(controllerID).scrollTop;
+                if (this.verbose) { 'Set ' + verticals[0] + ' to ' + controllerID + '\'s top position.' };
+                break;
+            // case horizontals[0]: //horizontals[0] === verticals[0]
+            //     break;
+            // case horizontals[1]: //disable timeline scrolling
+            //     break;
+            default:
+                if (this.verbose) {
+                    console.log('Invalid scroll div');
+                }
+        }
     }
 
     // public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {

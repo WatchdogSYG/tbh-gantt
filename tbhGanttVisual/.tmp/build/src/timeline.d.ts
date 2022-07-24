@@ -71,7 +71,11 @@ export declare class Timeline {
      * Converts the status date to a horizontal offset on the chart based on the Timeline scale. Similar to Timeline.dateLocation(date: dayjs.Dayjs).
      * @returns The location from the left edge of the chart the current status date corresponds to
      */
-    statusDateLocation(): number;
+    statusDateTranslation(): string;
+    /**
+     * DEV ONLY
+     */
+    setStatus(status: dayjs.Dayjs): void;
 }
 export interface ISeparator {
     text: string;

@@ -207,7 +207,8 @@ export function isLeapYear(year: number): boolean {
 export function minDayjs(d: dayjs.Dayjs[]): dayjs.Dayjs {
     let t: number[] = [];
     for (let i = 0; i < d.length; i++) {
-        t.push(d[i].valueOf())
+        t.push(d[i].valueOf());
+        console.log(d[i]);
     }
     return dayjs(Math.min(...t));
 }

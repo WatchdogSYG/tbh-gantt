@@ -78,6 +78,7 @@ div {
   height: fit-content;
   width: fit-content;
   min-width: 100%;
+  min-height: var(--timelineHeight);
   flex-shrink: 0;
   border-bottom: 1px solid black;
 }
@@ -158,6 +159,9 @@ td {
 }
 .monthText {
   text-anchor: middle;
+}
+#svg-tl {
+  padding-right: 20px;
 }
 /* ------- CHART ------- */
 .activityBar {

@@ -108,4 +108,5 @@ export declare class Visual implements IVisual {
     * @param div the div that was scrolled by the user.
     */
     private syncScrollTimelineTop;
+    private syncScroll;
 }

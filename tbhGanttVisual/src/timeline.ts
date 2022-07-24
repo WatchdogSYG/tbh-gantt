@@ -124,7 +124,7 @@ export class Timeline {
         this.ts.yearScale = this.generateYears();
         this.ts.monthScale = this.generateMonths();
     }
-    
+
     ////////////////////////////////////////////////////////////////
     //  Timeline Manipulation Functions
     ////////////////////////////////////////////////////////////////
@@ -320,8 +320,15 @@ export class Timeline {
      * Converts the status date to a horizontal offset on the chart based on the Timeline scale. Similar to Timeline.dateLocation(date: dayjs.Dayjs).
      * @returns The location from the left edge of the chart the current status date corresponds to
      */
-    public statusDateLocation(): number {
-        return this.dateLocation(this.status);
+    public statusDateTranslation(): string {
+        return 'translate(' + this.dateLocation(this.status) + ')';
+    }
+
+    /**
+     * DEV ONLY
+     */
+    public setStatus(status: dayjs.Dayjs) {
+        this.status = status;
     }
 }
 
