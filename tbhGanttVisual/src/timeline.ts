@@ -274,7 +274,6 @@ export class Timeline {
             );
             if (this.verbose) { console.log('LOG: created new MonthSeparator(' + Time.month(d.month()) + ', ' + cumulativeOffset + ') at this.ts.monthScale[' + i + '] with dOffset ' + (Time.daysInMonth(d.month() + i, d.year()) * this.dayScale * proportion) + 'px'); }
 
-           
             cumulativeOffset += Time.daysInMonth(d.month(), d.year()) * this.dayScale * proportion;
         }
 

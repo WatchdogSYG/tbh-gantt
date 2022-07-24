@@ -1004,10 +1004,9 @@ class Visual {
         this.status = now;
     }
     generateBody(options) {
-        ////////////////////////////////////////////////////////////////
-        //  Create body level child elements
-        ////////////////////////////////////////////////////////////////
-        // help from lines 377 onwards at https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
+        //////////////////////////////////////////////////////////////// Create body level child elements
+        // help from lines 377 onwards at 
+        //https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
         //the header including title, logos etc
         this.divHeader = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys(options.element)
             .append('div')
@@ -1018,16 +1017,7 @@ class Visual {
         this.content = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys(options.element)
             .append('div')
             .attr('id', 'div-content');
-        ////////////////////////////////////////////////////////////////
-        //  Create elements under the header
-        ////////////////////////////////////////////////////////////////
-        // //div to contain the act table and chart
-        // this.divContent = this.statusAndContent
-        //     .append('div')
-        //     .attr('id', 'div-content');
-        ////////////////////////////////////////////////////////////////
-        //  Create content elements (must set timeline width using selection.style())...
-        ////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////// Create elements under the header
         var _this = this;
         //div to hold the activity data in a table
         this.divActivities = this.content
@@ -1063,9 +1053,7 @@ class Visual {
         // .on('wheel', function () { _this.syncScrollTimelineTop('div-ganttChart', true); })
         // .on('scroll', function () { _this.syncScrollTimelineLeft('div-ganttChart', false); })
         // .on('wheel', function () { _this.syncScrollTimelineLeft('div-ganttChart', true); });
-        ////////////////////////////////////////////////////////////////
-        //  Create svg timeline
-        ////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////// Create svg timeline
         this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_2__/* .Timeline */ .TY(this.start, this.end, this.status);
         this.tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale()); //cannot be less than div width!
         this.tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_5__/* .pxToNumber */ .F(this.style.getPropertyValue('--timelineHeight'));
@@ -1083,9 +1071,7 @@ class Visual {
             .append('g')
             .append('svg')
             .attr('id', 'svg-bars');
-        ////////////////////////////////////////////////////////////////
-        //  Create activities table
-        ////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////// Create activities table
         this.divActivityHeader
             .append('table')
             .attr('id', 'table-activityHeader')
@@ -1099,6 +1085,7 @@ class Visual {
     //  UPDATE VISUAL ON REFRESH
     ////////////////////////////////////////////////////////////////
     update(options) {
+        //////////////////////////////////////////////////////////////// Setup Update loop
         //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
         if (this.verbose) {
             console.log('Visual update()', options);
@@ -1111,10 +1098,11 @@ class Visual {
         if (document.getElementById('statusLine-chart') != null) {
             document.getElementById('statusLine-chart').remove();
         }
-        //generatetimeline with default dates
+        //////////////////////////////////////////////////////////////// Get a default timeline
         this.status = dayjs__WEBPACK_IMPORTED_MODULE_4__(new Date(2019, 6, 19));
         let acts = this.checkConfiguration(dataView);
         let ts = this.drawTimeline();
+        //////////////////////////////////////////////////////////////// choose to draw the chart based on config
         this.configuration.logConfig();
         if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_3__/* .ValueFields.START */ .$.START) && this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_3__/* .ValueFields.END */ .$.END)) {
             this.drawChart(acts, ts, this.timelineSVG);
@@ -1124,7 +1112,9 @@ class Visual {
             console.log('nuill');
             this.divChartBody.html(null);
         }
+        //////////////////////////////////////////////////////////////// draw table
         this.drawTable(acts);
+        //////////////////////////////////////////////////////////////// unused capabilities object enumeration
         // let ops : EnumerateVisualObjectInstancesOptions = new EnumerateVisualObjectInstancesOptions('subTotals')
         // let o: VisualObjectInstanceEnumeration = this.enumerateObjectInstances(EnumerateVisualObjectInstancesOptions);
     }
@@ -1217,6 +1207,11 @@ class Visual {
         //console.log(globalEnd);
         return [_src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA(globalStart), _src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA(globalEnd)];
     }
+    /**
+     * Returns an array of empty arrays. The number of empty arrays is equal to the 1-indexed depth of the DataView tree.
+     * @param dataView the examinable DataView
+     * @returns a 2D array of size depth x 0
+     */
     resetAggregateBuffer(dataView) {
         let x = [];
         for (let i = 0; i <= this.maxDepth; i++) {
@@ -1321,6 +1316,10 @@ class Visual {
             }
         }
     }
+    /**
+     * Updates the variable this.maxDepth to the specified number.
+     * @param d the new depth
+     */
     updateMaxDepth(d) {
         if (d > this.maxDepth) {
             this.maxDepth = d;

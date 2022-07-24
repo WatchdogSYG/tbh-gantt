@@ -189,12 +189,11 @@ export class Visual implements IVisual {
         this.status = now;
     }
 
-    private generateBody(options: VisualConstructorOptions) {
-
-        ////////////////////////////////////////////////////////////////
-        //  Create body level child elements
-        ////////////////////////////////////////////////////////////////
-        // help from lines 377 onwards at https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
+    private generateBody(options: VisualConstructorOptions) {       
+        //////////////////////////////////////////////////////////////// Create body level child elements
+      
+        // help from lines 377 onwards at 
+        //https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
 
         //the header including title, logos etc
         this.divHeader = d3.select(options.element)
@@ -208,18 +207,7 @@ export class Visual implements IVisual {
             .append('div')
             .attr('id', 'div-content');
 
-        ////////////////////////////////////////////////////////////////
-        //  Create elements under the header
-        ////////////////////////////////////////////////////////////////
-
-        // //div to contain the act table and chart
-        // this.divContent = this.statusAndContent
-        //     .append('div')
-        //     .attr('id', 'div-content');
-
-        ////////////////////////////////////////////////////////////////
-        //  Create content elements (must set timeline width using selection.style())...
-        ////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////// Create elements under the header
 
         var _this = this;
 
@@ -263,10 +251,8 @@ export class Visual implements IVisual {
         // .on('scroll', function () { _this.syncScrollTimelineLeft('div-ganttChart', false); })
         // .on('wheel', function () { _this.syncScrollTimelineLeft('div-ganttChart', true); });
 
-        ////////////////////////////////////////////////////////////////
-        //  Create svg timeline
-        ////////////////////////////////////////////////////////////////
-
+        //////////////////////////////////////////////////////////////// Create svg timeline
+        
         this.timeline = new Timeline(this.start, this.end, this.status);
 
         this.tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale());//cannot be less than div width!
@@ -291,9 +277,7 @@ export class Visual implements IVisual {
             .append('svg')
             .attr('id', 'svg-bars');
 
-        ////////////////////////////////////////////////////////////////
-        //  Create activities table
-        ////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////// Create activities table
 
         this.divActivityHeader
             .append('table')
@@ -306,27 +290,26 @@ export class Visual implements IVisual {
             .attr('id', 'table-activities');
     }
 
-
     ////////////////////////////////////////////////////////////////
     //  UPDATE VISUAL ON REFRESH
     ////////////////////////////////////////////////////////////////
 
     public update(options: VisualUpdateOptions) {
-
+        //////////////////////////////////////////////////////////////// Setup Update loop
         //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
+
         if (this.verbose) { console.log('Visual update()', options); }
-
         let dataView: DataView = options.dataViews[0];
-
         //manually destroy unjoin()ed items (i know its not the best way to do it ...)
         if (document.getElementById('statusLine-tl') != null) { document.getElementById('statusLine-tl').remove(); }
         if (document.getElementById('statusLine-chart') != null) { document.getElementById('statusLine-chart').remove(); }
 
-        //generatetimeline with default dates
+        //////////////////////////////////////////////////////////////// Get a default timeline
         this.status = dayjs(new Date(2019, 6, 19));
         let acts: Activity[] = this.checkConfiguration(dataView);
         let ts: TimeScale = this.drawTimeline();
 
+        //////////////////////////////////////////////////////////////// choose to draw the chart based on config
         this.configuration.logConfig();
         if (this.configuration.field(ValueFields.START) && this.configuration.field(ValueFields.END)) {
             this.drawChart(acts, ts, this.timelineSVG);
@@ -335,11 +318,13 @@ export class Visual implements IVisual {
             console.log('nuill');
             this.divChartBody.html(null);
         }
+
+        //////////////////////////////////////////////////////////////// draw table
         this.drawTable(acts);
 
+        //////////////////////////////////////////////////////////////// unused capabilities object enumeration
         // let ops : EnumerateVisualObjectInstancesOptions = new EnumerateVisualObjectInstancesOptions('subTotals')
         // let o: VisualObjectInstanceEnumeration = this.enumerateObjectInstances(EnumerateVisualObjectInstancesOptions);
-
     }
 
     /**
@@ -442,6 +427,11 @@ export class Visual implements IVisual {
         return [Time.minDayjs(globalStart), Time.minDayjs(globalEnd)];
     }
 
+    /**
+     * Returns an array of empty arrays. The number of empty arrays is equal to the 1-indexed depth of the DataView tree.
+     * @param dataView the examinable DataView
+     * @returns a 2D array of size depth x 0
+     */
     private resetAggregateBuffer(dataView: DataView): dayjs.Dayjs[][] {
         let x: dayjs.Dayjs[][] = [];
         for (let i = 0; i <= this.maxDepth; i++) { x[i] = []; }
@@ -564,6 +554,10 @@ export class Visual implements IVisual {
         }
     }
 
+    /**
+     * Updates the variable this.maxDepth to the specified number.
+     * @param d the new depth
+     */
     private updateMaxDepth(d: number) {
         if (d > this.maxDepth) { this.maxDepth = d };
     }

@@ -51,6 +51,11 @@ export declare class Visual implements IVisual {
      * @returns the earliest start date and the latest finish date of the schedule
      */
     private summariseDates;
+    /**
+     * Returns an array of empty arrays. The number of empty arrays is equal to the 1-indexed depth of the DataView tree.
+     * @param dataView the examinable DataView
+     * @returns a 2D array of size depth x 0
+     */
     private resetAggregateBuffer;
     /**
      * This function takes the Activity array derived from a Depth-First Search of the DataView matrix data structure (tree)
@@ -82,6 +87,10 @@ export declare class Visual implements IVisual {
      * @param node the DataViewMatrixNode to consider as the root node of the tree
      */
     private dfsPreorder;
+    /**
+     * Updates the variable this.maxDepth to the specified number.
+     * @param d the new depth
+     */
     private updateMaxDepth;
     /**
      * Returns the node's name if it is not null, and returns an empty string otherwise.
