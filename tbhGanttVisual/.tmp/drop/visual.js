@@ -47,6 +47,7 @@ class Configuration {
         this.bool_isMilestone = false;
         this.bool_isCritical = false;
         this.bool_statusDate = false;
+        this.vs = [];
     }
     field(field, set) {
         if (set != null) {
@@ -77,6 +78,7 @@ class Configuration {
         }
     }
     checkRoles(vs) {
+        this.vs = vs;
         if (this.verbose) {
             console.log('LOG: number of valuesource items: ' + vs.length);
         }
@@ -105,15 +107,6 @@ class Configuration {
     logConfig() {
         console.log(this.printConfig());
     }
-    valueRoles() {
-        return [
-            ValueFields.START,
-            ValueFields.END,
-            ValueFields.ISMILESTONE,
-            ValueFields.ISCRITICAL,
-            ValueFields.STATUSDATE
-        ];
-    }
     drawGraph() {
         if (this.bool_start && this.bool_end) {
             return true;
@@ -129,6 +122,37 @@ class Configuration {
         if (this.bool_end) {
             return end;
         }
+    }
+    getDisplayNames() {
+        let s = ['Activity'];
+        if (this.vs.length == 0) {
+            console.log('WARN: No values provided to display.');
+        }
+        else {
+            for (let i = 0; i < this.vs.length; i++) {
+                console.log(this.vs[i].displayName);
+                s.push(this.vs[i].displayName);
+            }
+        }
+        return s;
+    }
+    valueRoles() {
+        return [
+            ValueFields.START,
+            ValueFields.END,
+            ValueFields.ISMILESTONE,
+            ValueFields.ISCRITICAL,
+            ValueFields.STATUSDATE
+        ];
+    }
+    configurationBooleans() {
+        return [
+            this.bool_start,
+            this.bool_end,
+            this.bool_isMilestone,
+            this.bool_isCritical,
+            this.bool_statusDate
+        ];
     }
 }
 var ValueFields;
@@ -1075,8 +1099,7 @@ class Visual {
         this.divActivityHeader
             .append('table')
             .attr('id', 'table-activityHeader')
-            .append('tr')
-            .attr('class', 'highlight');
+            .append('tr');
         this.divActivityBody
             .append('table')
             .attr('id', 'table-activities');
@@ -1499,12 +1522,11 @@ class Visual {
         console.log('LOG: DONE Drawing Chart');
     }
     drawTable(acts) {
+        //////////////////////////////////////////////////////////////// Choose columns based off config
         console.log('LOG: Drawing Table');
-        if (this.verbose) {
-            console.log('LOG: populateActivityTable called with some number of rows.');
-        }
-        var s = ['1', '2', '3', '4'];
+        let s = this.configuration.getDisplayNames();
         this.divActivityHeader.select('tr').selectAll('th').data(s).join('th').text(d => d);
+        this.divActivityHeader.select('th').classed('td-name', true);
         //create the number of trs required.
         this.divActivityBody
             .select('table')
@@ -1521,6 +1543,7 @@ class Visual {
         //this is a workaround since I couldnt get d3.data(acts).classed(function (d) { return d.getLevel().toString();}) working due to an error
         // (d: any) => string is not compatible with type string...
         // search for @indentTypeMismatch in activity.ts
+        d3__WEBPACK_IMPORTED_MODULE_0__/* .selectAll */ .td_('.td-name').attr('min-width', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.divActivityBody.node().getBoundingClientRect().width));
         d3__WEBPACK_IMPORTED_MODULE_0__/* .selectAll */ .td_('.td-name').data(acts).attr('class', function (d) { return d.getLevelString(); });
         td.classed('td-name', true);
         // tr.selectAll('.td-start')//select all tds, there are 0
@@ -1544,9 +1567,15 @@ class Visual {
     /**
      * Synchronises the left scrolling of the div-timeline and div-ganttChart depending on which one was scrolled.
      *
-     * KNOWN ISSUE: since the event listener that fires this callback is on both div-timeline and div-ganttChart,
+     *  KNOWN BUG: since the event listener that fires this callback is on both div-activityTable and div-ganttChart,
      * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
-     * @param div the div that was scrolled by the user.
+     *
+     * KNOWN BUG: scrolling near scrollTop = 0 and scrollTop = max slows down the scroll per mousewheel tick.
+     * Possibly due to the above bug. I could use the d3.event method to use scroll events and their dy direction but its not working.
+     *
+     * KNOWN BUG: Mousewheel scrolling increments are reduced when near the limits of the track.
+     *
+     * INCOMPLETE JSDOC
      */
     syncScrollTimelineLeft(scrollID, wheel) {
         //links i used to understand ts callbacks, d3 event handling
@@ -1579,12 +1608,15 @@ class Visual {
     /**
     * Synchronises the top scrolling of the div-activityTable and div-ganttChart depending on which one was scrolled.
     *
-    * KNOWN BUG: since the event listener that fires this callback is on both div-activityTable and div-ganttChart,
-    * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
-    *
-    * KNOWN BUG: scrolling near scrollTop = 0 and scrollTop = max slows down the scroll per mousewheel tick.
-    * Possibly due to the above bug. I could use the d3.event method to use scroll events and their dy direction but its not working.
-    * @param div the div that was scrolled by the user.
+    *  KNOWN BUG: since the event listener that fires this callback is on both div-activityTable and div-ganttChart,
+     * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
+     *
+     * KNOWN BUG: scrolling near scrollTop = 0 and scrollTop = max slows down the scroll per mousewheel tick.
+     * Possibly due to the above bug. I could use the d3.event method to use scroll events and their dy direction but its not working.
+     *
+     * KNOWN BUG: Mousewheel scrolling increments are reduced when near the limits of the track.
+     *
+     * INCOMPLETE JSDOC
     */
     syncScrollTimelineTop(scrollID, wheel) {
         //links i used to understand ts callbacks, d3 event handling
@@ -1614,6 +1646,18 @@ class Visual {
                 ;
         }
     }
+    /**
+     * Syncronises top and left scrolling of various divs.
+     *
+     *  KNOWN BUG: since the event listener that fires this callback is on both div-activityTable and div-ganttChart,
+     * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
+     *
+     * KNOWN BUG: scrolling near scrollTop = 0 and scrollTop = max slows down the scroll per mousewheel tick.
+     * Possibly due to the above bug. I could use the d3.event method to use scroll events and their dy direction but its not working.
+     *
+     * KNOWN BUG: Mousewheel scrolling increments are reduced when near the limits of the track.
+     * @param controllerID the ID of the element that fired the event
+     */
     syncScroll(controllerID) {
         let verticals = ['div-ganttChart', 'div-activityTable'];
         let horizontals = ['div-ganttChart', 'div-timeline'];

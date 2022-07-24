@@ -76,11 +76,12 @@ div {
 }
 .div-content-header {
   height: fit-content;
-  width: fit-content;
+  width: 100%;
   min-width: 100%;
   min-height: var(--timelineHeight);
   flex-shrink: 0;
   border-bottom: 1px solid black;
+  overflow-x: scroll;
 }
 .div-content-body {
   min-height: 0px;
@@ -101,7 +102,6 @@ div {
 }
 #div-timeline {
   max-width: 100%;
-  overflow-x: scroll;
 }
 #div-timeline::-webkit-scrollbar {
   height: 0px;
@@ -111,12 +111,19 @@ table {
   width: fit-content;
 }
 #table-activityHeader {
-  width: 25%;
+  width: fit-content;
   color: #bbbbbb;
 }
 th {
   height: var(--timelineHeight);
-  padding: 0;
+  padding: 0px 5px 0px 5px;
+  text-align: center;
+  width: auto;
+  color: black;
+}
+.td-name {
+  min-width: none;
+  width: auto;
 }
 tr {
   height: var(--rowHeight);
@@ -190,7 +197,10 @@ td {
   background: #c8c8c8;
 }
 #div-activityTable::-webkit-scrollbar {
-  width: 10px;
+  width: 0px;
+}
+.div-content-header::-webkit-scrollbar {
+  height: 0px;
 }
 /* ------- DEBUG ------- */
 .highlight {

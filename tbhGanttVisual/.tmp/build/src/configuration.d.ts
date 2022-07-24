@@ -11,15 +11,18 @@ export declare class Configuration {
     private bool_isMilestone;
     private bool_isCritical;
     private bool_statusDate;
+    private vs;
     constructor();
     field(field: ValueFields, set?: boolean): boolean;
     checkRoles(vs: powerbi.DataViewMetadataColumn[]): Configuration;
     printConfig(): string;
     logConfig(): void;
-    valueRoles(): ValueFields[];
     drawGraph(): boolean;
     startFilter(start: dayjs.Dayjs): dayjs.Dayjs;
     endFilter(end: dayjs.Dayjs): dayjs.Dayjs;
+    getDisplayNames(): string[];
+    valueRoles(): ValueFields[];
+    configurationBooleans(): boolean[];
 }
 export declare enum ValueFields {
     START = "Start",

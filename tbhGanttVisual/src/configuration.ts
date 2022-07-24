@@ -18,12 +18,15 @@ export class Configuration {
     private bool_isCritical: boolean; //isCritical 
     private bool_statusDate: boolean; //statusDate 
 
+    private vs: powerbi.DataViewMetadataColumn[];
+
     constructor() {
         this.bool_start = false;
         this.bool_end = false;
         this.bool_isMilestone = false;
         this.bool_isCritical = false;
         this.bool_statusDate = false;
+        this.vs = [];
     }
 
     public field(field: ValueFields, set?: boolean): boolean {
@@ -47,14 +50,14 @@ export class Configuration {
 
     public checkRoles(vs: powerbi.DataViewMetadataColumn[]): Configuration {
 
+        this.vs = vs;
+
         if (this.verbose) { console.log('LOG: number of valuesource items: ' + vs.length); }
-
         let r: ValueFields[] = this.valueRoles();
-
         let valueSourceIndex = 0
+
         for (let i = 0; (i < r.length) && (valueSourceIndex < vs.length); i++) {
             //console.log('vs[' + valueSourceIndex + '] = ' + vs[valueSourceIndex].roles + ', r[' + i + '] = ' + r[i]);
-
             if (vs[valueSourceIndex].roles[r[i]] == true) {
                 this.field(r[i], true);
                 valueSourceIndex++;
@@ -63,7 +66,6 @@ export class Configuration {
             }
             //this.logConfig();
         }
-
         return this;
     }
 
@@ -77,16 +79,6 @@ export class Configuration {
 
     public logConfig() {
         console.log(this.printConfig());
-    }
-
-    public valueRoles(): ValueFields[] {
-        return [
-            ValueFields.START,
-            ValueFields.END,
-            ValueFields.ISMILESTONE,
-            ValueFields.ISCRITICAL,
-            ValueFields.STATUSDATE
-        ];
     }
 
     public drawGraph(): boolean {
@@ -103,6 +95,40 @@ export class Configuration {
     public endFilter(end: dayjs.Dayjs): dayjs.Dayjs {
         if (this.bool_end) { return end; }
     }
+
+    public getDisplayNames(): string[] {
+        let s: string[] = ['Activity'];
+        if (this.vs.length == 0) {
+            console.log('WARN: No values provided to display.')
+        } else {
+            for (let i = 0; i < this.vs.length; i++) {
+                console.log(this.vs[i].displayName);
+                s.push(this.vs[i].displayName);
+            }
+        }
+        return s;
+    }
+
+    public valueRoles(): ValueFields[] {
+        return [
+            ValueFields.START,
+            ValueFields.END,
+            ValueFields.ISMILESTONE,
+            ValueFields.ISCRITICAL,
+            ValueFields.STATUSDATE
+        ];
+    }
+
+    public configurationBooleans(): boolean[] {
+        return [
+            this.bool_start,
+            this.bool_end,
+            this.bool_isMilestone,
+            this.bool_isCritical,
+            this.bool_statusDate
+        ];
+    }
+    
 }
 
 export enum ValueFields {

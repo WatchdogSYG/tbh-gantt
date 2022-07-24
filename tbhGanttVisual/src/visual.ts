@@ -189,9 +189,9 @@ export class Visual implements IVisual {
         this.status = now;
     }
 
-    private generateBody(options: VisualConstructorOptions) {       
+    private generateBody(options: VisualConstructorOptions) {
         //////////////////////////////////////////////////////////////// Create body level child elements
-      
+
         // help from lines 377 onwards at 
         //https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
 
@@ -252,7 +252,7 @@ export class Visual implements IVisual {
         // .on('wheel', function () { _this.syncScrollTimelineLeft('div-ganttChart', true); });
 
         //////////////////////////////////////////////////////////////// Create svg timeline
-        
+
         this.timeline = new Timeline(this.start, this.end, this.status);
 
         this.tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale());//cannot be less than div width!
@@ -282,8 +282,7 @@ export class Visual implements IVisual {
         this.divActivityHeader
             .append('table')
             .attr('id', 'table-activityHeader')
-            .append('tr')
-            .attr('class', 'highlight');
+            .append('tr');
 
         this.divActivityBody
             .append('table')
@@ -765,11 +764,13 @@ export class Visual implements IVisual {
     }
 
     private drawTable(acts: Activity[]) {
+        //////////////////////////////////////////////////////////////// Choose columns based off config
         console.log('LOG: Drawing Table');
-        if (this.verbose) { console.log('LOG: populateActivityTable called with some number of rows.'); }
 
-        var s = ['1', '2', '3', '4'];
+        let s: string[] = this.configuration.getDisplayNames();
+
         this.divActivityHeader.select('tr').selectAll('th').data(s).join('th').text(d => d);
+        this.divActivityHeader.select('th').classed('td-name',true);
 
         //create the number of trs required.
         this.divActivityBody
@@ -789,7 +790,10 @@ export class Visual implements IVisual {
         //this is a workaround since I couldnt get d3.data(acts).classed(function (d) { return d.getLevel().toString();}) working due to an error
         // (d: any) => string is not compatible with type string...
         // search for @indentTypeMismatch in activity.ts
+        d3.selectAll('.td-name').attr('min-width', Lib.px(this.divActivityBody.node().getBoundingClientRect().width));
+        
         d3.selectAll('.td-name').data(acts).attr('class', function (d) { return d.getLevelString(); })
+
         td.classed('td-name', true);
 
 
@@ -808,7 +812,6 @@ export class Visual implements IVisual {
         //.text(function (d) { return d.getTableText(); });//we are taking d from the bound data from the trs
         // .attr('class','style'+d.wbsIndex);
 
-
         console.log('LOG: DONE Drawing Table');
     }
 
@@ -822,9 +825,15 @@ export class Visual implements IVisual {
     /**
      * Synchronises the left scrolling of the div-timeline and div-ganttChart depending on which one was scrolled.
      * 
-     * KNOWN ISSUE: since the event listener that fires this callback is on both div-timeline and div-ganttChart, 
+     *  KNOWN BUG: since the event listener that fires this callback is on both div-activityTable and div-ganttChart, 
      * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
-     * @param div the div that was scrolled by the user.
+     * 
+     * KNOWN BUG: scrolling near scrollTop = 0 and scrollTop = max slows down the scroll per mousewheel tick.
+     * Possibly due to the above bug. I could use the d3.event method to use scroll events and their dy direction but its not working.
+     * 
+     * KNOWN BUG: Mousewheel scrolling increments are reduced when near the limits of the track.
+     * 
+     * INCOMPLETE JSDOC
      */
     private syncScrollTimelineLeft(scrollID: string, wheel: boolean) {
         //links i used to understand ts callbacks, d3 event handling
@@ -854,12 +863,15 @@ export class Visual implements IVisual {
     /**
     * Synchronises the top scrolling of the div-activityTable and div-ganttChart depending on which one was scrolled.
     * 
-    * KNOWN BUG: since the event listener that fires this callback is on both div-activityTable and div-ganttChart, 
-    * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
-    * 
-    * KNOWN BUG: scrolling near scrollTop = 0 and scrollTop = max slows down the scroll per mousewheel tick.
-    * Possibly due to the above bug. I could use the d3.event method to use scroll events and their dy direction but its not working.
-    * @param div the div that was scrolled by the user.
+    *  KNOWN BUG: since the event listener that fires this callback is on both div-activityTable and div-ganttChart, 
+     * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
+     * 
+     * KNOWN BUG: scrolling near scrollTop = 0 and scrollTop = max slows down the scroll per mousewheel tick.
+     * Possibly due to the above bug. I could use the d3.event method to use scroll events and their dy direction but its not working.
+     * 
+     * KNOWN BUG: Mousewheel scrolling increments are reduced when near the limits of the track.
+     * 
+     * INCOMPLETE JSDOC
     */
     private syncScrollTimelineTop(scrollID: string, wheel: boolean) {
         //links i used to understand ts callbacks, d3 event handling
@@ -886,6 +898,18 @@ export class Visual implements IVisual {
         }
     }
 
+    /**
+     * Syncronises top and left scrolling of various divs.
+     * 
+     *  KNOWN BUG: since the event listener that fires this callback is on both div-activityTable and div-ganttChart, 
+     * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
+     * 
+     * KNOWN BUG: scrolling near scrollTop = 0 and scrollTop = max slows down the scroll per mousewheel tick.
+     * Possibly due to the above bug. I could use the d3.event method to use scroll events and their dy direction but its not working.
+     * 
+     * KNOWN BUG: Mousewheel scrolling increments are reduced when near the limits of the track.
+     * @param controllerID the ID of the element that fired the event
+     */
     private syncScroll(controllerID: string) {
         let verticals: string[] = ['div-ganttChart', 'div-activityTable'];
         let horizontals: string[] = ['div-ganttChart', 'div-timeline'];
@@ -927,7 +951,6 @@ export class Visual implements IVisual {
 
     //     return objectEnumeration;
     // }
-
 
     ////////////////////////////////////////////////////////////////
     //  END OF CLASS

@@ -104,21 +104,42 @@ export declare class Visual implements IVisual {
     /**
      * Synchronises the left scrolling of the div-timeline and div-ganttChart depending on which one was scrolled.
      *
-     * KNOWN ISSUE: since the event listener that fires this callback is on both div-timeline and div-ganttChart,
+     *  KNOWN BUG: since the event listener that fires this callback is on both div-activityTable and div-ganttChart,
      * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
-     * @param div the div that was scrolled by the user.
+     *
+     * KNOWN BUG: scrolling near scrollTop = 0 and scrollTop = max slows down the scroll per mousewheel tick.
+     * Possibly due to the above bug. I could use the d3.event method to use scroll events and their dy direction but its not working.
+     *
+     * KNOWN BUG: Mousewheel scrolling increments are reduced when near the limits of the track.
+     *
+     * INCOMPLETE JSDOC
      */
     private syncScrollTimelineLeft;
     /**
     * Synchronises the top scrolling of the div-activityTable and div-ganttChart depending on which one was scrolled.
     *
-    * KNOWN BUG: since the event listener that fires this callback is on both div-activityTable and div-ganttChart,
-    * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
-    *
-    * KNOWN BUG: scrolling near scrollTop = 0 and scrollTop = max slows down the scroll per mousewheel tick.
-    * Possibly due to the above bug. I could use the d3.event method to use scroll events and their dy direction but its not working.
-    * @param div the div that was scrolled by the user.
+    *  KNOWN BUG: since the event listener that fires this callback is on both div-activityTable and div-ganttChart,
+     * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
+     *
+     * KNOWN BUG: scrolling near scrollTop = 0 and scrollTop = max slows down the scroll per mousewheel tick.
+     * Possibly due to the above bug. I could use the d3.event method to use scroll events and their dy direction but its not working.
+     *
+     * KNOWN BUG: Mousewheel scrolling increments are reduced when near the limits of the track.
+     *
+     * INCOMPLETE JSDOC
     */
     private syncScrollTimelineTop;
+    /**
+     * Syncronises top and left scrolling of various divs.
+     *
+     *  KNOWN BUG: since the event listener that fires this callback is on both div-activityTable and div-ganttChart,
+     * it first updates scrollTop for both divs, and then it is fired again from the other div, but with a scroll change of 0.
+     *
+     * KNOWN BUG: scrolling near scrollTop = 0 and scrollTop = max slows down the scroll per mousewheel tick.
+     * Possibly due to the above bug. I could use the d3.event method to use scroll events and their dy direction but its not working.
+     *
+     * KNOWN BUG: Mousewheel scrolling increments are reduced when near the limits of the track.
+     * @param controllerID the ID of the element that fired the event
+     */
     private syncScroll;
 }
