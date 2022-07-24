@@ -1449,16 +1449,12 @@ class Visual {
             .classed('activityBar', true)
             .attr('fill', function (d) {
             switch (d.getLevel()) {
-                case 0:
-                    return 'red';
-                case 1:
-                    return 'green';
-                case 2:
-                    return 'blue';
-                case 3:
-                    return 'yellow';
-                default:
-                    return 'gray';
+                case 0: return '#2A588E';
+                case 1: return '#3B6064';
+                case 2: return '#55828B';
+                case 3: return '#87BBA2';
+                case 4: return '#A4E1C9';
+                default: return 'gray';
             }
         });
         ////////////////////////////////////////////////////////////////

@@ -1,8 +1,7 @@
 :root {
   --rowHeight: 20px;
   --timelineHeight: 50px;
-  --chartPortionPct: 75%;
-  --chartPortionFr: 75fr;
+  --chartPortionPct: 65%;
   --tbh-blue-background: #232d40;
   --tbh-blue1: #19808f;
   --tbh-blue2: #09343f;
@@ -68,7 +67,7 @@ div {
   display: flex;
 }
 #div-activities {
-  width: 25%;
+  width: 35%;
   flex-shrink: 0;
   height: 100%;
   display: flex;
@@ -172,7 +171,7 @@ td {
 }
 /* ------- CHART ------- */
 .activityBar {
-  stroke: black;
+  stroke: gray;
   stroke-width: 1px;
 }
 #svg-statusLine {
