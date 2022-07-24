@@ -37,9 +37,9 @@
 //
 //lock scrolling to discrete steps (row height)
 //
+//dont draw the year if the start date is around december
 //
-//
-//
+//if the timeilne is to be shorter than the div width, scale it so it fits the whole div width
 //
 //
 //
@@ -127,6 +127,8 @@ export class Visual implements IVisual {
     private ganttSVG: Selection<SVGSVGElement>;
     //text
 
+    private bars: Selection<SVGSVGElement>;
+
     ////////////////DEV VARS\\\\\\\\\\\\\\\\
     private verbose: boolean = false; //verbose logging
 
@@ -157,6 +159,9 @@ export class Visual implements IVisual {
         //jsUnit.allTests();
 
         this.style = getComputedStyle(document.querySelector(':root'));
+        this.setDefaultTimelineParams();
+        this.generateBody(options);
+        this.configuration = new Configuration();
 
         //     this.target = options.element;
         //     this.updateCount = 0;
@@ -169,18 +174,13 @@ export class Visual implements IVisual {
         //         new_p.appendChild(new_em);
         //         this.target.appendChild(new_p);
         //      }
-        this.setDefaultTimelineParams();
-
-        this.generateBody(options);
-
-
-        this.configuration = new Configuration();
-
     }
 
+    /**
+     * Sets the member variables start, end, and status to the beginning of this year, the end of this year, and now, respectively.
+     */
     private setDefaultTimelineParams() {
         let now: dayjs.Dayjs = dayjs(new Date());
-
         this.start = now.startOf('year');
         this.end = now.endOf('year');
         this.status = now;
@@ -206,7 +206,7 @@ export class Visual implements IVisual {
 
         this.status = dayjs(new Date(2019, 6, 19));
         let acts: Activity[] = this.checkConfiguration(dataView);
-        let ts: TimeScale = this.drawTimeline(acts);
+        let ts: TimeScale = this.drawTimeline();
 
         this.configuration.logConfig();
         if (this.configuration.field(ValueFields.START) && this.configuration.field(ValueFields.END)) {
@@ -314,6 +314,12 @@ export class Visual implements IVisual {
 
         this.gYears = this.timelineSVG.append('g')
             .classed('g-tl', true);
+
+
+        this.bars = this.divChartBody
+            .append('g')
+            .append('svg')
+            .attr('id', 'svg-bars');
     }
 
     /**
@@ -334,28 +340,20 @@ export class Visual implements IVisual {
 
         //check verbose
         console.log('dataView.matrix.rows.root', dataView.matrix.rows.root);
-        console.log('a');
 
         let acts: Activity[] = [];
-        console.log('a');
         this.dfsPreorder(acts, dataView.matrix.rows.root.children[0]);
-        console.log('a');
         if (this.configuration.field(ValueFields.START) && this.configuration.field(ValueFields.END)) {
             let dt: dayjs.Dayjs[] = this.summariseDates(acts);
-            console.log('b');
             this.start = dt[0];
             this.end = dt[1];
         } else {
             this.setDefaultTimelineParams();
-            console.log('c');
         }
 
-        console.log('a');
         acts = this.trimHeirarchy(acts);
-        console.log('a');
         console.log('Activity array', acts);
         console.log('LOG: DONE Checking Configuration');
-        console.log('a');
         return acts;
     }
 
@@ -542,7 +540,7 @@ export class Visual implements IVisual {
         }
     }
 
-    private drawTimeline(acts: Activity[]): TimeScale {
+    private drawTimeline(): TimeScale {
         console.log('LOG: Drawing Timeline');
 
         this.timeline.defineTimeline(this.start, this.end, this.status);
@@ -559,8 +557,7 @@ export class Visual implements IVisual {
         //////////////////////////////////////////////////////////////// YearText
         this.gYears.selectAll('text')
             .data(ts.yearScale)
-            .enter()
-            .append('text')
+            .join('text')
             .attr('x', function (d) {
                 return Lib.px(d.offset + d.textAnchorOffset);
             })
@@ -571,12 +568,12 @@ export class Visual implements IVisual {
             .classed('yearText', true);
 
         //////////////////////////////////////////////////////////////// YearLine
-        this.gYears.selectAll('line').data(ts.yearScale).enter().append('line')
+        this.gYears.selectAll('line')
+            .data(ts.yearScale)
+            .join('line')
             .attr('x1', function (d) { return Lib.px(d.offset); })
             .attr('y1', '0px')
-            .attr('x2', function (d) {
-                return Lib.px(d.offset);
-            })
+            .attr('x2', function (d) { return Lib.px(d.offset); })
             .attr('y2', this.tlHeight)
             .attr('stroke-width', '2px')
             .attr('style', 'stroke:black');
@@ -584,11 +581,8 @@ export class Visual implements IVisual {
         //////////////////////////////////////////////////////////////// MonthText
         this.gMonths.selectAll('text')
             .data(ts.monthScale)
-            .enter()
-            .append('text')
-            .attr('x', function (d) {
-                return Lib.px(d.offset + d.textAnchorOffset);
-            })
+            .join('text')
+            .attr('x', function (d) { return Lib.px(d.offset + d.textAnchorOffset); })
             .attr('y', Lib.px(this.tlHeight / 2))
             .text(function (d) { return d.text; })
             .attr('text-anchor', 'top')
@@ -597,12 +591,12 @@ export class Visual implements IVisual {
             .classed('monthText', true);
 
         //////////////////////////////////////////////////////////////// YMonthLine
-        this.gMonths.selectAll('line').data(ts.monthScale).enter().append('line')
+        this.gMonths.selectAll('line')
+            .data(ts.monthScale)
+            .join('line')
             .attr('x1', function (d) { return Lib.px(d.offset); })
             .attr('y1', Lib.px(this.tlHeight / 2))
-            .attr('x2', function (d) {
-                return Lib.px(d.offset);
-            })
+            .attr('x2', function (d) { return Lib.px(d.offset); })
             .attr('y2', this.tlHeight)
             .attr('style', 'stroke:red');
 
@@ -614,7 +608,6 @@ export class Visual implements IVisual {
     private drawChart(acts: Activity[], ts: TimeScale, gantt: Selection<SVGSVGElement>) {
 
         console.log('LOG: Drawing Chart');
-
 
         ////////////////////////////////////////////////////////////////
         //  Create #table-activities
@@ -628,24 +621,17 @@ export class Visual implements IVisual {
 
         var _this = this; //get a reference to self so that d3's anonymous callbacks can access member functions
 
-        //this.populateActivityTable(myData, null, 'table-activities');
-
         ////////////////////////////////////////////////////////////////
         //  Prepare for chart drawing
         ////////////////////////////////////////////////////////////////
 
-        let bars: Selection<SVGSVGElement> = this.divChartBody
-            .append('g')
-            .append('svg')
-            .attr('id', 'svg-bars')
+        this.bars
             .attr('width', Lib.px(this.tlWidth))
             .attr('height', Lib.px(this.rowHeight * acts.length));
 
-
-        bars.selectAll('rect')
+        this.bars.selectAll('rect')
             .data(acts)
-            .enter()
-            .append('rect')
+            .join('rect')
             .attr('x', function (d) {
                 return Lib.px(_this.timeline.dateLocation(d.getStart()));
             })
@@ -658,7 +644,6 @@ export class Visual implements IVisual {
             .attr('ry', '3px')
             .classed('activityBar', true)
             .attr('fill', function (d) {
-
                 switch (d.getLevel()) {
                     case 0:
                         return 'red';
@@ -677,7 +662,7 @@ export class Visual implements IVisual {
         //  Draw chart
         ////////////////////////////////////////////////////////////////
 
-        this.chartHeight = bars.node().getBoundingClientRect().height + this.tlHeight;
+        this.chartHeight = this.bars.node().getBoundingClientRect().height + this.tlHeight;
 
         //also put this in a fn later for update()
         // getBBox() help here:

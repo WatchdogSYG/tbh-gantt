@@ -96,11 +96,11 @@ class Configuration {
         return this;
     }
     printConfig() {
-        return ValueFields.START + this.bool_start + '\n' +
-            ValueFields.END + this.bool_end + '\n' +
-            ValueFields.ISMILESTONE + this.bool_isMilestone + '\n' +
-            ValueFields.ISCRITICAL + this.bool_isCritical + '\n' +
-            ValueFields.STATUSDATE + this.bool_statusDate;
+        return ValueFields.START + ' = ' + this.bool_start + '\n' +
+            ValueFields.END + ' = ' + this.bool_end + '\n' +
+            ValueFields.ISMILESTONE + ' = ' + this.bool_isMilestone + '\n' +
+            ValueFields.ISCRITICAL + ' = ' + this.bool_isCritical + '\n' +
+            ValueFields.STATUSDATE + ' = ' + this.bool_statusDate;
     }
     logConfig() {
         console.log(this.printConfig());
@@ -929,9 +929,9 @@ class TimeScale {
 //
 //lock scrolling to discrete steps (row height)
 //
+//dont draw the year if the start date is around december
 //
-//
-//
+//if the timeilne is to be shorter than the div width, scale it so it fits the whole div width
 //
 //
 //
@@ -963,7 +963,6 @@ class Visual {
     //  Constructor
     ////////////////////////////////////////////////////////////////
     constructor(options) {
-        //text
         ////////////////DEV VARS\\\\\\\\\\\\\\\\
         this.verbose = false; //verbose logging
         if (this.verbose) {
@@ -971,6 +970,9 @@ class Visual {
         }
         //jsUnit.allTests();
         this.style = getComputedStyle(document.querySelector(':root'));
+        this.setDefaultTimelineParams();
+        this.generateBody(options);
+        this.configuration = new _src_configuration__WEBPACK_IMPORTED_MODULE_3__/* .Configuration */ .V();
         //     this.target = options.element;
         //     this.updateCount = 0;
         //     if (document) {
@@ -982,10 +984,10 @@ class Visual {
         //         new_p.appendChild(new_em);
         //         this.target.appendChild(new_p);
         //      }
-        this.setDefaultTimelineParams();
-        this.generateBody(options);
-        this.configuration = new _src_configuration__WEBPACK_IMPORTED_MODULE_3__/* .Configuration */ .V();
     }
+    /**
+     * Sets the member variables start, end, and status to the beginning of this year, the end of this year, and now, respectively.
+     */
     setDefaultTimelineParams() {
         let now = dayjs__WEBPACK_IMPORTED_MODULE_4__(new Date());
         this.start = now.startOf('year');
@@ -1009,7 +1011,7 @@ class Visual {
         //generatetimeline with default dates
         this.status = dayjs__WEBPACK_IMPORTED_MODULE_4__(new Date(2019, 6, 19));
         let acts = this.checkConfiguration(dataView);
-        let ts = this.drawTimeline(acts);
+        let ts = this.drawTimeline();
         this.configuration.logConfig();
         if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_3__/* .ValueFields.START */ .$.START) && this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_3__/* .ValueFields.END */ .$.END)) {
             this.drawChart(acts, ts, this.timelineSVG);
@@ -1095,6 +1097,10 @@ class Visual {
             .classed('g-tl', true);
         this.gYears = this.timelineSVG.append('g')
             .classed('g-tl', true);
+        this.bars = this.divChartBody
+            .append('g')
+            .append('svg')
+            .attr('id', 'svg-bars');
     }
     /**
      * Returns the configuration of the desired graph to determine which elements to render based on the data in dataView.
@@ -1110,27 +1116,19 @@ class Visual {
         //this.configuration.logConfig();
         //check verbose
         console.log('dataView.matrix.rows.root', dataView.matrix.rows.root);
-        console.log('a');
         let acts = [];
-        console.log('a');
         this.dfsPreorder(acts, dataView.matrix.rows.root.children[0]);
-        console.log('a');
         if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_3__/* .ValueFields.START */ .$.START) && this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_3__/* .ValueFields.END */ .$.END)) {
             let dt = this.summariseDates(acts);
-            console.log('b');
             this.start = dt[0];
             this.end = dt[1];
         }
         else {
             this.setDefaultTimelineParams();
-            console.log('c');
         }
-        console.log('a');
         acts = this.trimHeirarchy(acts);
-        console.log('a');
         console.log('Activity array', acts);
         console.log('LOG: DONE Checking Configuration');
-        console.log('a');
         return acts;
     }
     /**
@@ -1289,7 +1287,7 @@ class Visual {
             return node.value.toString();
         }
     }
-    drawTimeline(acts) {
+    drawTimeline() {
         console.log('LOG: Drawing Timeline');
         this.timeline.defineTimeline(this.start, this.end, this.status);
         //todo reduce duplicate code vvv
@@ -1301,8 +1299,7 @@ class Visual {
         //////////////////////////////////////////////////////////////// YearText
         this.gYears.selectAll('text')
             .data(ts.yearScale)
-            .enter()
-            .append('text')
+            .join('text')
             .attr('x', function (d) {
             return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset + d.textAnchorOffset);
         })
@@ -1312,23 +1309,20 @@ class Visual {
             .attr('alignment-baseline', 'hanging')
             .classed('yearText', true);
         //////////////////////////////////////////////////////////////// YearLine
-        this.gYears.selectAll('line').data(ts.yearScale).enter().append('line')
+        this.gYears.selectAll('line')
+            .data(ts.yearScale)
+            .join('line')
             .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
             .attr('y1', '0px')
-            .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
-        })
+            .attr('x2', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
             .attr('y2', this.tlHeight)
             .attr('stroke-width', '2px')
             .attr('style', 'stroke:black');
         //////////////////////////////////////////////////////////////// MonthText
         this.gMonths.selectAll('text')
             .data(ts.monthScale)
-            .enter()
-            .append('text')
-            .attr('x', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset + d.textAnchorOffset);
-        })
+            .join('text')
+            .attr('x', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset + d.textAnchorOffset); })
             .attr('y', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight / 2))
             .text(function (d) { return d.text; })
             .attr('text-anchor', 'top')
@@ -1336,12 +1330,12 @@ class Visual {
             .attr('text-anchor', 'middle')
             .classed('monthText', true);
         //////////////////////////////////////////////////////////////// YMonthLine
-        this.gMonths.selectAll('line').data(ts.monthScale).enter().append('line')
+        this.gMonths.selectAll('line')
+            .data(ts.monthScale)
+            .join('line')
             .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
             .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight / 2))
-            .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
-        })
+            .attr('x2', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
             .attr('y2', this.tlHeight)
             .attr('style', 'stroke:red');
         console.log('LOG: DONE Drawing Timeline');
@@ -1358,20 +1352,15 @@ class Visual {
         // https://stackoverflow.com/questions/37583275/how-to-append-multiple-child-elements-to-a-div-in-d3-js?noredirect=1&lq=1
         // https://stackoverflow.com/questions/21485981/appending-multiple-non-nested-elements-for-each-data-member-with-d3-js
         var _this = this; //get a reference to self so that d3's anonymous callbacks can access member functions
-        //this.populateActivityTable(myData, null, 'table-activities');
         ////////////////////////////////////////////////////////////////
         //  Prepare for chart drawing
         ////////////////////////////////////////////////////////////////
-        let bars = this.divChartBody
-            .append('g')
-            .append('svg')
-            .attr('id', 'svg-bars')
+        this.bars
             .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlWidth))
             .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.rowHeight * acts.length));
-        bars.selectAll('rect')
+        this.bars.selectAll('rect')
             .data(acts)
-            .enter()
-            .append('rect')
+            .join('rect')
             .attr('x', function (d) {
             return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(_this.timeline.dateLocation(d.getStart()));
         })
@@ -1400,7 +1389,7 @@ class Visual {
         ////////////////////////////////////////////////////////////////
         //  Draw chart
         ////////////////////////////////////////////////////////////////
-        this.chartHeight = bars.node().getBoundingClientRect().height + this.tlHeight;
+        this.chartHeight = this.bars.node().getBoundingClientRect().height + this.tlHeight;
         //also put this in a fn later for update()
         // getBBox() help here:
         // https://stackoverflow.com/questions/45792692/property-getbbox-does-not-exist-on-type-svgelement

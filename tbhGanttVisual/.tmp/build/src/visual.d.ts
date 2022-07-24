@@ -18,6 +18,7 @@ export declare class Visual implements IVisual {
     private activityTable;
     private timelineSVG;
     private ganttSVG;
+    private bars;
     private verbose;
     private style;
     private timeline;
@@ -32,6 +33,9 @@ export declare class Visual implements IVisual {
     private gMonths;
     private gYears;
     constructor(options: VisualConstructorOptions);
+    /**
+     * Sets the member variables start, end, and status to the beginning of this year, the end of this year, and now, respectively.
+     */
     private setDefaultTimelineParams;
     update(options: VisualUpdateOptions): void;
     private generateBody;

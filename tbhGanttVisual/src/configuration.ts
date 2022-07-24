@@ -68,11 +68,11 @@ export class Configuration {
     }
 
     public printConfig(): string {
-        return ValueFields.START + this.bool_start + '\n' +
-            ValueFields.END + this.bool_end + '\n' +
-            ValueFields.ISMILESTONE + this.bool_isMilestone + '\n' +
-            ValueFields.ISCRITICAL + this.bool_isCritical + '\n' +
-            ValueFields.STATUSDATE + this.bool_statusDate;
+        return ValueFields.START + ' = ' + this.bool_start + '\n' +
+            ValueFields.END + ' = ' + this.bool_end + '\n' +
+            ValueFields.ISMILESTONE + ' = ' + this.bool_isMilestone + '\n' +
+            ValueFields.ISCRITICAL + ' = ' + this.bool_isCritical + '\n' +
+            ValueFields.STATUSDATE + ' = ' + this.bool_statusDate;
     }
 
     public logConfig() {
