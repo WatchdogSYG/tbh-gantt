@@ -41,7 +41,7 @@
 //
 //if the timeilne is to be shorter than the div width, scale it so it fits the whole div width
 //
-//
+//handle missing value fields by determining values index
 //
 //
 //
@@ -80,13 +80,14 @@ type Selection<T extends d3.BaseType> = d3.Selection<T, any, any, any>;
 import * as Lib from './../src/lib';
 import * as Time from './../src/time';
 import { Timeline, TimeScale } from './../src/timeline';
-import { Activity } from './../src/activity';
+import { Activity, ActivityStyle } from './../src/activity';
 import { Configuration, ValueFields } from './../src/configuration';
 
 import * as dayjs from 'dayjs';
 
 //UNIT TESTS
 import * as jsUnit from './../tests/globalTests';
+import { validationHelper } from 'powerbi-visuals-utils-dataviewutils';
 
 ////////////////////////////////////////////////////////////////
 //  Begin class definition
@@ -94,14 +95,7 @@ import * as jsUnit from './../tests/globalTests';
 
 export class Visual implements IVisual {
 
-    ////////////////////////////////////////////////////////////////
-    //  Define members
-    ////////////////////////////////////////////////////////////////
-
-    // private target: HTMLElement;
-    // private updateCount: number;
-    // private settings: VisualSettings;
-    // private textNode: Text;
+    //////////////////////////////////////////////////////////////// Define members
 
     private host: IVisualHost;
     private body: Selection<any>;
@@ -193,7 +187,6 @@ export class Visual implements IVisual {
 
     private generateBody(options: VisualConstructorOptions) {
         //////////////////////////////////////////////////////////////// Create body level child elements
-
         // help from lines 377 onwards at 
         //https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
 
@@ -255,7 +248,7 @@ export class Visual implements IVisual {
 
         //////////////////////////////////////////////////////////////// Create svg timeline
 
-        this.timeline = new Timeline(this.start, this.end, this.status);
+        this.timeline = new Timeline(this.start, this.end, this.status, this.divChartHeader.node().getBoundingClientRect().width);
 
         this.tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale());//cannot be less than div width!
         this.tlHeight = Lib.pxToNumber(this.style.getPropertyValue('--timelineHeight'));
@@ -272,7 +265,6 @@ export class Visual implements IVisual {
 
         this.gYears = this.timelineSVG.append('g')
             .classed('g-tl', true);
-
 
         this.bars = this.divChartBody
             .append('g')
@@ -342,13 +334,14 @@ export class Visual implements IVisual {
         }
 
         this.configuration.checkRoles(dataView.matrix.valueSources);
-        //this.configuration.logConfig();
+        this.configuration.logConfig();
 
         //check verbose
         console.log('dataView.matrix.rows.root', dataView.matrix.rows.root);
-
         let acts: Activity[] = [];
         this.dfsPreorder(acts, dataView.matrix.rows.root.children[0]);
+        console.log('b');
+console.log(acts);
 
         acts = this.trimHeirarchy(acts);
 
@@ -360,7 +353,9 @@ export class Visual implements IVisual {
             this.setDefaultTimelineParams();
         }
 
-        console.log('Activity array', acts);
+// if(this.configuration.field(ValueFields.STATUSDATE)){ this.status =  };
+
+        // console.log('Activity array', acts);
         console.log('LOG: DONE Checking Configuration');
         return acts;
     }
@@ -531,24 +526,42 @@ export class Visual implements IVisual {
      */
     private dfsPreorder(activities: Activity[], node: powerbi.DataViewMatrixNode) {
         this.updateMaxDepth(node.level);
+        console.log('a');
+
         if (node.children == null) {
+            console.log(node.level);
+
+            let start: dayjs.Dayjs = null;
+            let end: dayjs.Dayjs = null;
+            let status: dayjs.Dayjs = null;
+            console.log(dayjs(node.values[this.configuration.getValueMap(ValueFields.START)].value as Date));
+            console.log(dayjs(node.values[this.configuration.getValueMap(ValueFields.END)].value as Date));
+            // console.log(dayjs(Time.nullOrDate(node.values[this.configuration.getValueMap(ValueFields.STATUSDATE)].value)));
+
+            //check if safe to access .value
+            if(this.configuration.field(ValueFields.START)){ start = dayjs(node.values[this.configuration.getValueMap(ValueFields.START)].value as Date);}
+            if(this.configuration.field(ValueFields.END)){ end = dayjs(node.values[this.configuration.getValueMap(ValueFields.END)].value as Date);}
+            if(this.configuration.field(ValueFields.STATUSDATE)){ status = dayjs(node.values[this.configuration.getValueMap(ValueFields.STATUSDATE)].value as Date);}
+            console.log('a');
+            
             // console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
-            if ((node.values[0] != null) && (node.values[1] != null)) {//every task must have a start and finish, unless the config contradicts
-                activities.push(new Activity(
+               activities.push(new Activity(
                     this.nodeName(node),
-                    this.configuration.startFilter(dayjs(node.values[0].value as Date)),
-                    this.configuration.endFilter(dayjs(node.values[1].value as Date)),
-                    node.level));
-            }
+                    node.level,
+                    start,
+                    end,
+                    status
+                    ));
+            
         } else {
-            // console.log("LOG: RECURSION: level = " + node.level);
-            // console.log("LOG:" + this.nodeName(node));
-            // console.log("LOG:" + node.level);
+            //if it has children, it has null value
             activities.push(new Activity(
                 this.nodeName(node),
+                node.level,
                 null,
                 null,
-                node.level));//need to check type?
+                null
+                ));
             for (let i = 0; i < node.children.length; i++) {
                 this.dfsPreorder(activities, node.children[i]);
             }
@@ -579,7 +592,7 @@ export class Visual implements IVisual {
     private drawTimeline(): TimeScale {
         console.log('LOG: Drawing Timeline from ' + this.start.format('DD/MM/YY') + ' to ' + this.end.format('DD/MM/YY'));
 
-        this.timeline.defineTimeline(this.start, this.end, this.status);
+        this.timeline.defineTimeline(this.start, this.end, this.status, this.divChartHeader.node().getBoundingClientRect().width);
 
         //todo reduce duplicate code vvv
         this.tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale());//cannot be less than div width!
@@ -686,7 +699,7 @@ export class Visual implements IVisual {
                     case 2: return '#55828B';
                     case 3: return '#87BBA2';
                     case 4: return '#A4E1C9';
-                    default:return 'gray';
+                    default: return 'gray';
                 }
             });
 
@@ -711,7 +724,7 @@ export class Visual implements IVisual {
 
         //////////////////////////////////////////////////////////////// Grid
 
-        this.gMonths.selectAll('.grid-months')
+        this.bars.selectAll('.grid-months')
             .data(ts.monthScale).enter().append('line')
             .attr('x1', function (d) { return Lib.px(d.offset); })
             .attr('y1', Lib.px(this.tlHeight))
@@ -719,9 +732,9 @@ export class Visual implements IVisual {
                 return Lib.px(d.offset);
             })
             .attr('y2', Lib.px(this.chartHeight))
-            .attr('style', 'stroke:green');
+            .attr('style', 'stroke:gray');
 
-        this.gYears.selectAll('.grid-years')
+        this.bars.selectAll('.grid-years')
             .data(ts.yearScale).enter().append('line')
             .attr('x1', function (d) { return Lib.px(d.offset); })
             .attr('y1', Lib.px(this.tlHeight))
@@ -733,19 +746,18 @@ export class Visual implements IVisual {
 
         //////////////////////////////////////////////////////////////// Status
 
-        // this.status = dayjs(new Date(2019, 3, 15));
-        this.status = dayjs(new Date(2020, 10, 15));
-        this.timeline.setStatus(this.status);
+        //the status lines are destroyed and recreated every update(). I couldn't find a way to use .join or .update
 
-        //the status lines are destroyed and recreated every update(). I could'nt find a way to use .join or .update
-        this.timelineSVG
+        if(this.configuration.field(ValueFields.STATUSDATE)){
+
+            this.timelineSVG
             .append('line')
             .attr('x1', '0px')
             .attr('x2', '0px')
             .attr('y1', '0px')
             .attr('y2', Lib.px(this.tlHeight))
             .attr('id', 'statusLine-tl')
-            .attr('transform', this.timeline.statusDateTranslation())
+            .attr('transform', this.timeline.statusDateTranslationPx())
             .attr('style', 'stroke: red');
 
         this.bars
@@ -755,8 +767,10 @@ export class Visual implements IVisual {
             .attr('y1', '0px')
             .attr('y2', Lib.px(this.chartHeight))
             .attr('id', 'statusLine-chart')
-            .attr('transform', this.timeline.statusDateTranslation())
+            .attr('transform', this.timeline.statusDateTranslationPx())
             .attr('style', 'stroke: red');
+        }
+        
 
         console.log('LOG: DONE Drawing Chart');
     }
@@ -768,7 +782,7 @@ export class Visual implements IVisual {
         let s: string[] = this.configuration.getDisplayNames();
 
         this.divActivityHeader.select('tr').selectAll('th').data(s).join('th').text(d => d);
-        this.divActivityHeader.select('th').classed('td-name',true);
+        this.divActivityHeader.select('th').classed('td-name', true);
 
         //create the number of trs required.
         this.divActivityBody
@@ -789,7 +803,7 @@ export class Visual implements IVisual {
         // (d: any) => string is not compatible with type string...
         // search for @indentTypeMismatch in activity.ts
         d3.selectAll('.td-name').attr('min-width', Lib.px(this.divActivityBody.node().getBoundingClientRect().width));
-        
+
         d3.selectAll('.td-name').data(acts).attr('class', function (d) { return d.getLevelString(); })
 
         td.classed('td-name', true);
@@ -812,8 +826,6 @@ export class Visual implements IVisual {
 
         console.log('LOG: DONE Drawing Table');
     }
-
-
 
     //https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
     //https://www.dashingd3js.com/d3-tutorial/use-d3-js-to-bind-data-to-dom-elements
@@ -933,6 +945,34 @@ export class Visual implements IVisual {
         }
     }
 
+
+
+    //[09:28] Jack Tran
+    // Add Custom Formatting 
+    private static parseSettings(dataView: DataView): VisualSettings {
+        return <VisualSettings>VisualSettings.parse(dataView);
+    }
+
+    /** 
+    * This function gets called for each of the objects defined in the capabilities files and allows you to select which of the 
+    * objects and properties you want to expose to the users in the property pane.
+    * 
+    */
+    public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
+        const settings: VisualSettings = this.settings || <VisualSettings>VisualSettings.getDefault();
+        return VisualSettings.enumerateObjectInstances(settings, options);
+    }
+
+
+    ////////////////////////////////////////////////////////////////
+    //  END OF CLASS
+    ////////////////////////////////////////////////////////////////
+}
+
+    ////////////////////////////////////////////////////////////////
+    //  UNUSED CODE SNIPPETS
+    ////////////////////////////////////////////////////////////////    
+    
     // public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
 
 
@@ -951,26 +991,3 @@ export class Visual implements IVisual {
 
     //     return objectEnumeration;
     // }
-
-
-    //[09:28] Jack Tran
-// Add Custom Formatting 
-private static parseSettings(dataView: DataView): VisualSettings {
-return <VisualSettings>VisualSettings.parse(dataView);
-}
-
-/** 
-* This function gets called for each of the objects defined in the capabilities files and allows you to select which of the 
-* objects and properties you want to expose to the users in the property pane.
-* 
-*/
-public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
-const settings: VisualSettings = this.settings || <VisualSettings>VisualSettings.getDefault();
-return VisualSettings.enumerateObjectInstances(settings, options);
-}
-
-
-    ////////////////////////////////////////////////////////////////
-    //  END OF CLASS
-    ////////////////////////////////////////////////////////////////
-}

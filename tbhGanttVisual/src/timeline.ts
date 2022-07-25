@@ -72,13 +72,13 @@ export class Timeline {
     //  Constructor
     ////////////////////////////////////////////////////////////////
 
-    constructor(start: dayjs.Dayjs, end: dayjs.Dayjs, status: dayjs.Dayjs) {
+    constructor(start: dayjs.Dayjs, end: dayjs.Dayjs, status: dayjs.Dayjs, minWidth: number) {
         if (this.verbose) { console.log('LOG: Constructing Timeline Object'); }
-        this.defineTimeline(start, end, status);
+        this.defineTimeline(start, end, status, minWidth);
     }
 
 
-    public defineTimeline(start: dayjs.Dayjs, end: dayjs.Dayjs, status: dayjs.Dayjs) {
+    public defineTimeline(start: dayjs.Dayjs, end: dayjs.Dayjs, status: dayjs.Dayjs, minWidth: number) {
         //check which date is larger and round to nearest day
         if (start > end) {
             this.d1 = end.startOf('d');
@@ -322,7 +322,7 @@ export class Timeline {
      * Converts the status date to a horizontal offset on the chart based on the Timeline scale. Similar to Timeline.dateLocation(date: dayjs.Dayjs).
      * @returns The location from the left edge of the chart the current status date corresponds to
      */
-    public statusDateTranslation(): string {
+    public statusDateTranslationPx(): string {
         return 'translate(' + this.dateLocation(this.status) + ')';
     }
 

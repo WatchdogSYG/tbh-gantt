@@ -9,28 +9,48 @@ var tbhGanttVisual02814EA99E75457B80AA513BCFD5A299_DEBUG;
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "c": () => (/* binding */ Activity)
 /* harmony export */ });
+/* unused harmony export ActivityStyle */
 class Activity {
-    constructor(name, start, end, level) {
-        this.start = start;
-        this.end = end;
+    constructor(name, level, start, end, globalStatus) {
         this.name = name;
         this.level = level;
+        this.start = start;
+        this.end = end;
+        this.globalStatus = globalStatus;
     }
-    getStart() { return this.start; }
-    getEnd() { return this.end; }
     getName() { return this.name; }
     getLevel() { return this.level; }
     getLevelString() { return 'indent'.concat(this.level.toString()); } //required for workaround, search for @indentTypeMismatch in visual.ts
+    getStart() { return this.start; }
+    getEnd() { return this.end; }
+    getGlobalStatus() { return this.globalStatus; }
     getTableText() { return [this.name, this.start.format('DD/MM/YY'), this.end.format('DD/MM/YY')]; }
+    setLevel(level) { this.level = level; }
     setStart(date) { this.start = date; }
     setEnd(date) { this.end = date; }
-    setLevel(level) { this.level = level; }
+    setGlobalStatus(date) { this.globalStatus = date; }
+}
+class ActivityStyle {
+    constructor() {
+        //TODO: get the styles at runtume
+        this.fillArray = [
+            '#2A588E',
+            '#3B6064',
+            '#55828B',
+            '#87BBA2',
+            '#A4E1C9',
+            'gray'
+        ];
+    }
+    fill(level) {
+        return this.fill(Math.min(Math.floor(level), this.fill.length));
+    }
 }
 
 
 /***/ }),
 
-/***/ 747:
+/***/ 8747:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -48,6 +68,7 @@ class Configuration {
         this.bool_isCritical = false;
         this.bool_statusDate = false;
         this.vs = [];
+        this.valueMap = new Map;
     }
     field(field, set) {
         if (set != null) {
@@ -88,6 +109,7 @@ class Configuration {
             //console.log('vs[' + valueSourceIndex + '] = ' + vs[valueSourceIndex].roles + ', r[' + i + '] = ' + r[i]);
             if (vs[valueSourceIndex].roles[r[i]] == true) {
                 this.field(r[i], true);
+                this.valueMap.set(r[valueSourceIndex], valueSourceIndex);
                 valueSourceIndex++;
             }
             else {
@@ -96,6 +118,9 @@ class Configuration {
             //this.logConfig();
         }
         return this;
+    }
+    getValueMap(key) {
+        return this.valueMap.get(key);
     }
     printConfig() {
         return ValueFields.START + ' = ' + this.bool_start + '\n' +
@@ -117,10 +142,24 @@ class Configuration {
         if (this.bool_start) {
             return start;
         }
+        else {
+            return null;
+        }
     }
     endFilter(end) {
         if (this.bool_end) {
             return end;
+        }
+        else {
+            return null;
+        }
+    }
+    statusFilter(status) {
+        if (this.bool_statusDate) {
+            return status;
+        }
+        else {
+            return null;
         }
     }
     getDisplayNames() {
@@ -250,6 +289,69 @@ function roundOptions(x, round) {
 
 /***/ }),
 
+/***/ 3615:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "J": () => (/* binding */ VisualSettings)
+/* harmony export */ });
+/* unused harmony export userFormattingSettings */
+/* harmony import */ var powerbi_visuals_utils_dataviewutils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4554);
+/*
+ *  Power BI Visualizations
+ *
+ *  Copyright (c) Microsoft Corporation
+ *  All rights reserved.
+ *  MIT License
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the ""Software""), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
+
+
+var DataViewObjectsParser = powerbi_visuals_utils_dataviewutils__WEBPACK_IMPORTED_MODULE_0__/* .DataViewObjectsParser */ .U;
+class VisualSettings extends DataViewObjectsParser {
+    constructor() {
+        super(...arguments);
+        this.userFormatting = new userFormattingSettings();
+        //      public dataColour: DataColourSettings = new DataColourSettings();
+        //      public font: fontSettings = new fontSettings();
+    }
+}
+class userFormattingSettings {
+    constructor() {
+        // Default color
+        this.defaultColor = "";
+        // Show all
+        this.showAllDataPoints = true;
+        // Fill
+        this.fill = "";
+        // Color saturation
+        //public fillRule: string = "";
+        // Text Size
+        this.fontSize = 12;
+    }
+}
+
+
+/***/ }),
+
 /***/ 4734:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -268,7 +370,7 @@ function roundOptions(x, round) {
 /* harmony export */   "ti": () => (/* binding */ daysElapsedInYear),
 /* harmony export */   "tp": () => (/* binding */ daysElapsedInMonth)
 /* harmony export */ });
-/* unused harmony exports millisPerSecond, secondsPerMinute, minutesPerHour, hoursPerDay, daysPerWeek, monthsPerYear, daysPerYear, mmmArray, mArray, epoch0, isLeapYear */
+/* unused harmony exports millisPerSecond, secondsPerMinute, minutesPerHour, hoursPerDay, daysPerWeek, monthsPerYear, daysPerYear, mmmArray, mArray, epoch0, isLeapYear, nullOrDate */
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9665);
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_0__);
 //A header lib for date and time fns
@@ -485,6 +587,10 @@ function maxDayjs(d) {
     }
     return dayjs__WEBPACK_IMPORTED_MODULE_0__(Math.max(...t));
 }
+function nullOrDate(d) {
+    //if (d == null) { return null; } else { return d as Date; }
+    return null;
+}
 ////////////////////////////////////////////////////////////////
 //  UNUSED FUNCTIONS
 ////////////////////////////////////////////////////////////////
@@ -630,7 +736,7 @@ class Timeline {
     ////////////////////////////////////////////////////////////////
     //  Constructor
     ////////////////////////////////////////////////////////////////
-    constructor(start, end, status) {
+    constructor(start, end, status, minWidth) {
         ////////////////////////////////////////////////////////////////
         //  Define members
         ////////////////////////////////////////////////////////////////
@@ -639,7 +745,7 @@ class Timeline {
         if (this.verbose) {
             console.log('LOG: Constructing Timeline Object');
         }
-        this.defineTimeline(start, end, status);
+        this.defineTimeline(start, end, status, minWidth);
     }
     ////////////////////////////////////////////////////////////////
     //  Get/Set
@@ -658,7 +764,7 @@ class Timeline {
     //getters and setters with updates
     setYearPadding(padding) {
     }
-    defineTimeline(start, end, status) {
+    defineTimeline(start, end, status, minWidth) {
         //check which date is larger and round to nearest day
         if (start > end) {
             this.d1 = end.startOf('d');
@@ -875,7 +981,7 @@ class Timeline {
      * Converts the status date to a horizontal offset on the chart based on the Timeline scale. Similar to Timeline.dateLocation(date: dayjs.Dayjs).
      * @returns The location from the left edge of the chart the current status date corresponds to
      */
-    statusDateTranslation() {
+    statusDateTranslationPx() {
         return 'translate(' + this.dateLocation(this.status) + ')';
     }
     /**
@@ -916,14 +1022,15 @@ class TimeScale {
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "u": () => (/* binding */ Visual)
 /* harmony export */ });
-/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(662);
-/* harmony import */ var _src_lib__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(809);
-/* harmony import */ var _src_time__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4734);
-/* harmony import */ var _src_timeline__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(1092);
-/* harmony import */ var _src_activity__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(8944);
-/* harmony import */ var _src_configuration__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(747);
-/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(9665);
-/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _settings__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3615);
+/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(662);
+/* harmony import */ var _src_lib__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(809);
+/* harmony import */ var _src_time__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4734);
+/* harmony import */ var _src_timeline__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(1092);
+/* harmony import */ var _src_activity__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(8944);
+/* harmony import */ var _src_configuration__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(8747);
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(9665);
+/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_5__);
 /*
 *  Power BI Visual CLI
 *
@@ -965,7 +1072,7 @@ class TimeScale {
 //
 //if the timeilne is to be shorter than the div width, scale it so it fits the whole div width
 //
-//
+//handle missing value fields by determining values index
 //
 //
 //
@@ -979,6 +1086,7 @@ class TimeScale {
 ////////////////////////////////////////////////////////////////
 //  Imports
 ////////////////////////////////////////////////////////////////
+
 
 
 
@@ -1005,7 +1113,7 @@ class Visual {
         this.style = getComputedStyle(document.querySelector(':root'));
         this.setDefaultTimelineParams();
         this.generateBody(options);
-        this.configuration = new _src_configuration__WEBPACK_IMPORTED_MODULE_3__/* .Configuration */ .V();
+        this.configuration = new _src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .Configuration */ .V();
         //     this.target = options.element;
         //     this.updateCount = 0;
         //     if (document) {
@@ -1022,7 +1130,7 @@ class Visual {
      * Sets the member variables start, end, and status to the beginning of this year, the end of this year, and now, respectively.
      */
     setDefaultTimelineParams() {
-        let now = dayjs__WEBPACK_IMPORTED_MODULE_4__(new Date());
+        let now = dayjs__WEBPACK_IMPORTED_MODULE_5__(new Date());
         this.start = now.startOf('year');
         this.end = now.endOf('year');
         this.status = now;
@@ -1032,13 +1140,13 @@ class Visual {
         // help from lines 377 onwards at 
         //https://github.com/microsoft/powerbi-visuals-gantt/blob/master/src/gantt.ts
         //the header including title, logos etc
-        this.divHeader = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys(options.element)
+        this.divHeader = d3__WEBPACK_IMPORTED_MODULE_1__/* .select */ .Ys(options.element)
             .append('div')
             .attr('id', 'div-header')
             .append('h4')
             .text('TBH Gantt Chart Visual v0.1 (in development)');
         //structure of the content below the header
-        this.content = d3__WEBPACK_IMPORTED_MODULE_0__/* .select */ .Ys(options.element)
+        this.content = d3__WEBPACK_IMPORTED_MODULE_1__/* .select */ .Ys(options.element)
             .append('div')
             .attr('id', 'div-content');
         //////////////////////////////////////////////////////////////// Create elements under the header
@@ -1078,14 +1186,14 @@ class Visual {
         // .on('scroll', function () { _this.syncScrollTimelineLeft('div-ganttChart', false); })
         // .on('wheel', function () { _this.syncScrollTimelineLeft('div-ganttChart', true); });
         //////////////////////////////////////////////////////////////// Create svg timeline
-        this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_2__/* .Timeline */ .TY(this.start, this.end, this.status);
+        this.timeline = new _src_timeline__WEBPACK_IMPORTED_MODULE_3__/* .Timeline */ .TY(this.start, this.end, this.status, this.divChartHeader.node().getBoundingClientRect().width);
         this.tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale()); //cannot be less than div width!
-        this.tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_5__/* .pxToNumber */ .F(this.style.getPropertyValue('--timelineHeight'));
-        this.rowHeight = _src_lib__WEBPACK_IMPORTED_MODULE_5__/* .pxToNumber */ .F(this.style.getPropertyValue('--rowHeight'));
+        this.tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_6__/* .pxToNumber */ .F(this.style.getPropertyValue('--timelineHeight'));
+        this.rowHeight = _src_lib__WEBPACK_IMPORTED_MODULE_6__/* .pxToNumber */ .F(this.style.getPropertyValue('--rowHeight'));
         this.timelineSVG = this.divChartHeader
             .append('svg')
-            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight))
-            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlWidth))
+            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlHeight))
+            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlWidth))
             .attr('id', 'svg-tl');
         this.gMonths = this.timelineSVG.append('g')
             .classed('g-tl', true);
@@ -1109,7 +1217,7 @@ class Visual {
     ////////////////////////////////////////////////////////////////
     update(options) {
         //////////////////////////////////////////////////////////////// Setup Update loop
-        //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
+        this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
         if (this.verbose) {
             console.log('Visual update()', options);
         }
@@ -1122,12 +1230,12 @@ class Visual {
             document.getElementById('statusLine-chart').remove();
         }
         //////////////////////////////////////////////////////////////// Get a default timeline
-        this.status = dayjs__WEBPACK_IMPORTED_MODULE_4__(new Date(2019, 6, 19));
+        this.status = dayjs__WEBPACK_IMPORTED_MODULE_5__(new Date(2019, 6, 19));
         let acts = this.checkConfiguration(dataView);
         let ts = this.drawTimeline();
         //////////////////////////////////////////////////////////////// choose to draw the chart based on config
         this.configuration.logConfig();
-        if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_3__/* .ValueFields.START */ .$.START) && this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_3__/* .ValueFields.END */ .$.END)) {
+        if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.START */ .$.START) && this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.END */ .$.END)) {
             this.drawChart(acts, ts, this.timelineSVG);
             console.log('not null');
         }
@@ -1152,13 +1260,15 @@ class Visual {
             console.log('LOG: number of heirachy levels: ' + dataView.matrix.rows.levels.length);
         }
         this.configuration.checkRoles(dataView.matrix.valueSources);
-        //this.configuration.logConfig();
+        this.configuration.logConfig();
         //check verbose
         console.log('dataView.matrix.rows.root', dataView.matrix.rows.root);
         let acts = [];
         this.dfsPreorder(acts, dataView.matrix.rows.root.children[0]);
+        console.log('b');
+        console.log(acts);
         acts = this.trimHeirarchy(acts);
-        if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_3__/* .ValueFields.START */ .$.START) && this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_3__/* .ValueFields.END */ .$.END)) {
+        if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.START */ .$.START) && this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.END */ .$.END)) {
             let dt = this.summariseDates(acts, dataView);
             this.start = dt[0];
             this.end = dt[1];
@@ -1166,7 +1276,8 @@ class Visual {
         else {
             this.setDefaultTimelineParams();
         }
-        console.log('Activity array', acts);
+        // if(this.configuration.field(ValueFields.STATUSDATE)){ this.status =  };
+        // console.log('Activity array', acts);
         console.log('LOG: DONE Checking Configuration');
         return acts;
     }
@@ -1185,7 +1296,7 @@ class Visual {
         for (let i = 0; i < acts.length; i++) {
             let l = acts[acts.length - i - 1].getLevel();
             if (l < currentLevel) { // going up indents, summarise, add self to higher buffer
-                acts[acts.length - i - 1].setStart(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA(aggregateBuffer[l + 1]));
+                acts[acts.length - i - 1].setStart(_src_time__WEBPACK_IMPORTED_MODULE_2__/* .minDayjs */ .rA(aggregateBuffer[l + 1]));
                 //console.log(l, aggregateBuffer[l + 1]);
                 //console.log(l, 'Summarise Start', Time.minDayjs(aggregateBuffer[l + 1]).format('DD/MM/YY'));
                 aggregateBuffer[l].push(acts[acts.length - i - 1].getStart());
@@ -1208,7 +1319,7 @@ class Visual {
         for (let i = 0; i < acts.length; i++) {
             let l = acts[acts.length - i - 1].getLevel();
             if (l < currentLevel) { // going up indents, summarise, add self to higher buffer
-                acts[acts.length - i - 1].setEnd(_src_time__WEBPACK_IMPORTED_MODULE_1__/* .maxDayjs */ .AY(aggregateBuffer[l + 1]));
+                acts[acts.length - i - 1].setEnd(_src_time__WEBPACK_IMPORTED_MODULE_2__/* .maxDayjs */ .AY(aggregateBuffer[l + 1]));
                 //console.log(l, 'Summarise End', Time.maxDayjs(aggregateBuffer[l + 1]).format('DD/MM/YY'));
                 aggregateBuffer[l].push(acts[acts.length - i - 1].getEnd());
                 currentLevel = l;
@@ -1228,7 +1339,7 @@ class Visual {
         }
         //console.log(globalStart);
         //console.log(globalEnd);
-        return [_src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA(globalStart), _src_time__WEBPACK_IMPORTED_MODULE_1__/* .minDayjs */ .rA(globalEnd)];
+        return [_src_time__WEBPACK_IMPORTED_MODULE_2__/* .minDayjs */ .rA(globalStart), _src_time__WEBPACK_IMPORTED_MODULE_2__/* .minDayjs */ .rA(globalEnd)];
     }
     /**
      * Returns an array of empty arrays. The number of empty arrays is equal to the 1-indexed depth of the DataView tree.
@@ -1323,17 +1434,32 @@ class Visual {
      */
     dfsPreorder(activities, node) {
         this.updateMaxDepth(node.level);
+        console.log('a');
         if (node.children == null) {
-            // console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
-            if ((node.values[0] != null) && (node.values[1] != null)) { //every task must have a start and finish, unless the config contradicts
-                activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_6__/* .Activity */ .c(this.nodeName(node), this.configuration.startFilter(dayjs__WEBPACK_IMPORTED_MODULE_4__(node.values[0].value)), this.configuration.endFilter(dayjs__WEBPACK_IMPORTED_MODULE_4__(node.values[1].value)), node.level));
+            console.log(node.level);
+            let start = null;
+            let end = null;
+            let status = null;
+            console.log(dayjs__WEBPACK_IMPORTED_MODULE_5__(node.values[this.configuration.getValueMap(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.START */ .$.START)].value));
+            console.log(dayjs__WEBPACK_IMPORTED_MODULE_5__(node.values[this.configuration.getValueMap(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.END */ .$.END)].value));
+            // console.log(dayjs(Time.nullOrDate(node.values[this.configuration.getValueMap(ValueFields.STATUSDATE)].value)));
+            //check if safe to access .value
+            if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.START */ .$.START)) {
+                start = dayjs__WEBPACK_IMPORTED_MODULE_5__(node.values[this.configuration.getValueMap(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.START */ .$.START)].value);
             }
+            if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.END */ .$.END)) {
+                end = dayjs__WEBPACK_IMPORTED_MODULE_5__(node.values[this.configuration.getValueMap(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.END */ .$.END)].value);
+            }
+            if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.STATUSDATE */ .$.STATUSDATE)) {
+                status = dayjs__WEBPACK_IMPORTED_MODULE_5__(node.values[this.configuration.getValueMap(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.STATUSDATE */ .$.STATUSDATE)].value);
+            }
+            console.log('a');
+            // console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
+            activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_7__/* .Activity */ .c(this.nodeName(node), node.level, start, end, status));
         }
         else {
-            // console.log("LOG: RECURSION: level = " + node.level);
-            // console.log("LOG:" + this.nodeName(node));
-            // console.log("LOG:" + node.level);
-            activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_6__/* .Activity */ .c(this.nodeName(node), null, null, node.level)); //need to check type?
+            //if it has children, it has null value
+            activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_7__/* .Activity */ .c(this.nodeName(node), node.level, null, null, null));
             for (let i = 0; i < node.children.length; i++) {
                 this.dfsPreorder(activities, node.children[i]);
             }
@@ -1364,19 +1490,19 @@ class Visual {
     }
     drawTimeline() {
         console.log('LOG: Drawing Timeline from ' + this.start.format('DD/MM/YY') + ' to ' + this.end.format('DD/MM/YY'));
-        this.timeline.defineTimeline(this.start, this.end, this.status);
+        this.timeline.defineTimeline(this.start, this.end, this.status, this.divChartHeader.node().getBoundingClientRect().width);
         //todo reduce duplicate code vvv
         this.tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale()); //cannot be less than div width!
         let ts = this.timeline.getTimeScale();
         this.timelineSVG
-            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight))
-            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlWidth));
+            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlHeight))
+            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlWidth));
         //////////////////////////////////////////////////////////////// YearText
         this.gYears.selectAll('text')
             .data(ts.yearScale)
             .join('text')
             .attr('x', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset + d.textAnchorOffset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset + d.textAnchorOffset);
         })
             .attr('y', '0px')
             .text(function (d) { return d.text; })
@@ -1387,9 +1513,9 @@ class Visual {
         this.gYears.selectAll('line')
             .data(ts.yearScale)
             .join('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset); })
             .attr('y1', '0px')
-            .attr('x2', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
+            .attr('x2', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset); })
             .attr('y2', this.tlHeight)
             .attr('stroke-width', '2px')
             .attr('style', 'stroke:black');
@@ -1397,8 +1523,8 @@ class Visual {
         this.gMonths.selectAll('text')
             .data(ts.monthScale)
             .join('text')
-            .attr('x', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset + d.textAnchorOffset); })
-            .attr('y', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight / 2))
+            .attr('x', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset + d.textAnchorOffset); })
+            .attr('y', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlHeight / 2))
             .text(function (d) { return d.text; })
             .attr('text-anchor', 'top')
             .attr('alignment-baseline', 'hanging')
@@ -1408,9 +1534,9 @@ class Visual {
         this.gMonths.selectAll('line')
             .data(ts.monthScale)
             .join('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
-            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight / 2))
-            .attr('x2', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset); })
+            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlHeight / 2))
+            .attr('x2', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset); })
             .attr('y2', this.tlHeight)
             .attr('style', 'stroke:red');
         console.log('LOG: DONE Drawing Timeline');
@@ -1431,19 +1557,19 @@ class Visual {
         //  Prepare for chart drawing
         ////////////////////////////////////////////////////////////////
         this.bars
-            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlWidth))
-            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.rowHeight * acts.length));
+            .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlWidth))
+            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.rowHeight * acts.length));
         this.bars.selectAll('rect')
             .data(acts)
             .join('rect')
             .attr('x', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(_this.timeline.dateLocation(d.getStart()));
+            return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(_this.timeline.dateLocation(d.getStart()));
         })
-            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.rowHeight - 4))
+            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.rowHeight - 4))
             .attr('width', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(_this.timeline.dateLocation(d.getEnd()) - _this.timeline.dateLocation(d.getStart()));
+            return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(_this.timeline.dateLocation(d.getEnd()) - _this.timeline.dateLocation(d.getStart()));
         })
-            .attr('y', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px((_this.rowHeight * i) + 2); })
+            .attr('y', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px((_this.rowHeight * i) + 2); })
             .attr('rx', '3px')
             .attr('ry', '3px')
             .classed('activityBar', true)
@@ -1474,47 +1600,46 @@ class Visual {
         //     .attr('y2', Lib.px(this.chartHeight))
         //     .attr('transform', 'translate(' + this.timeline.statusDateLocation() + ')');
         //////////////////////////////////////////////////////////////// Grid
-        this.gMonths.selectAll('.grid-months')
+        this.bars.selectAll('.grid-months')
             .data(ts.monthScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
-            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight))
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset); })
+            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlHeight))
             .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset);
         })
-            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.chartHeight))
-            .attr('style', 'stroke:green');
-        this.gYears.selectAll('.grid-years')
+            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.chartHeight))
+            .attr('style', 'stroke:gray');
+        this.bars.selectAll('.grid-years')
             .data(ts.yearScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset); })
-            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight))
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset); })
+            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlHeight))
             .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(d.offset);
+            return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset);
         })
-            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.chartHeight))
+            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.chartHeight))
             .attr('style', 'stroke:gray');
         //////////////////////////////////////////////////////////////// Status
-        // this.status = dayjs(new Date(2019, 3, 15));
-        this.status = dayjs__WEBPACK_IMPORTED_MODULE_4__(new Date(2020, 10, 15));
-        this.timeline.setStatus(this.status);
-        //the status lines are destroyed and recreated every update(). I could'nt find a way to use .join or .update
-        this.timelineSVG
-            .append('line')
-            .attr('x1', '0px')
-            .attr('x2', '0px')
-            .attr('y1', '0px')
-            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.tlHeight))
-            .attr('id', 'statusLine-tl')
-            .attr('transform', this.timeline.statusDateTranslation())
-            .attr('style', 'stroke: red');
-        this.bars
-            .append('line')
-            .attr('x1', '0px')
-            .attr('x2', '0px')
-            .attr('y1', '0px')
-            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.chartHeight))
-            .attr('id', 'statusLine-chart')
-            .attr('transform', this.timeline.statusDateTranslation())
-            .attr('style', 'stroke: red');
+        //the status lines are destroyed and recreated every update(). I couldn't find a way to use .join or .update
+        if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.STATUSDATE */ .$.STATUSDATE)) {
+            this.timelineSVG
+                .append('line')
+                .attr('x1', '0px')
+                .attr('x2', '0px')
+                .attr('y1', '0px')
+                .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlHeight))
+                .attr('id', 'statusLine-tl')
+                .attr('transform', this.timeline.statusDateTranslationPx())
+                .attr('style', 'stroke: red');
+            this.bars
+                .append('line')
+                .attr('x1', '0px')
+                .attr('x2', '0px')
+                .attr('y1', '0px')
+                .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.chartHeight))
+                .attr('id', 'statusLine-chart')
+                .attr('transform', this.timeline.statusDateTranslationPx())
+                .attr('style', 'stroke: red');
+        }
         console.log('LOG: DONE Drawing Chart');
     }
     drawTable(acts) {
@@ -1539,8 +1664,8 @@ class Visual {
         //this is a workaround since I couldnt get d3.data(acts).classed(function (d) { return d.getLevel().toString();}) working due to an error
         // (d: any) => string is not compatible with type string...
         // search for @indentTypeMismatch in activity.ts
-        d3__WEBPACK_IMPORTED_MODULE_0__/* .selectAll */ .td_('.td-name').attr('min-width', _src_lib__WEBPACK_IMPORTED_MODULE_5__.px(this.divActivityBody.node().getBoundingClientRect().width));
-        d3__WEBPACK_IMPORTED_MODULE_0__/* .selectAll */ .td_('.td-name').data(acts).attr('class', function (d) { return d.getLevelString(); });
+        d3__WEBPACK_IMPORTED_MODULE_1__/* .selectAll */ .td_('.td-name').attr('min-width', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.divActivityBody.node().getBoundingClientRect().width));
+        d3__WEBPACK_IMPORTED_MODULE_1__/* .selectAll */ .td_('.td-name').data(acts).attr('class', function (d) { return d.getLevelString(); });
         td.classed('td-name', true);
         // tr.selectAll('.td-start')//select all tds, there are 0
         //     .data(function (d) { return d.getTableText()[1]; })//THIS DATA COMES FROM THE TR's _data_ PROPERTY
@@ -1682,6 +1807,20 @@ class Visual {
                     console.log('Invalid scroll div');
                 }
         }
+    }
+    //[09:28] Jack Tran
+    // Add Custom Formatting 
+    static parseSettings(dataView) {
+        return _settings__WEBPACK_IMPORTED_MODULE_0__/* .VisualSettings.parse */ .J.parse(dataView);
+    }
+    /**
+    * This function gets called for each of the objects defined in the capabilities files and allows you to select which of the
+    * objects and properties you want to expose to the users in the property pane.
+    *
+    */
+    enumerateObjectInstances(options) {
+        const settings = this.settings || _settings__WEBPACK_IMPORTED_MODULE_0__/* .VisualSettings.getDefault */ .J.getDefault();
+        return _settings__WEBPACK_IMPORTED_MODULE_0__/* .VisualSettings.enumerateObjectInstances */ .J.enumerateObjectInstances(settings, options);
     }
 }
 
@@ -11293,6 +11432,161 @@ var dependencies = {"d3-array":"1","d3-axis":"1","d3-brush":"1","d3-chord":"1","
 
 
 
+
+/***/ }),
+
+/***/ 9567:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "N": () => (/* binding */ getValue)
+/* harmony export */ });
+/* unused harmony export getFillColorByPropertyName */
+function getValue(object, propertyName, defaultValue) {
+    if (!object) {
+        return defaultValue;
+    }
+    let propertyValue = object[propertyName];
+    if (propertyValue === undefined) {
+        return defaultValue;
+    }
+    return propertyValue;
+}
+/** Gets the solid color from a fill property using only a propertyName */
+function getFillColorByPropertyName(object, propertyName, defaultColor) {
+    let value = getValue(object, propertyName);
+    if (!value || !value.solid) {
+        return defaultColor;
+    }
+    return value.solid.color;
+}
+//# sourceMappingURL=dataViewObject.js.map
+
+/***/ }),
+
+/***/ 982:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "d9": () => (/* binding */ getCommonValue)
+/* harmony export */ });
+/* unused harmony exports getValue, getObject, getFillColor */
+/* harmony import */ var _dataViewObject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9567);
+
+/** Gets the value of the given object/property pair. */
+function getValue(objects, propertyId, defaultValue) {
+    if (!objects) {
+        return defaultValue;
+    }
+    return _dataViewObject__WEBPACK_IMPORTED_MODULE_0__/* .getValue */ .N(objects[propertyId.objectName], propertyId.propertyName, defaultValue);
+}
+/** Gets an object from objects. */
+function getObject(objects, objectName, defaultValue) {
+    if (objects && objects[objectName]) {
+        return objects[objectName];
+    }
+    return defaultValue;
+}
+/** Gets the solid color from a fill property. */
+function getFillColor(objects, propertyId, defaultColor) {
+    const value = getValue(objects, propertyId);
+    if (!value || !value.solid) {
+        return defaultColor;
+    }
+    return value.solid.color;
+}
+function getCommonValue(objects, propertyId, defaultValue) {
+    const value = getValue(objects, propertyId, defaultValue);
+    if (value && value.solid) {
+        return value.solid.color;
+    }
+    if (value === undefined
+        || value === null
+        || (typeof value === "object" && !value.solid)) {
+        return defaultValue;
+    }
+    return value;
+}
+//# sourceMappingURL=dataViewObjects.js.map
+
+/***/ }),
+
+/***/ 4554:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "U": () => (/* binding */ DataViewObjectsParser)
+/* harmony export */ });
+/* harmony import */ var _dataViewObjects__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(982);
+
+class DataViewObjectsParser {
+    static getDefault() {
+        return new this();
+    }
+    static createPropertyIdentifier(objectName, propertyName) {
+        return {
+            objectName,
+            propertyName
+        };
+    }
+    static parse(dataView) {
+        let dataViewObjectParser = this.getDefault(), properties;
+        if (!dataView || !dataView.metadata || !dataView.metadata.objects) {
+            return dataViewObjectParser;
+        }
+        properties = dataViewObjectParser.getProperties();
+        for (let objectName in properties) {
+            for (let propertyName in properties[objectName]) {
+                const defaultValue = dataViewObjectParser[objectName][propertyName];
+                dataViewObjectParser[objectName][propertyName] = _dataViewObjects__WEBPACK_IMPORTED_MODULE_0__/* .getCommonValue */ .d9(dataView.metadata.objects, properties[objectName][propertyName], defaultValue);
+            }
+        }
+        return dataViewObjectParser;
+    }
+    static isPropertyEnumerable(propertyName) {
+        return !DataViewObjectsParser.InnumerablePropertyPrefix.test(propertyName);
+    }
+    static enumerateObjectInstances(dataViewObjectParser, options) {
+        let dataViewProperties = dataViewObjectParser && dataViewObjectParser[options.objectName];
+        if (!dataViewProperties) {
+            return [];
+        }
+        let instance = {
+            objectName: options.objectName,
+            selector: null,
+            properties: {}
+        };
+        for (let key in dataViewProperties) {
+            if (dataViewProperties.hasOwnProperty(key)) {
+                instance.properties[key] = dataViewProperties[key];
+            }
+        }
+        return {
+            instances: [instance]
+        };
+    }
+    getProperties() {
+        let properties = {}, objectNames = Object.keys(this);
+        objectNames.forEach((objectName) => {
+            if (DataViewObjectsParser.isPropertyEnumerable(objectName)) {
+                let propertyNames = Object.keys(this[objectName]);
+                properties[objectName] = {};
+                propertyNames.forEach((propertyName) => {
+                    if (DataViewObjectsParser.isPropertyEnumerable(objectName)) {
+                        properties[objectName][propertyName] =
+                            DataViewObjectsParser.createPropertyIdentifier(objectName, propertyName);
+                    }
+                });
+            }
+        });
+        return properties;
+    }
+}
+DataViewObjectsParser.InnumerablePropertyPrefix = /^_/;
+//# sourceMappingURL=dataViewObjectsParser.js.map
 
 /***/ }),
 

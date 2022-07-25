@@ -218,12 +218,17 @@ export function minDayjs(d: dayjs.Dayjs[]): dayjs.Dayjs {
  * @param d An array of Dayjs objects
  * @returns the latest one
  */
- export function maxDayjs(d: dayjs.Dayjs[]): dayjs.Dayjs {
+export function maxDayjs(d: dayjs.Dayjs[]): dayjs.Dayjs {
     let t: number[] = [];
     for (let i = 0; i < d.length; i++) {
         t.push(d[i].valueOf())
     }
     return dayjs(Math.max(...t));
+}
+
+export function nullOrDate(d: dayjs.Dayjs): Date {
+    //if (d == null) { return null; } else { return d as Date; }
+    return null;
 }
 
 ////////////////////////////////////////////////////////////////

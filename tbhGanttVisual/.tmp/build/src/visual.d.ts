@@ -3,6 +3,8 @@ import powerbi from 'powerbi-visuals-api';
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
+import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
+import VisualObjectInstanceEnumeration = powerbi.VisualObjectInstanceEnumeration;
 export declare class Visual implements IVisual {
     private host;
     private body;
@@ -33,6 +35,7 @@ export declare class Visual implements IVisual {
     private gMonths;
     private gYears;
     private maxDepth;
+    private settings;
     constructor(options: VisualConstructorOptions);
     /**
      * Sets the member variables start, end, and status to the beginning of this year, the end of this year, and now, respectively.
@@ -142,4 +145,11 @@ export declare class Visual implements IVisual {
      * @param controllerID the ID of the element that fired the event
      */
     private syncScroll;
+    private static parseSettings;
+    /**
+    * This function gets called for each of the objects defined in the capabilities files and allows you to select which of the
+    * objects and properties you want to expose to the users in the property pane.
+    *
+    */
+    enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration;
 }

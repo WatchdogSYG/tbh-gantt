@@ -11,15 +11,18 @@ export declare class Configuration {
     private bool_isMilestone;
     private bool_isCritical;
     private bool_statusDate;
+    private valueMap;
     private vs;
     constructor();
     field(field: ValueFields, set?: boolean): boolean;
     checkRoles(vs: powerbi.DataViewMetadataColumn[]): Configuration;
+    getValueMap(key: ValueFields): number;
     printConfig(): string;
     logConfig(): void;
     drawGraph(): boolean;
     startFilter(start: dayjs.Dayjs): dayjs.Dayjs;
     endFilter(end: dayjs.Dayjs): dayjs.Dayjs;
+    statusFilter(status: dayjs.Dayjs): dayjs.Dayjs;
     getDisplayNames(): string[];
     valueRoles(): ValueFields[];
     configurationBooleans(): boolean[];

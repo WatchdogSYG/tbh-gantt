@@ -31,8 +31,8 @@ export declare class Timeline {
     setYearPadding(padding: number): void;
     private yearPadding;
     private monthPadding;
-    constructor(start: dayjs.Dayjs, end: dayjs.Dayjs, status: dayjs.Dayjs);
-    defineTimeline(start: dayjs.Dayjs, end: dayjs.Dayjs, status: dayjs.Dayjs): void;
+    constructor(start: dayjs.Dayjs, end: dayjs.Dayjs, status: dayjs.Dayjs, minWidth: number);
+    defineTimeline(start: dayjs.Dayjs, end: dayjs.Dayjs, status: dayjs.Dayjs, minWidth: number): void;
     /**
      * Not yet implemented
      * @param daysPerPixel the desired scale factor
@@ -71,7 +71,7 @@ export declare class Timeline {
      * Converts the status date to a horizontal offset on the chart based on the Timeline scale. Similar to Timeline.dateLocation(date: dayjs.Dayjs).
      * @returns The location from the left edge of the chart the current status date corresponds to
      */
-    statusDateTranslation(): string;
+    statusDateTranslationPx(): string;
     /**
      * DEV ONLY
      */

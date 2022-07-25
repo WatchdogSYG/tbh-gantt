@@ -18,6 +18,8 @@ export class Configuration {
     private bool_isCritical: boolean; //isCritical 
     private bool_statusDate: boolean; //statusDate 
 
+    private valueMap: Map<ValueFields, number>;
+
     private vs: powerbi.DataViewMetadataColumn[];
 
     constructor() {
@@ -27,6 +29,7 @@ export class Configuration {
         this.bool_isCritical = false;
         this.bool_statusDate = false;
         this.vs = [];
+        this.valueMap = new Map<ValueFields, number>;
     }
 
     public field(field: ValueFields, set?: boolean): boolean {
@@ -49,7 +52,6 @@ export class Configuration {
     }
 
     public checkRoles(vs: powerbi.DataViewMetadataColumn[]): Configuration {
-
         this.vs = vs;
 
         if (this.verbose) { console.log('LOG: number of valuesource items: ' + vs.length); }
@@ -60,6 +62,7 @@ export class Configuration {
             //console.log('vs[' + valueSourceIndex + '] = ' + vs[valueSourceIndex].roles + ', r[' + i + '] = ' + r[i]);
             if (vs[valueSourceIndex].roles[r[i]] == true) {
                 this.field(r[i], true);
+                this.valueMap.set(r[valueSourceIndex], valueSourceIndex);
                 valueSourceIndex++;
             } else {
                 this.field(r[i], false);//must explicitly set in case a field is removed
@@ -67,6 +70,10 @@ export class Configuration {
             //this.logConfig();
         }
         return this;
+    }
+
+    public getValueMap(key: ValueFields): number {
+        return this.valueMap.get(key);
     }
 
     public printConfig(): string {
@@ -89,11 +96,15 @@ export class Configuration {
     }
 
     public startFilter(start: dayjs.Dayjs): dayjs.Dayjs {
-        if (this.bool_start) { return start; }
+        if (this.bool_start) { return start; } else { return null; }
     }
 
     public endFilter(end: dayjs.Dayjs): dayjs.Dayjs {
-        if (this.bool_end) { return end; }
+        if (this.bool_end) { return end; } else { return null; }
+    }
+
+    public statusFilter(status: dayjs.Dayjs): dayjs.Dayjs {
+        if (this.bool_statusDate) { return status; } else { return null; }
     }
 
     public getDisplayNames(): string[] {
@@ -128,7 +139,7 @@ export class Configuration {
             this.bool_statusDate
         ];
     }
-    
+
 }
 
 export enum ValueFields {
