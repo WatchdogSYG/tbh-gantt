@@ -226,11 +226,6 @@ export function maxDayjs(d: dayjs.Dayjs[]): dayjs.Dayjs {
     return dayjs(Math.max(...t));
 }
 
-export function nullOrDate(d: dayjs.Dayjs): Date {
-    //if (d == null) { return null; } else { return d as Date; }
-    return null;
-}
-
 ////////////////////////////////////////////////////////////////
 //  UNUSED FUNCTIONS
 ////////////////////////////////////////////////////////////////

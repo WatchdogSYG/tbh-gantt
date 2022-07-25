@@ -526,26 +526,20 @@ console.log(acts);
      */
     private dfsPreorder(activities: Activity[], node: powerbi.DataViewMatrixNode) {
         this.updateMaxDepth(node.level);
-        console.log('a');
 
         if (node.children == null) {
-            console.log(node.level);
 
             let start: dayjs.Dayjs = null;
             let end: dayjs.Dayjs = null;
             let status: dayjs.Dayjs = null;
-            console.log(dayjs(node.values[this.configuration.getValueMap(ValueFields.START)].value as Date));
-            console.log(dayjs(node.values[this.configuration.getValueMap(ValueFields.END)].value as Date));
-            // console.log(dayjs(Time.nullOrDate(node.values[this.configuration.getValueMap(ValueFields.STATUSDATE)].value)));
 
             //check if safe to access .value
             if(this.configuration.field(ValueFields.START)){ start = dayjs(node.values[this.configuration.getValueMap(ValueFields.START)].value as Date);}
             if(this.configuration.field(ValueFields.END)){ end = dayjs(node.values[this.configuration.getValueMap(ValueFields.END)].value as Date);}
             if(this.configuration.field(ValueFields.STATUSDATE)){ status = dayjs(node.values[this.configuration.getValueMap(ValueFields.STATUSDATE)].value as Date);}
-            console.log('a');
             
             // console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
-               activities.push(new Activity(
+            activities.push(new Activity(
                     this.nodeName(node),
                     node.level,
                     start,

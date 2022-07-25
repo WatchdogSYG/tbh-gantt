@@ -69,4 +69,3 @@ export declare function minDayjs(d: dayjs.Dayjs[]): dayjs.Dayjs;
  * @returns the latest one
  */
 export declare function maxDayjs(d: dayjs.Dayjs[]): dayjs.Dayjs;
-export declare function nullOrDate(d: dayjs.Dayjs): Date;

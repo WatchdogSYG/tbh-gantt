@@ -370,7 +370,7 @@ class userFormattingSettings {
 /* harmony export */   "ti": () => (/* binding */ daysElapsedInYear),
 /* harmony export */   "tp": () => (/* binding */ daysElapsedInMonth)
 /* harmony export */ });
-/* unused harmony exports millisPerSecond, secondsPerMinute, minutesPerHour, hoursPerDay, daysPerWeek, monthsPerYear, daysPerYear, mmmArray, mArray, epoch0, isLeapYear, nullOrDate */
+/* unused harmony exports millisPerSecond, secondsPerMinute, minutesPerHour, hoursPerDay, daysPerWeek, monthsPerYear, daysPerYear, mmmArray, mArray, epoch0, isLeapYear */
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9665);
 /* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_0__);
 //A header lib for date and time fns
@@ -586,10 +586,6 @@ function maxDayjs(d) {
         t.push(d[i].valueOf());
     }
     return dayjs__WEBPACK_IMPORTED_MODULE_0__(Math.max(...t));
-}
-function nullOrDate(d) {
-    //if (d == null) { return null; } else { return d as Date; }
-    return null;
 }
 ////////////////////////////////////////////////////////////////
 //  UNUSED FUNCTIONS
@@ -1434,15 +1430,10 @@ class Visual {
      */
     dfsPreorder(activities, node) {
         this.updateMaxDepth(node.level);
-        console.log('a');
         if (node.children == null) {
-            console.log(node.level);
             let start = null;
             let end = null;
             let status = null;
-            console.log(dayjs__WEBPACK_IMPORTED_MODULE_5__(node.values[this.configuration.getValueMap(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.START */ .$.START)].value));
-            console.log(dayjs__WEBPACK_IMPORTED_MODULE_5__(node.values[this.configuration.getValueMap(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.END */ .$.END)].value));
-            // console.log(dayjs(Time.nullOrDate(node.values[this.configuration.getValueMap(ValueFields.STATUSDATE)].value)));
             //check if safe to access .value
             if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.START */ .$.START)) {
                 start = dayjs__WEBPACK_IMPORTED_MODULE_5__(node.values[this.configuration.getValueMap(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.START */ .$.START)].value);
@@ -1453,7 +1444,6 @@ class Visual {
             if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.STATUSDATE */ .$.STATUSDATE)) {
                 status = dayjs__WEBPACK_IMPORTED_MODULE_5__(node.values[this.configuration.getValueMap(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.STATUSDATE */ .$.STATUSDATE)].value);
             }
-            console.log('a');
             // console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
             activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_7__/* .Activity */ .c(this.nodeName(node), node.level, start, end, status));
         }
