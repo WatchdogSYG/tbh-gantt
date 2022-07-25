@@ -172,7 +172,7 @@ td {
 /* ------- CHART ------- */
 .activityBar {
   stroke: gray;
-  stroke-width: 1px;
+  stroke-width: 0px;
 }
 #svg-statusLine {
   z-index: 3;

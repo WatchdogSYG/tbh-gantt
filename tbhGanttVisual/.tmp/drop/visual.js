@@ -1293,7 +1293,6 @@ class Visual {
      * @returns the earliest start date and the latest finish date of the schedule
      */
     summariseDates(acts, dataView) {
-        console.log('a');
         let aggregateBuffer = [];
         let currentLevel = acts[acts.length - 1].getLevel();
         let globalStart = [];
@@ -1301,7 +1300,6 @@ class Visual {
         let globalStatus = [];
         // console.log(this.resetAggregateBuffer(dataView));
         //////////////////////////////////////////////////////////////// start
-        console.log('b');
         aggregateBuffer = this.resetAggregateBuffer(dataView);
         for (let i = 0; i < acts.length; i++) {
             let l = acts[acts.length - i - 1].getLevel();
@@ -1325,7 +1323,6 @@ class Visual {
             //console.log(aggregateBuffer[l]);
             //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
         }
-        console.log('c');
         //////////////////////////////////////////////////////////////// end
         currentLevel = acts[acts.length - 1].getLevel();
         aggregateBuffer = this.resetAggregateBuffer(dataView);
@@ -1350,7 +1347,6 @@ class Visual {
             //console.log(aggregateBuffer[l]);
             //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
         }
-        console.log('d');
         //////////////////////////////////////////////////////////////// status
         if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.STATUSDATE */ .$.STATUSDATE)) {
             currentLevel = acts[acts.length - 1].getLevel();
@@ -1358,27 +1354,17 @@ class Visual {
             for (let i = 0; i < acts.length; i++) {
                 let l = acts[acts.length - i - 1].getLevel();
                 if (l < currentLevel) { // going up indents, summarise, add self to higher buffer
-                    console.log('A');
-                    console.log(l);
-                    console.log(aggregateBuffer[l]);
-                    console.log(aggregateBuffer[l + 1]);
-                    console.log(acts[acts.length - i - 1]);
                     acts[acts.length - i - 1].setGlobalStatus(_src_time__WEBPACK_IMPORTED_MODULE_2__/* .minDayjs */ .rA(aggregateBuffer[l + 1]));
-                    //console.log(l, 'Summarise End', Time.maxDayjs(aggregateBuffer[l + 1]).format('DD/MM/YY'));
-                    console.log('A');
+                    //console.log(l, 'Summarise End', Time.maxDayjs(aggregateBuffer[l + 1]).format('DD/MM/YY'));                
                     aggregateBuffer[l].push(acts[acts.length - i - 1].getGlobalStatus());
                     currentLevel = l;
                 }
                 else if (l > currentLevel) { //going down indents, clear buffer, add self
-                    console.log('B');
                     currentLevel = l;
                     aggregateBuffer[l] = [(acts[acts.length - i - 1].getGlobalStatus())];
                 }
                 else { //same indent, add to buffer
-                    console.log('C');
                     aggregateBuffer[l].push(acts[acts.length - i - 1].getGlobalStatus());
-                    console.log(l);
-                    console.log(acts[acts.length - i - 1]);
                 }
                 if (l == 0) {
                     globalStatus.push(acts[acts.length - i - 1].getGlobalStatus());
@@ -1386,7 +1372,6 @@ class Visual {
                 //console.log(aggregateBuffer[l]);
                 //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
             }
-            console.log('e');
         }
         //console.log(globalStart);
         //console.log(globalEnd);
@@ -1583,7 +1568,7 @@ class Visual {
             .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlHeight / 2))
             .attr('x2', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset); })
             .attr('y2', this.tlHeight)
-            .attr('style', 'stroke:red');
+            .attr('style', 'stroke:gray');
         console.log('LOG: DONE Drawing Timeline');
         return ts;
     }
@@ -1600,23 +1585,33 @@ class Visual {
         var _this = this; //get a reference to self so that d3's anonymous callbacks can access member functions
         this.chartHeight = acts.length * this.rowHeight;
         //////////////////////////////////////////////////////////////// Grid
-        this.bars.selectAll('.grid-months')
-            .data(ts.monthScale).enter().append('line')
+        this.bars.selectAll('.grid-months-v')
+            .data(ts.monthScale).join('line')
             .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset); })
             .attr('y1', '0px')
             .attr('x2', function (d) {
             return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset);
         })
             .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.chartHeight))
+            .classed('grid-months-v', true)
             .attr('style', 'stroke:gray');
-        this.bars.selectAll('.grid-years')
-            .data(ts.yearScale).enter().append('line')
+        this.bars.selectAll('.grid-years-v')
+            .data(ts.yearScale).join('line')
             .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset); })
             .attr('y1', '0px')
             .attr('x2', function (d) {
             return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset);
         })
             .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.chartHeight))
+            .classed('grid-years-v', true)
+            .attr('style', 'stroke:gray');
+        this.bars.selectAll('.grid-v')
+            .data(acts).join('line')
+            .attr('x1', '0px')
+            .attr('y1', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(_this.rowHeight * i); })
+            .attr('x2', this.tlWidth)
+            .attr('y2', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(_this.rowHeight * i); })
+            .classed('grid-v', true)
             .attr('style', 'stroke:gray');
         //////////////////////////////////////////////////////////////// bars
         this.bars
@@ -1673,7 +1668,9 @@ class Visual {
     drawTable(acts) {
         //////////////////////////////////////////////////////////////// Choose columns based off config
         console.log('LOG: Drawing Table');
-        let s = this.configuration.getDisplayNames();
+        //TODO: WARNING: implement named headers instead of hard code!!
+        // let s: string[] = this.configuration.getDisplayNames();
+        let s = ['Activity Name'];
         this.divActivityHeader.select('tr').selectAll('th').data(s).join('th').text(d => d);
         this.divActivityHeader.select('th').classed('td-name', true);
         //create the number of trs required.
