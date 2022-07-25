@@ -965,7 +965,7 @@ return <VisualSettings>VisualSettings.parse(dataView);
 * 
 */
 public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
-const settings: VisualSettings = this.visualSettings || <VisualSettings>VisualSettings.getDefault();
+const settings: VisualSettings = this.settings || <VisualSettings>VisualSettings.getDefault();
 return VisualSettings.enumerateObjectInstances(settings, options);
 }
 
