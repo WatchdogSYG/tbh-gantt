@@ -30,10 +30,12 @@ import { dataViewObjectsParser } from "powerbi-visuals-utils-dataviewutils";
 import DataViewObjectsParser = dataViewObjectsParser.DataViewObjectsParser;
 
 export class VisualSettings extends DataViewObjectsParser {
-      public dataPoint: dataPointSettings = new dataPointSettings();
+      public userFormatting: userFormattingSettings = new userFormattingSettings();
+//      public dataColour: DataColourSettings = new DataColourSettings();
+//      public font: fontSettings = new fontSettings();
       }
 
-    export class dataPointSettings {
+    export class userFormattingSettings {
      // Default color
       public defaultColor: string = "";
      // Show all
@@ -41,8 +43,17 @@ export class VisualSettings extends DataViewObjectsParser {
      // Fill
       public fill: string = "";
      // Color saturation
-      public fillRule: string = "";
+      //public fillRule: string = "";
      // Text Size
       public fontSize: number = 12;
      }
+/*
+     export class DataColourSettings {
+      public dataColour: string = "white";
+    }
+
+    export class fontSettings {
+      public fontSize: number = 12;
+    }
+  */
 

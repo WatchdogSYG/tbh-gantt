@@ -1,0 +1,160 @@
+{
+    "dataRoles": [
+        {
+            "name": "WBS",
+            "displayName": "WBS",
+            "displayNameKey": "Visual_Category",
+            "kind": "Grouping"
+        },
+        {
+            "name": "Start",
+            "displayName": "Start",
+            "displayNameKey": "Visual_Values",
+            "kind": "Measure"
+        },
+        {
+            "name": "Finish",
+            "displayName": "Finish",
+            "displayNameKey": "Visual_Values",
+            "kind": "Measure"
+        },
+        {
+            "name": "IsMilestone",
+            "displayName": "IsMilestone",
+            "displayNameKey": "Visual_Values",
+            "kind": "Measure"
+
+        },
+        {
+            "name": "IsCritical",
+            "displayName": "IsCritical",
+            "displayNameKey": "Visual_Values",
+            "kind": "Measure"
+        },
+        {
+            "name": "CustomField",
+            "displayName": "CustomField",
+            "displayNameKey": "Visual_Values",
+            "kind": "Measure"
+        },
+        {
+            "name": "StatusDate",
+            "displayName": "StatusDate",
+            "displayNameKey": "Visual_Values",
+            "kind": "Measure"
+        }
+    ],
+    "dataViewMappings": [
+        {
+            "matrix": {
+                "rows": {
+                    "for": {
+                        "in": "WBS"
+                    }
+                },
+                "values": {
+                    "select": [
+                        {
+                            "for": {
+                                "in": "Start"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "Finish"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "IsMilestone"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "IsCritical"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "CustomField"
+                            }    
+                        },
+                        {
+                            "for": {
+                                "in": "StatusDate"
+                            }
+                        }
+                    ]
+                }
+            },
+            "conditions":[
+                {
+                    "WBS":{
+                        "min":1
+                    },
+                    "Start":{
+                        "max":1
+                    },
+                    "Finish":{
+                        "max":1
+                    },
+                    "IsMilestone":{
+                        "max":1
+                    },
+                    "IsCritical":{
+                        "max":1
+                    },
+                    "StatusDate":{
+                        "max":1
+                    }
+                }
+            ]
+        }
+    ],
+    "objects":{
+        "userFormatting": {
+            "displayName": "Formatting",
+            "properties": {
+                "defaultColor": {
+                    "displayName": "Default Color",
+                    "description": "Default Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "showAllDataPoints":{
+                    "displayName": "Show All Data Points",
+                    "description": "Show All Data Points",
+                    "type":{
+                        "bool":true
+                    }   
+                },
+                "fill": {
+                    "displayName": "Fill Color",
+                    "description": "Fill Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "fontSize": {
+                    "displayName": "Font Size",
+                    "displayNameKey": "Visual_FontSize",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+}

@@ -65,7 +65,7 @@ import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
 import DataView = powerbi.DataView;
 
-//import { VisualSettings } from './settings';
+import { VisualSettings } from './settings';
 
 import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
 import VisualObjectInstance = powerbi.VisualObjectInstance;
@@ -150,6 +150,8 @@ export class Visual implements IVisual {
     private gYears: Selection<SVGGElement>;
 
     private maxDepth: number;
+
+    private settings: VisualSettings;
 
     ////////////////////////////////////////////////////////////////
     //  Constructor
@@ -295,7 +297,7 @@ export class Visual implements IVisual {
 
     public update(options: VisualUpdateOptions) {
         //////////////////////////////////////////////////////////////// Setup Update loop
-        //this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
+        this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);
 
         if (this.verbose) { console.log('Visual update()', options); }
         let dataView: DataView = options.dataViews[0];
@@ -932,6 +934,8 @@ export class Visual implements IVisual {
     }
 
     // public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
+
+
     //     let objectName: string = options.objectName;
     //     let objectEnumeration: VisualObjectInstance[] = [];
 
@@ -947,6 +951,24 @@ export class Visual implements IVisual {
 
     //     return objectEnumeration;
     // }
+
+
+    //[09:28] Jack Tran
+// Add Custom Formatting 
+private static parseSettings(dataView: DataView): VisualSettings {
+return <VisualSettings>VisualSettings.parse(dataView);
+}
+
+/** 
+* This function gets called for each of the objects defined in the capabilities files and allows you to select which of the 
+* objects and properties you want to expose to the users in the property pane.
+* 
+*/
+public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
+const settings: VisualSettings = this.visualSettings || <VisualSettings>VisualSettings.getDefault();
+return VisualSettings.enumerateObjectInstances(settings, options);
+}
+
 
     ////////////////////////////////////////////////////////////////
     //  END OF CLASS

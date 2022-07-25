@@ -1,7 +1,6 @@
 import * as dayjs from "dayjs";
 import powerbi from "powerbi-visuals-api";
 
-
 export class Activity {
 
     private level: number;
