@@ -1,6 +1,7 @@
 import * as dayjs from 'dayjs';
 export declare class Timeline {
     verbose: boolean;
+    rightScrollbarWidth: number;
     private d1;
     private d2;
     private status;
@@ -28,6 +29,7 @@ export declare class Timeline {
     getTimeScale(): TimeScale;
     getYearPadding(): number;
     getMonthPadding(): number;
+    getWidth(): number;
     setYearPadding(padding: number): void;
     private yearPadding;
     private monthPadding;
@@ -73,7 +75,7 @@ export declare class Timeline {
      */
     statusDateTranslationPx(): string;
     /**
-     * DEV ONLY
+     * EXPERIMENTAL
      */
     setStatus(status: dayjs.Dayjs): void;
 }

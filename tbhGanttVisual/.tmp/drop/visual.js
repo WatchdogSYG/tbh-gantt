@@ -568,10 +568,11 @@ function isLeapYear(year) {
  * @returns the earliest one
  */
 function minDayjs(d) {
+    console.log(d);
     let t = [];
     for (let i = 0; i < d.length; i++) {
         t.push(d[i].valueOf());
-        console.log(d[i]);
+        console.log(i, d[i]);
     }
     return dayjs__WEBPACK_IMPORTED_MODULE_0__(Math.min(...t));
 }
@@ -738,6 +739,7 @@ class Timeline {
         ////////////////////////////////////////////////////////////////
         //--------DEV--------//
         this.verbose = false;
+        this.rightScrollbarWidth = 20; //TODO get rid of this hardcoded value!!
         if (this.verbose) {
             console.log('LOG: Constructing Timeline Object');
         }
@@ -757,6 +759,7 @@ class Timeline {
     getTimeScale() { return this.ts; }
     getYearPadding() { return this.yearPadding; }
     getMonthPadding() { return this.monthPadding; }
+    getWidth() { return this.width; }
     //getters and setters with updates
     setYearPadding(padding) {
     }
@@ -771,14 +774,21 @@ class Timeline {
             this.d2 = end.endOf('d');
         }
         this.status = status;
+        this.n_days = this.d2.diff(this.d1, 'd', true);
+        this.dayScale = 2; //default
+        this.width = Math.ceil(this.getDays() * this.getDayScale());
+        if (Math.ceil(this.n_days * this.dayScale) < minWidth) { //its going to be smaller than min
+            //set width to minWidth
+            this.width = minWidth - this.rightScrollbarWidth;
+            //set dayscale to match
+            this.dayScale = (minWidth - this.rightScrollbarWidth) / this.n_days;
+        }
         this.n_years = this.d2.diff(this.d1, 'y', true);
         this.n_months = this.d2.diff(this.d1, 'M', true);
-        this.n_days = this.d2.diff(this.d1, 'd', true);
         // this.span_days;
         this.span_months = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .spanMonths */ .V7(start, end);
         this.span_years = _src_time__WEBPACK_IMPORTED_MODULE_0__/* .spanYears */ .LP(start, end);
         this.yearPadding = 5;
-        this.dayScale = 2;
         this.updateScaleFactors();
         if (this.verbose) {
             console.log('LOG: Timeline created from ' +
@@ -978,10 +988,11 @@ class Timeline {
      * @returns The location from the left edge of the chart the current status date corresponds to
      */
     statusDateTranslationPx() {
+        console.log('status', this.status);
         return 'translate(' + this.dateLocation(this.status) + ')';
     }
     /**
-     * DEV ONLY
+     * EXPERIMENTAL
      */
     setStatus(status) {
         this.status = status;
@@ -1226,17 +1237,15 @@ class Visual {
             document.getElementById('statusLine-chart').remove();
         }
         //////////////////////////////////////////////////////////////// Get a default timeline
-        this.status = dayjs__WEBPACK_IMPORTED_MODULE_5__(new Date(2019, 6, 19));
+        this.status = dayjs__WEBPACK_IMPORTED_MODULE_5__(new Date(2022, 6, 25));
         let acts = this.checkConfiguration(dataView);
         let ts = this.drawTimeline();
         //////////////////////////////////////////////////////////////// choose to draw the chart based on config
         this.configuration.logConfig();
         if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.START */ .$.START) && this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.END */ .$.END)) {
             this.drawChart(acts, ts, this.timelineSVG);
-            console.log('not null');
         }
         else {
-            console.log('nuill');
             this.divChartBody.html(null);
         }
         //////////////////////////////////////////////////////////////// draw table
@@ -1256,18 +1265,17 @@ class Visual {
             console.log('LOG: number of heirachy levels: ' + dataView.matrix.rows.levels.length);
         }
         this.configuration.checkRoles(dataView.matrix.valueSources);
-        this.configuration.logConfig();
+        // this.configuration.logConfig();
         //check verbose
         console.log('dataView.matrix.rows.root', dataView.matrix.rows.root);
         let acts = [];
         this.dfsPreorder(acts, dataView.matrix.rows.root.children[0]);
-        console.log('b');
-        console.log(acts);
         acts = this.trimHeirarchy(acts);
         if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.START */ .$.START) && this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.END */ .$.END)) {
             let dt = this.summariseDates(acts, dataView);
             this.start = dt[0];
             this.end = dt[1];
+            this.status = dt[2]; //WARNING: assuming all statuses are the same!!
         }
         else {
             this.setDefaultTimelineParams();
@@ -1279,15 +1287,21 @@ class Visual {
     }
     /**
      * Summarises the higher level matrix elements by taking its childrens' minimum start dates and maximum end dates.
+     * TODO: abstract this to take any number of custom fields.
+     *
      * @param acts the the DFS-derived Activity array to summarise
      * @returns the earliest start date and the latest finish date of the schedule
      */
     summariseDates(acts, dataView) {
+        console.log('a');
         let aggregateBuffer = [];
         let currentLevel = acts[acts.length - 1].getLevel();
         let globalStart = [];
         let globalEnd = [];
+        let globalStatus = [];
         // console.log(this.resetAggregateBuffer(dataView));
+        //////////////////////////////////////////////////////////////// start
+        console.log('b');
         aggregateBuffer = this.resetAggregateBuffer(dataView);
         for (let i = 0; i < acts.length; i++) {
             let l = acts[acts.length - i - 1].getLevel();
@@ -1311,6 +1325,9 @@ class Visual {
             //console.log(aggregateBuffer[l]);
             //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
         }
+        console.log('c');
+        //////////////////////////////////////////////////////////////// end
+        currentLevel = acts[acts.length - 1].getLevel();
         aggregateBuffer = this.resetAggregateBuffer(dataView);
         for (let i = 0; i < acts.length; i++) {
             let l = acts[acts.length - i - 1].getLevel();
@@ -1333,9 +1350,47 @@ class Visual {
             //console.log(aggregateBuffer[l]);
             //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
         }
+        console.log('d');
+        //////////////////////////////////////////////////////////////// status
+        if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.STATUSDATE */ .$.STATUSDATE)) {
+            currentLevel = acts[acts.length - 1].getLevel();
+            aggregateBuffer = this.resetAggregateBuffer(dataView);
+            for (let i = 0; i < acts.length; i++) {
+                let l = acts[acts.length - i - 1].getLevel();
+                if (l < currentLevel) { // going up indents, summarise, add self to higher buffer
+                    console.log('A');
+                    console.log(l);
+                    console.log(aggregateBuffer[l]);
+                    console.log(aggregateBuffer[l + 1]);
+                    console.log(acts[acts.length - i - 1]);
+                    acts[acts.length - i - 1].setGlobalStatus(_src_time__WEBPACK_IMPORTED_MODULE_2__/* .minDayjs */ .rA(aggregateBuffer[l + 1]));
+                    //console.log(l, 'Summarise End', Time.maxDayjs(aggregateBuffer[l + 1]).format('DD/MM/YY'));
+                    console.log('A');
+                    aggregateBuffer[l].push(acts[acts.length - i - 1].getGlobalStatus());
+                    currentLevel = l;
+                }
+                else if (l > currentLevel) { //going down indents, clear buffer, add self
+                    console.log('B');
+                    currentLevel = l;
+                    aggregateBuffer[l] = [(acts[acts.length - i - 1].getGlobalStatus())];
+                }
+                else { //same indent, add to buffer
+                    console.log('C');
+                    aggregateBuffer[l].push(acts[acts.length - i - 1].getGlobalStatus());
+                    console.log(l);
+                    console.log(acts[acts.length - i - 1]);
+                }
+                if (l == 0) {
+                    globalStatus.push(acts[acts.length - i - 1].getGlobalStatus());
+                }
+                //console.log(aggregateBuffer[l]);
+                //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
+            }
+            console.log('e');
+        }
         //console.log(globalStart);
         //console.log(globalEnd);
-        return [_src_time__WEBPACK_IMPORTED_MODULE_2__/* .minDayjs */ .rA(globalStart), _src_time__WEBPACK_IMPORTED_MODULE_2__/* .minDayjs */ .rA(globalEnd)];
+        return [_src_time__WEBPACK_IMPORTED_MODULE_2__/* .minDayjs */ .rA(globalStart), _src_time__WEBPACK_IMPORTED_MODULE_2__/* .minDayjs */ .rA(globalEnd), _src_time__WEBPACK_IMPORTED_MODULE_2__/* .minDayjs */ .rA(globalStatus)];
     }
     /**
      * Returns an array of empty arrays. The number of empty arrays is equal to the 1-indexed depth of the DataView tree.
@@ -1481,8 +1536,8 @@ class Visual {
     drawTimeline() {
         console.log('LOG: Drawing Timeline from ' + this.start.format('DD/MM/YY') + ' to ' + this.end.format('DD/MM/YY'));
         this.timeline.defineTimeline(this.start, this.end, this.status, this.divChartHeader.node().getBoundingClientRect().width);
-        //todo reduce duplicate code vvv
-        this.tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale()); //cannot be less than div width!
+        // todo reduce duplicate code vvv
+        this.tlWidth = this.timeline.getWidth();
         let ts = this.timeline.getTimeScale();
         this.timelineSVG
             .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlHeight))
@@ -1543,9 +1598,27 @@ class Visual {
         // https://stackoverflow.com/questions/37583275/how-to-append-multiple-child-elements-to-a-div-in-d3-js?noredirect=1&lq=1
         // https://stackoverflow.com/questions/21485981/appending-multiple-non-nested-elements-for-each-data-member-with-d3-js
         var _this = this; //get a reference to self so that d3's anonymous callbacks can access member functions
-        ////////////////////////////////////////////////////////////////
-        //  Prepare for chart drawing
-        ////////////////////////////////////////////////////////////////
+        this.chartHeight = acts.length * this.rowHeight;
+        //////////////////////////////////////////////////////////////// Grid
+        this.bars.selectAll('.grid-months')
+            .data(ts.monthScale).enter().append('line')
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset); })
+            .attr('y1', '0px')
+            .attr('x2', function (d) {
+            return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset);
+        })
+            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.chartHeight))
+            .attr('style', 'stroke:gray');
+        this.bars.selectAll('.grid-years')
+            .data(ts.yearScale).enter().append('line')
+            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset); })
+            .attr('y1', '0px')
+            .attr('x2', function (d) {
+            return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset);
+        })
+            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.chartHeight))
+            .attr('style', 'stroke:gray');
+        //////////////////////////////////////////////////////////////// bars
         this.bars
             .attr('width', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlWidth))
             .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.rowHeight * acts.length));
@@ -1573,41 +1646,6 @@ class Visual {
                 default: return 'gray';
             }
         });
-        ////////////////////////////////////////////////////////////////
-        //  Draw chart
-        ////////////////////////////////////////////////////////////////
-        this.chartHeight = this.bars.node().getBoundingClientRect().height + this.tlHeight;
-        //also put this in a fn later for update()
-        // getBBox() help here:
-        // https://stackoverflow.com/questions/45792692/property-getbbox-does-not-exist-on-type-svgelement
-        // https://stackoverflow.com/questions/24534988/d3-get-the-bounding-box-of-a-selected-element
-        // this.divChartBody.append('g')
-        //     .attr('id', 'statusLine').attr('width', '100%').attr('height', '100%')
-        //     .append('line')
-        //     .attr('x1', '0px')
-        //     .attr('y1', '0px')
-        //     .attr('x2', '0px')
-        //     .attr('y2', Lib.px(this.chartHeight))
-        //     .attr('transform', 'translate(' + this.timeline.statusDateLocation() + ')');
-        //////////////////////////////////////////////////////////////// Grid
-        this.bars.selectAll('.grid-months')
-            .data(ts.monthScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset); })
-            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlHeight))
-            .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset);
-        })
-            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.chartHeight))
-            .attr('style', 'stroke:gray');
-        this.bars.selectAll('.grid-years')
-            .data(ts.yearScale).enter().append('line')
-            .attr('x1', function (d) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset); })
-            .attr('y1', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlHeight))
-            .attr('x2', function (d) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(d.offset);
-        })
-            .attr('y2', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.chartHeight))
-            .attr('style', 'stroke:gray');
         //////////////////////////////////////////////////////////////// Status
         //the status lines are destroyed and recreated every update(). I couldn't find a way to use .join or .update
         if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.STATUSDATE */ .$.STATUSDATE)) {

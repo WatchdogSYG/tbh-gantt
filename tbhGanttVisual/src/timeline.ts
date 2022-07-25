@@ -5,6 +5,7 @@
 
 //TODO status and data datae lines?
 
+import { min } from 'd3';
 import * as dayjs from 'dayjs';
 import * as Lib from './../src/lib';
 import * as Time from './../src/time';
@@ -17,6 +18,7 @@ export class Timeline {
 
     //--------DEV--------//
     verbose: boolean = false;
+    rightScrollbarWidth:number = 20; //TODO get rid of this hardcoded value!!
 
     private d1: dayjs.Dayjs;
     private d2: dayjs.Dayjs;
@@ -56,6 +58,8 @@ export class Timeline {
     public getYearPadding(): number { return this.yearPadding; }
     public getMonthPadding(): number { return this.monthPadding; }
 
+    public getWidth(): number { return this.width; }
+
     //getters and setters with updates
     public setYearPadding(padding: number) {
 
@@ -77,7 +81,6 @@ export class Timeline {
         this.defineTimeline(start, end, status, minWidth);
     }
 
-
     public defineTimeline(start: dayjs.Dayjs, end: dayjs.Dayjs, status: dayjs.Dayjs, minWidth: number) {
         //check which date is larger and round to nearest day
         if (start > end) {
@@ -90,17 +93,24 @@ export class Timeline {
 
         this.status = status;
 
+        this.n_days = this.d2.diff(this.d1, 'd', true);
+        this.dayScale = 2;//default
+        this.width = Math.ceil(this.getDays() * this.getDayScale());
+
+        if (Math.ceil(this.n_days * this.dayScale) < minWidth) {//its going to be smaller than min
+            //set width to minWidth
+            this.width = minWidth - this.rightScrollbarWidth;
+            //set dayscale to match
+            this.dayScale =(minWidth-this.rightScrollbarWidth)/this.n_days;
+        }
+
         this.n_years = this.d2.diff(this.d1, 'y', true);
         this.n_months = this.d2.diff(this.d1, 'M', true);
-        this.n_days = this.d2.diff(this.d1, 'd', true);
         // this.span_days;
         this.span_months = Time.spanMonths(start, end);
         this.span_years = Time.spanYears(start, end);
 
         this.yearPadding = 5;
-        this.dayScale = 2;
-
-
         this.updateScaleFactors();
         if (this.verbose) {
             console.log('LOG: Timeline created from ' +
@@ -123,6 +133,7 @@ export class Timeline {
 
         this.ts.yearScale = this.generateYears();
         this.ts.monthScale = this.generateMonths();
+
     }
 
     ////////////////////////////////////////////////////////////////
@@ -265,7 +276,7 @@ export class Timeline {
 
             }
 
-            let d: dayjs.Dayjs = this.d1.add(i,'month');
+            let d: dayjs.Dayjs = this.d1.add(i, 'month');
 
             result[i] = new MonthSeparator(
                 Time.m(d.month()),
@@ -323,11 +334,12 @@ export class Timeline {
      * @returns The location from the left edge of the chart the current status date corresponds to
      */
     public statusDateTranslationPx(): string {
+        console.log('status',this.status);
         return 'translate(' + this.dateLocation(this.status) + ')';
     }
 
     /**
-     * DEV ONLY
+     * EXPERIMENTAL
      */
     public setStatus(status: dayjs.Dayjs) {
         this.status = status;

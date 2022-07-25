@@ -50,6 +50,8 @@ export declare class Visual implements IVisual {
     private checkConfiguration;
     /**
      * Summarises the higher level matrix elements by taking its childrens' minimum start dates and maximum end dates.
+     * TODO: abstract this to take any number of custom fields.
+     *
      * @param acts the the DFS-derived Activity array to summarise
      * @returns the earliest start date and the latest finish date of the schedule
      */

@@ -298,7 +298,7 @@ export class Visual implements IVisual {
         if (document.getElementById('statusLine-chart') != null) { document.getElementById('statusLine-chart').remove(); }
 
         //////////////////////////////////////////////////////////////// Get a default timeline
-        this.status = dayjs(new Date(2019, 6, 19));
+        this.status = dayjs(new Date(2022, 6, 25));
         let acts: Activity[] = this.checkConfiguration(dataView);
         let ts: TimeScale = this.drawTimeline();
 
@@ -306,9 +306,7 @@ export class Visual implements IVisual {
         this.configuration.logConfig();
         if (this.configuration.field(ValueFields.START) && this.configuration.field(ValueFields.END)) {
             this.drawChart(acts, ts, this.timelineSVG);
-            console.log('not null');
         } else {
-            console.log('nuill');
             this.divChartBody.html(null);
         }
 
@@ -334,14 +332,12 @@ export class Visual implements IVisual {
         }
 
         this.configuration.checkRoles(dataView.matrix.valueSources);
-        this.configuration.logConfig();
+        // this.configuration.logConfig();
 
         //check verbose
         console.log('dataView.matrix.rows.root', dataView.matrix.rows.root);
         let acts: Activity[] = [];
         this.dfsPreorder(acts, dataView.matrix.rows.root.children[0]);
-        console.log('b');
-console.log(acts);
 
         acts = this.trimHeirarchy(acts);
 
@@ -349,6 +345,7 @@ console.log(acts);
             let dt: dayjs.Dayjs[] = this.summariseDates(acts, dataView);
             this.start = dt[0];
             this.end = dt[1];
+            this.status = dt[2];//WARNING: assuming all statuses are the same!!
         } else {
             this.setDefaultTimelineParams();
         }
@@ -362,17 +359,24 @@ console.log(acts);
 
     /**
      * Summarises the higher level matrix elements by taking its childrens' minimum start dates and maximum end dates.
+     * TODO: abstract this to take any number of custom fields.
+     * 
      * @param acts the the DFS-derived Activity array to summarise
      * @returns the earliest start date and the latest finish date of the schedule
      */
     private summariseDates(acts: Activity[], dataView: DataView): dayjs.Dayjs[] {
 
+        console.log('a');
+        
         let aggregateBuffer: dayjs.Dayjs[][] = [];
         let currentLevel: number = acts[acts.length - 1].getLevel();
         let globalStart: dayjs.Dayjs[] = [];
         let globalEnd: dayjs.Dayjs[] = [];
+        let globalStatus: dayjs.Dayjs[] = [];
         // console.log(this.resetAggregateBuffer(dataView));
 
+        //////////////////////////////////////////////////////////////// start
+        console.log('b');
         aggregateBuffer = this.resetAggregateBuffer(dataView);
         for (let i = 0; i < acts.length; i++) {
             let l: number = acts[acts.length - i - 1].getLevel();
@@ -394,7 +398,10 @@ console.log(acts);
             //console.log(aggregateBuffer[l]);
             //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
         }
+        console.log('c');
+        //////////////////////////////////////////////////////////////// end
 
+        currentLevel = acts[acts.length - 1].getLevel();
         aggregateBuffer = this.resetAggregateBuffer(dataView);
         for (let i = 0; i < acts.length; i++) {
             let l: number = acts[acts.length - i - 1].getLevel();
@@ -416,11 +423,49 @@ console.log(acts);
             //console.log(aggregateBuffer[l]);
             //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
         }
+        console.log('d');
+        //////////////////////////////////////////////////////////////// status
+if(this.configuration.field(ValueFields.STATUSDATE)){
+        currentLevel = acts[acts.length - 1].getLevel();
+        aggregateBuffer = this.resetAggregateBuffer(dataView);
+        for (let i = 0; i < acts.length; i++) {
+            let l: number = acts[acts.length - i - 1].getLevel();
 
+            if (l < currentLevel) {// going up indents, summarise, add self to higher buffer
+                 console.log('A');
+                 console.log(l);
+                 
+                 console.log(aggregateBuffer[l]);
+                 console.log(aggregateBuffer[l+1]);
+                 console.log(acts[acts.length - i - 1]);
+                 acts[acts.length - i - 1].setGlobalStatus(Time.minDayjs(aggregateBuffer[l + 1]));
+                //console.log(l, 'Summarise End', Time.maxDayjs(aggregateBuffer[l + 1]).format('DD/MM/YY'));
+                console.log('A');
+                
+                aggregateBuffer[l].push(acts[acts.length - i - 1].getGlobalStatus());
+                currentLevel = l;
+            } else if (l > currentLevel) {//going down indents, clear buffer, add self
+                console.log('B');
+                currentLevel = l;
+                aggregateBuffer[l] = [(acts[acts.length - i - 1].getGlobalStatus())];
+            } else {//same indent, add to buffer
+                console.log('C');
+                aggregateBuffer[l].push(acts[acts.length - i - 1].getGlobalStatus());
+                console.log(l);
+                console.log(acts[acts.length - i - 1]);
+            }
+            if (l == 0) {
+                globalStatus.push(acts[acts.length - i - 1].getGlobalStatus());
+            }
+            //console.log(aggregateBuffer[l]);
+            //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
+        }
+        console.log('e');
+    }
         //console.log(globalStart);
         //console.log(globalEnd);
 
-        return [Time.minDayjs(globalStart), Time.minDayjs(globalEnd)];
+        return [Time.minDayjs(globalStart), Time.minDayjs(globalEnd), Time.minDayjs(globalStatus)];
     }
 
     /**
@@ -513,7 +558,6 @@ console.log(acts);
                 a.push(acts[i]);
             }
         }
-
         return a;
     }
 
@@ -587,9 +631,10 @@ console.log(acts);
         console.log('LOG: Drawing Timeline from ' + this.start.format('DD/MM/YY') + ' to ' + this.end.format('DD/MM/YY'));
 
         this.timeline.defineTimeline(this.start, this.end, this.status, this.divChartHeader.node().getBoundingClientRect().width);
-
-        //todo reduce duplicate code vvv
-        this.tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale());//cannot be less than div width!
+    
+        // todo reduce duplicate code vvv
+        
+        this.tlWidth = this.timeline.getWidth();
 
         let ts: TimeScale = this.timeline.getTimeScale();
 
@@ -664,9 +709,31 @@ console.log(acts);
 
         var _this = this; //get a reference to self so that d3's anonymous callbacks can access member functions
 
-        ////////////////////////////////////////////////////////////////
-        //  Prepare for chart drawing
-        ////////////////////////////////////////////////////////////////
+        this.chartHeight = acts.length * this.rowHeight;
+
+         //////////////////////////////////////////////////////////////// Grid
+
+         this.bars.selectAll('.grid-months')
+         .data(ts.monthScale).enter().append('line')
+         .attr('x1', function (d) { return Lib.px(d.offset); })
+         .attr('y1', '0px')
+         .attr('x2', function (d) {
+             return Lib.px(d.offset);
+         })
+         .attr('y2', Lib.px(this.chartHeight))
+         .attr('style', 'stroke:gray');
+
+     this.bars.selectAll('.grid-years')
+         .data(ts.yearScale).enter().append('line')
+         .attr('x1', function (d) { return Lib.px(d.offset); })
+         .attr('y1', '0px')
+         .attr('x2', function (d) {
+             return Lib.px(d.offset);
+         })
+         .attr('y2', Lib.px(this.chartHeight))
+         .attr('style', 'stroke:gray');
+
+//////////////////////////////////////////////////////////////// bars
 
         this.bars
             .attr('width', Lib.px(this.tlWidth))
@@ -697,49 +764,8 @@ console.log(acts);
                 }
             });
 
-        ////////////////////////////////////////////////////////////////
-        //  Draw chart
-        ////////////////////////////////////////////////////////////////
-
-        this.chartHeight = this.bars.node().getBoundingClientRect().height + this.tlHeight;
-
-        //also put this in a fn later for update()
-        // getBBox() help here:
-        // https://stackoverflow.com/questions/45792692/property-getbbox-does-not-exist-on-type-svgelement
-        // https://stackoverflow.com/questions/24534988/d3-get-the-bounding-box-of-a-selected-element
-        // this.divChartBody.append('g')
-        //     .attr('id', 'statusLine').attr('width', '100%').attr('height', '100%')
-        //     .append('line')
-        //     .attr('x1', '0px')
-        //     .attr('y1', '0px')
-        //     .attr('x2', '0px')
-        //     .attr('y2', Lib.px(this.chartHeight))
-        //     .attr('transform', 'translate(' + this.timeline.statusDateLocation() + ')');
-
-        //////////////////////////////////////////////////////////////// Grid
-
-        this.bars.selectAll('.grid-months')
-            .data(ts.monthScale).enter().append('line')
-            .attr('x1', function (d) { return Lib.px(d.offset); })
-            .attr('y1', Lib.px(this.tlHeight))
-            .attr('x2', function (d) {
-                return Lib.px(d.offset);
-            })
-            .attr('y2', Lib.px(this.chartHeight))
-            .attr('style', 'stroke:gray');
-
-        this.bars.selectAll('.grid-years')
-            .data(ts.yearScale).enter().append('line')
-            .attr('x1', function (d) { return Lib.px(d.offset); })
-            .attr('y1', Lib.px(this.tlHeight))
-            .attr('x2', function (d) {
-                return Lib.px(d.offset);
-            })
-            .attr('y2', Lib.px(this.chartHeight))
-            .attr('style', 'stroke:gray');
 
         //////////////////////////////////////////////////////////////// Status
-
         //the status lines are destroyed and recreated every update(). I couldn't find a way to use .join or .update
 
         if(this.configuration.field(ValueFields.STATUSDATE)){
