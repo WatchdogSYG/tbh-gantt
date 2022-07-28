@@ -823,8 +823,12 @@ if(this.configuration.field(ValueFields.STATUSDATE)){
         // search for @indentTypeMismatch in activity.ts
         d3.selectAll('.td-name').attr('min-width', Lib.px(this.divActivityBody.node().getBoundingClientRect().width));
 
-        d3.selectAll('.td-name').data(acts).attr('class', function (d) { return d.getLevelString(); })
-
+        d3.selectAll('.td-name').data(acts).attr('class', function (d) { 
+            if(d.getLevel() == acts.length){
+                return d.getLevelString() + " leaf";
+            }else{
+                return d.getLevelString();
+            }})
         td.classed('td-name', true);
 
 
