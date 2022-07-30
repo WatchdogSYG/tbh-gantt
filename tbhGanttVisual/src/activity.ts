@@ -10,11 +10,7 @@ export class Activity {
 
     public getName(): string { return this.name; }
     public getLevel(): number { return this.level; }
-    public getLevelString(): string { 
-        console.log('getLevelString(): ',this.getName(), this.level, 'indent'.concat(this.level.toString()));
-        
-        
-        return 'indent'.concat(this.level.toString()); } //required for workaround, search for @indentTypeMismatch in visual.ts
+    public getLevelString(): string { return 'indent'.concat(this.level.toString()); } //required for workaround, search for @indentTypeMismatch in visual.ts
     public getStart(): dayjs.Dayjs { return this.start; }
     public getEnd(): dayjs.Dayjs { return this.end; }
     public getGlobalStatus(): dayjs.Dayjs { return this.globalStatus; }

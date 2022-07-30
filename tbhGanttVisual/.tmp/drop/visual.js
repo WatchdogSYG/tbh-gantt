@@ -20,10 +20,7 @@ class Activity {
     }
     getName() { return this.name; }
     getLevel() { return this.level; }
-    getLevelString() {
-        console.log('getLevelString(): ', this.getName(), this.level, 'indent'.concat(this.level.toString()));
-        return 'indent'.concat(this.level.toString());
-    } //required for workaround, search for @indentTypeMismatch in visual.ts
+    getLevelString() { return 'indent'.concat(this.level.toString()); } //required for workaround, search for @indentTypeMismatch in visual.ts
     getStart() { return this.start; }
     getEnd() { return this.end; }
     getGlobalStatus() { return this.globalStatus; }
@@ -1693,9 +1690,6 @@ class Visual {
         // (d: any) => string is not compatible with type string...
         // search for @indentTypeMismatch in activity.ts
         d3__WEBPACK_IMPORTED_MODULE_1__/* .selectAll */ .td_('.col-name').attr('min-width', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.divActivityBody.node().getBoundingClientRect().width));
-        console.log("maxdepth: ", this.maxDepth);
-        console.log(acts);
-        console.log(td);
         d3__WEBPACK_IMPORTED_MODULE_1__/* .select */ .Ys('#table-activities').selectAll('.col-name').data(acts).attr('class', function (d) {
             if (d.getLevel() == _this.maxDepth) {
                 return d.getLevelString() + " leaf";

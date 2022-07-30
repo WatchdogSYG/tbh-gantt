@@ -826,17 +826,14 @@ export class Visual implements IVisual {
         // search for @indentTypeMismatch in activity.ts
         d3.selectAll('.col-name').attr('min-width', Lib.px(this.divActivityBody.node().getBoundingClientRect().width));
 
-        console.log("maxdepth: ", this.maxDepth);
-        console.log(acts);
-
-        console.log(td);
-        d3.select('#table-activities').selectAll('.col-name').data(acts).attr('class',function (d: Activity) { 
-            if(d.getLevel() == _this.maxDepth){
+        d3.select('#table-activities').selectAll('.col-name').data(acts).attr('class', function (d: Activity) {
+            if (d.getLevel() == _this.maxDepth) {
                 return d.getLevelString() + " leaf";
-            }else{
+            } else {
                 return d.getLevelString();
-            }}
-            );
+            }
+        }
+        );
         td.classed('col-name', true);
 
         // tr.selectAll('.td-start')//select all tds, there are 0
