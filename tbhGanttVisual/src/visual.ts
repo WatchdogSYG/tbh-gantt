@@ -88,6 +88,7 @@ import * as dayjs from 'dayjs';
 //UNIT TESTS
 import * as jsUnit from './../tests/globalTests';
 import { validationHelper } from 'powerbi-visuals-utils-dataviewutils';
+import { CLIENT_RENEG_WINDOW } from 'tls';
 
 ////////////////////////////////////////////////////////////////
 //  Begin class definition
@@ -339,7 +340,11 @@ export class Visual implements IVisual {
         let acts: Activity[] = [];
         this.dfsPreorder(acts, dataView.matrix.rows.root.children[0]);
 
+        //console.log('LOG: DFS: ',acts);
+        
         acts = this.trimHeirarchy(acts);
+
+        //console.log('LOG: Trimmed: ',acts);
 
         if (this.configuration.field(ValueFields.START) && this.configuration.field(ValueFields.END)) {
             let dt: dayjs.Dayjs[] = this.summariseDates(acts, dataView);
@@ -350,9 +355,9 @@ export class Visual implements IVisual {
             this.setDefaultTimelineParams();
         }
 
-// if(this.configuration.field(ValueFields.STATUSDATE)){ this.status =  };
+        // if(this.configuration.field(ValueFields.STATUSDATE)){ this.status =  };
 
-        // console.log('Activity array', acts);
+        //console.log('Activity array', acts);
         console.log('LOG: DONE Checking Configuration');
         return acts;
     }
@@ -422,21 +427,21 @@ export class Visual implements IVisual {
             //console.log(aggregateBuffer[l]);
             //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
         }
-        
-        //////////////////////////////////////////////////////////////// status
-if(this.configuration.field(ValueFields.STATUSDATE)){
-        currentLevel = acts[acts.length - 1].getLevel();
-        aggregateBuffer = this.resetAggregateBuffer(dataView);
-        for (let i = 0; i < acts.length; i++) {
-            let l: number = acts[acts.length - i - 1].getLevel();
 
-            if (l < currentLevel) {// going up indents, summarise, add self to higher buffer
-                 acts[acts.length - i - 1].setGlobalStatus(Time.minDayjs(aggregateBuffer[l + 1]));
-                //console.log(l, 'Summarise End', Time.maxDayjs(aggregateBuffer[l + 1]).format('DD/MM/YY'));                
-                aggregateBuffer[l].push(acts[acts.length - i - 1].getGlobalStatus());
-                currentLevel = l;
-            } else if (l > currentLevel) {//going down indents, clear buffer, add self
-                currentLevel = l;
+        //////////////////////////////////////////////////////////////// status
+        if (this.configuration.field(ValueFields.STATUSDATE)) {
+            currentLevel = acts[acts.length - 1].getLevel();
+            aggregateBuffer = this.resetAggregateBuffer(dataView);
+            for (let i = 0; i < acts.length; i++) {
+                let l: number = acts[acts.length - i - 1].getLevel();
+
+                if (l < currentLevel) {// going up indents, summarise, add self to higher buffer
+                    acts[acts.length - i - 1].setGlobalStatus(Time.minDayjs(aggregateBuffer[l + 1]));
+                    //console.log(l, 'Summarise End', Time.maxDayjs(aggregateBuffer[l + 1]).format('DD/MM/YY'));                
+                    aggregateBuffer[l].push(acts[acts.length - i - 1].getGlobalStatus());
+                    currentLevel = l;
+                } else if (l > currentLevel) {//going down indents, clear buffer, add self
+                    currentLevel = l;
                 aggregateBuffer[l] = [(acts[acts.length - i - 1].getGlobalStatus())];
             } else {//same indent, add to buffer
                 aggregateBuffer[l].push(acts[acts.length - i - 1].getGlobalStatus());
@@ -568,7 +573,7 @@ if(this.configuration.field(ValueFields.STATUSDATE)){
             if(this.configuration.field(ValueFields.END)){ end = dayjs(node.values[this.configuration.getValueMap(ValueFields.END)].value as Date);}
             if(this.configuration.field(ValueFields.STATUSDATE)){ status = dayjs(node.values[this.configuration.getValueMap(ValueFields.STATUSDATE)].value as Date);}
             
-            // console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
+            //console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
             activities.push(new Activity(
                     this.nodeName(node),
                     node.level,
@@ -576,9 +581,7 @@ if(this.configuration.field(ValueFields.STATUSDATE)){
                     end,
                     status
                     ));
-            
         } else {
-            //if it has children, it has null value
             activities.push(new Activity(
                 this.nodeName(node),
                 node.level,
@@ -795,13 +798,13 @@ if(this.configuration.field(ValueFields.STATUSDATE)){
     private drawTable(acts: Activity[]) {
         //////////////////////////////////////////////////////////////// Choose columns based off config
         console.log('LOG: Drawing Table');
-
+        var _this = this;
         //TODO: WARNING: implement named headers instead of hard code!!
         // let s: string[] = this.configuration.getDisplayNames();
         let s: string[] = ['Activity Name'];
 
         this.divActivityHeader.select('tr').selectAll('th').data(s).join('th').text(d => d);
-        this.divActivityHeader.select('th').classed('td-name', true);
+        this.divActivityHeader.select('th').classed('col-name', true);
 
         //create the number of trs required.
         this.divActivityBody
@@ -812,25 +815,29 @@ if(this.configuration.field(ValueFields.STATUSDATE)){
             .classed('tr-activity', true);
 
         var td = this.divActivityBody.selectAll('.tr-activity')
-            .selectAll('.td-name')//select all tds, there are 0
+            .selectAll('td')//select all tds, there are 0
             .data(function (d: Activity) { return [d.getTableText()[0]]; })//THIS DATA COMES FROM THE TR's _data_ PROPERTY
             .join('td')
-            .classed('td-name', true)
+            .classed('col-name', true)
             .text(function (d) { return d; });
 
         //this is a workaround since I couldnt get d3.data(acts).classed(function (d) { return d.getLevel().toString();}) working due to an error
         // (d: any) => string is not compatible with type string...
         // search for @indentTypeMismatch in activity.ts
-        d3.selectAll('.td-name').attr('min-width', Lib.px(this.divActivityBody.node().getBoundingClientRect().width));
+        d3.selectAll('.col-name').attr('min-width', Lib.px(this.divActivityBody.node().getBoundingClientRect().width));
 
-        d3.selectAll('.td-name').data(acts).attr('class', function (d) { 
-            if(d.getLevel() == acts.length){
+        console.log("maxdepth: ", this.maxDepth);
+        console.log(acts);
+
+        console.log(td);
+        d3.select('#table-activities').selectAll('.col-name').data(acts).attr('class',function (d: Activity) { 
+            if(d.getLevel() == _this.maxDepth){
                 return d.getLevelString() + " leaf";
             }else{
                 return d.getLevelString();
-            }})
-        td.classed('td-name', true);
-
+            }}
+            );
+        td.classed('col-name', true);
 
         // tr.selectAll('.td-start')//select all tds, there are 0
         //     .data(function (d) { return d.getTableText()[1]; })//THIS DATA COMES FROM THE TR's _data_ PROPERTY

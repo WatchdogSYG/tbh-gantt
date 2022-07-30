@@ -10,7 +10,11 @@ export class Activity {
 
     public getName(): string { return this.name; }
     public getLevel(): number { return this.level; }
-    public getLevelString(): string { return 'indent'.concat(this.level.toString()); } //required for workaround, search for @indentTypeMismatch in visual.ts
+    public getLevelString(): string { 
+        console.log('getLevelString(): ',this.getName(), this.level, 'indent'.concat(this.level.toString()));
+        
+        
+        return 'indent'.concat(this.level.toString()); } //required for workaround, search for @indentTypeMismatch in visual.ts
     public getStart(): dayjs.Dayjs { return this.start; }
     public getEnd(): dayjs.Dayjs { return this.end; }
     public getGlobalStatus(): dayjs.Dayjs { return this.globalStatus; }
@@ -34,7 +38,6 @@ export class Activity {
 export class ActivityStyle {
 
     //TODO: get the styles at runtume
-
     private fillArray: string[] = [
         '#2A588E',
         '#3B6064',
@@ -48,6 +51,6 @@ export class ActivityStyle {
     }
 
     public fill(level: number): string {
-        return this.fill(Math.min(Math.floor(level), this.fill.length));
+        return this.fillArray[Math.min(Math.floor(level), this.fillArray.length)];
     }
 }

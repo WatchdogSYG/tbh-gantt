@@ -20,7 +20,10 @@ class Activity {
     }
     getName() { return this.name; }
     getLevel() { return this.level; }
-    getLevelString() { return 'indent'.concat(this.level.toString()); } //required for workaround, search for @indentTypeMismatch in visual.ts
+    getLevelString() {
+        console.log('getLevelString(): ', this.getName(), this.level, 'indent'.concat(this.level.toString()));
+        return 'indent'.concat(this.level.toString());
+    } //required for workaround, search for @indentTypeMismatch in visual.ts
     getStart() { return this.start; }
     getEnd() { return this.end; }
     getGlobalStatus() { return this.globalStatus; }
@@ -43,7 +46,7 @@ class ActivityStyle {
         ];
     }
     fill(level) {
-        return this.fill(Math.min(Math.floor(level), this.fill.length));
+        return this.fillArray[Math.min(Math.floor(level), this.fillArray.length)];
     }
 }
 
@@ -568,11 +571,9 @@ function isLeapYear(year) {
  * @returns the earliest one
  */
 function minDayjs(d) {
-    console.log(d);
     let t = [];
     for (let i = 0; i < d.length; i++) {
         t.push(d[i].valueOf());
-        console.log(i, d[i]);
     }
     return dayjs__WEBPACK_IMPORTED_MODULE_0__(Math.min(...t));
 }
@@ -1270,7 +1271,9 @@ class Visual {
         console.log('dataView.matrix.rows.root', dataView.matrix.rows.root);
         let acts = [];
         this.dfsPreorder(acts, dataView.matrix.rows.root.children[0]);
+        //console.log('LOG: DFS: ',acts);
         acts = this.trimHeirarchy(acts);
+        //console.log('LOG: Trimmed: ',acts);
         if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.START */ .$.START) && this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.END */ .$.END)) {
             let dt = this.summariseDates(acts, dataView);
             this.start = dt[0];
@@ -1281,7 +1284,7 @@ class Visual {
             this.setDefaultTimelineParams();
         }
         // if(this.configuration.field(ValueFields.STATUSDATE)){ this.status =  };
-        // console.log('Activity array', acts);
+        //console.log('Activity array', acts);
         console.log('LOG: DONE Checking Configuration');
         return acts;
     }
@@ -1484,11 +1487,10 @@ class Visual {
             if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.STATUSDATE */ .$.STATUSDATE)) {
                 status = dayjs__WEBPACK_IMPORTED_MODULE_5__(node.values[this.configuration.getValueMap(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.STATUSDATE */ .$.STATUSDATE)].value);
             }
-            // console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
+            //console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
             activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_7__/* .Activity */ .c(this.nodeName(node), node.level, start, end, status));
         }
         else {
-            //if it has children, it has null value
             activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_7__/* .Activity */ .c(this.nodeName(node), node.level, null, null, null));
             for (let i = 0; i < node.children.length; i++) {
                 this.dfsPreorder(activities, node.children[i]);
@@ -1668,11 +1670,12 @@ class Visual {
     drawTable(acts) {
         //////////////////////////////////////////////////////////////// Choose columns based off config
         console.log('LOG: Drawing Table');
+        var _this = this;
         //TODO: WARNING: implement named headers instead of hard code!!
         // let s: string[] = this.configuration.getDisplayNames();
         let s = ['Activity Name'];
         this.divActivityHeader.select('tr').selectAll('th').data(s).join('th').text(d => d);
-        this.divActivityHeader.select('th').classed('td-name', true);
+        this.divActivityHeader.select('th').classed('col-name', true);
         //create the number of trs required.
         this.divActivityBody
             .select('table')
@@ -1681,17 +1684,27 @@ class Visual {
             .join('tr')
             .classed('tr-activity', true);
         var td = this.divActivityBody.selectAll('.tr-activity')
-            .selectAll('.td-name') //select all tds, there are 0
+            .selectAll('td') //select all tds, there are 0
             .data(function (d) { return [d.getTableText()[0]]; }) //THIS DATA COMES FROM THE TR's _data_ PROPERTY
             .join('td')
-            .classed('td-name', true)
+            .classed('col-name', true)
             .text(function (d) { return d; });
         //this is a workaround since I couldnt get d3.data(acts).classed(function (d) { return d.getLevel().toString();}) working due to an error
         // (d: any) => string is not compatible with type string...
         // search for @indentTypeMismatch in activity.ts
-        d3__WEBPACK_IMPORTED_MODULE_1__/* .selectAll */ .td_('.td-name').attr('min-width', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.divActivityBody.node().getBoundingClientRect().width));
-        d3__WEBPACK_IMPORTED_MODULE_1__/* .selectAll */ .td_('.td-name').data(acts).attr('class', function (d) { return d.getLevelString(); });
-        td.classed('td-name', true);
+        d3__WEBPACK_IMPORTED_MODULE_1__/* .selectAll */ .td_('.col-name').attr('min-width', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.divActivityBody.node().getBoundingClientRect().width));
+        console.log("maxdepth: ", this.maxDepth);
+        console.log(acts);
+        console.log(td);
+        d3__WEBPACK_IMPORTED_MODULE_1__/* .select */ .Ys('#table-activities').selectAll('.col-name').data(acts).attr('class', function (d) {
+            if (d.getLevel() == _this.maxDepth) {
+                return d.getLevelString() + " leaf";
+            }
+            else {
+                return d.getLevelString();
+            }
+        });
+        td.classed('col-name', true);
         // tr.selectAll('.td-start')//select all tds, there are 0
         //     .data(function (d) { return d.getTableText()[1]; })//THIS DATA COMES FROM THE TR's _data_ PROPERTY
         //     .enter()

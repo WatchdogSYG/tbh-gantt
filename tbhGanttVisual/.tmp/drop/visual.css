@@ -120,9 +120,10 @@ th {
   width: auto;
   color: black;
 }
-.td-name {
+.col-name {
   min-width: none;
   width: auto;
+  font-weight: bold;
 }
 tr {
   height: var(--rowHeight);
@@ -148,6 +149,12 @@ td {
 }
 .indent4 {
   padding-left: 100px;
+}
+.indent5 {
+  padding-left: 125px;
+}
+.leaf {
+  font-weight: normal;
 }
 /* #table-ganttGrid{
 
