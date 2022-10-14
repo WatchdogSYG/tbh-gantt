@@ -7,6 +7,8 @@ export class Activity {
     private start: dayjs.Dayjs;
     private end: dayjs.Dayjs;
     private globalStatus: dayjs.Dayjs;
+    private baselineStart: dayjs.Dayjs;
+    private baselineFinish: dayjs.Dayjs;
 
     public getName(): string { return this.name; }
     public getLevel(): number { return this.level; }
@@ -33,7 +35,7 @@ export class Activity {
 
 export class ActivityStyle {
 
-    //TODO: get the styles at runtume
+    //TODO: get the styles at runtime
     private fillArray: string[] = [
         '#2A588E',
         '#3B6064',
