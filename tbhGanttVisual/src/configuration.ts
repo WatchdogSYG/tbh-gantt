@@ -8,6 +8,16 @@
 import * as dayjs from "dayjs";
 import powerbi from "powerbi-visuals-api";
 
+export enum ValueFields {
+    START = 'Start',
+    END = 'Finish',
+    ISMILESTONE = 'IsMilestone',
+    ISCRITICAL = 'IsCritical',
+    STATUSDATE = 'StatusDate',
+    BASELINESTART = 'BaselineStart',
+    BASELINEFINISH = 'BaselineFinish'
+}
+
 export class Configuration {
 
     private verbose = false;
@@ -16,7 +26,9 @@ export class Configuration {
     private bool_end: boolean; //end        
     private bool_isMilestone: boolean; //isMilestone
     private bool_isCritical: boolean; //isCritical 
-    private bool_statusDate: boolean; //statusDate 
+    private bool_statusDate: boolean; //statusDate
+    private bool_baselineStart: boolean; //baselineStart  
+    private bool_baselineFinish: boolean; //baselineFinish
 
     private valueMap: Map<ValueFields, number>;
 
@@ -28,10 +40,18 @@ export class Configuration {
         this.bool_isMilestone = false;
         this.bool_isCritical = false;
         this.bool_statusDate = false;
+        this.bool_baselineStart = false;
+        this.bool_baselineFinish = false;
         this.vs = [];
         this.valueMap = new Map<ValueFields, number>;
     }
 
+    /**
+     * 
+     * @param field the ValueFields to check or set
+     * @param set if this variable is not null, set the corresponding boolean in the configuration
+     * @returns the boolean value associated with the ValueFields (singular) provided
+     */
     public field(field: ValueFields, set?: boolean): boolean {
         if (set != null) {
             switch (field) {
@@ -40,6 +60,8 @@ export class Configuration {
                 case ValueFields.ISMILESTONE: this.bool_isMilestone = set; break;
                 case ValueFields.ISCRITICAL: this.bool_isCritical = set; break;
                 case ValueFields.STATUSDATE: this.bool_statusDate = set; break;
+                case ValueFields.BASELINESTART: this.bool_baselineStart = set; break;
+                case ValueFields.BASELINEFINISH: this.bool_baselineFinish = set; break;
             }
         }
         switch (field) {
@@ -48,9 +70,16 @@ export class Configuration {
             case ValueFields.ISMILESTONE: return this.bool_isMilestone;
             case ValueFields.ISCRITICAL: return this.bool_isCritical;
             case ValueFields.STATUSDATE: return this.bool_statusDate;
+            case ValueFields.BASELINESTART: return this.bool_baselineStart;
+            case ValueFields.BASELINEFINISH: return this.bool_baselineFinish;
         }
     }
 
+    /**
+     * returns a Configuration object with members set based on the vs (valueSource of a DataView.matrix object).
+     * @param vs a powerbi.DataViewMetadataColumn array
+     * @returns a configured Configuration object
+     */
     public checkRoles(vs: powerbi.DataViewMetadataColumn[]): Configuration {
         this.vs = vs;
 
@@ -81,7 +110,9 @@ export class Configuration {
             ValueFields.END + ' = ' + this.bool_end + '\n' +
             ValueFields.ISMILESTONE + ' = ' + this.bool_isMilestone + '\n' +
             ValueFields.ISCRITICAL + ' = ' + this.bool_isCritical + '\n' +
-            ValueFields.STATUSDATE + ' = ' + this.bool_statusDate;
+            ValueFields.STATUSDATE + ' = ' + this.bool_statusDate + '\n' +
+            ValueFields.BASELINESTART + ' = ' + this.bool_baselineStart + '\n' +
+            ValueFields.BASELINEFINISH + ' = ' + this.bool_baselineFinish;
     }
 
     public logConfig() {
@@ -126,7 +157,9 @@ export class Configuration {
             ValueFields.END,
             ValueFields.ISMILESTONE,
             ValueFields.ISCRITICAL,
-            ValueFields.STATUSDATE
+            ValueFields.STATUSDATE,
+            ValueFields.BASELINESTART ,
+            ValueFields.BASELINEFINISH
         ];
     }
 
@@ -136,18 +169,11 @@ export class Configuration {
             this.bool_end,
             this.bool_isMilestone,
             this.bool_isCritical,
-            this.bool_statusDate
+            this.bool_statusDate,
+            this.bool_baselineStart,
+            this.bool_baselineFinish
         ];
     }
-
-}
-
-export enum ValueFields {
-    START = 'Start',
-    END = 'Finish',
-    ISMILESTONE = 'IsMilestone',
-    ISCRITICAL = 'IsCritical',
-    STATUSDATE = 'StatusDate'
 }
 
 /**

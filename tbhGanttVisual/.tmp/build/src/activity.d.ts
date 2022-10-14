@@ -5,6 +5,8 @@ export declare class Activity {
     private start;
     private end;
     private globalStatus;
+    private baselineStart;
+    private baselineFinish;
     getName(): string;
     getLevel(): number;
     getLevelString(): string;

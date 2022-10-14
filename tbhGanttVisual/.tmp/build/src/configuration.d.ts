@@ -4,6 +4,15 @@
  */
 import * as dayjs from "dayjs";
 import powerbi from "powerbi-visuals-api";
+export declare enum ValueFields {
+    START = "Start",
+    END = "Finish",
+    ISMILESTONE = "IsMilestone",
+    ISCRITICAL = "IsCritical",
+    STATUSDATE = "StatusDate",
+    BASELINESTART = "BaselineStart",
+    BASELINEFINISH = "BaselineFinish"
+}
 export declare class Configuration {
     private verbose;
     private bool_start;
@@ -11,10 +20,23 @@ export declare class Configuration {
     private bool_isMilestone;
     private bool_isCritical;
     private bool_statusDate;
+    private bool_baselineStart;
+    private bool_baselineFinish;
     private valueMap;
     private vs;
     constructor();
+    /**
+     *
+     * @param field the ValueFields to check or set
+     * @param set if this variable is not null, set the corresponding boolean in the configuration
+     * @returns the boolean value associated with the ValueFields (singular) provided
+     */
     field(field: ValueFields, set?: boolean): boolean;
+    /**
+     * returns a Configuration object with members set based on the vs (valueSource of a DataView.matrix object).
+     * @param vs a powerbi.DataViewMetadataColumn array
+     * @returns a configured Configuration object
+     */
     checkRoles(vs: powerbi.DataViewMetadataColumn[]): Configuration;
     getValueMap(key: ValueFields): number;
     printConfig(): string;
@@ -26,13 +48,6 @@ export declare class Configuration {
     getDisplayNames(): string[];
     valueRoles(): ValueFields[];
     configurationBooleans(): boolean[];
-}
-export declare enum ValueFields {
-    START = "Start",
-    END = "Finish",
-    ISMILESTONE = "IsMilestone",
-    ISCRITICAL = "IsCritical",
-    STATUSDATE = "StatusDate"
 }
 /**
  * 1

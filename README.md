@@ -50,7 +50,7 @@ The order of the measure data roles defined in `capabilities.json` is important.
 
 Therefore, the order of the Measure role elements in the capabilities file must match the order that the `Configuration` object checks for fields, and vice versa. Custom fields in the `Custom Fields` bucket will be assigned using their `displayName`.
 
-## Procedure
+## Procedure 1 - MVP
 ### Setup
 1. Download Power BI Desktop.
 1. Setup the development environment. src: https://docs.microsoft.com/en-us/power-bi/developer/visuals/environment-setup
@@ -151,3 +151,81 @@ https://stackoverflow.com/questions/14422198/how-do-i-remove-all-children-elemen
 - [Optional] Timeline axis units adjustable
 
 ## Mockups / Layouts
+
+## Procedure 2 - Adding a Measure Field (v0.2)
+
+### Aim
+
+This procedure aims to document all steps required to add a new measure field into the matrix dataRole in the `capabilities.json` file. In this case, we want to add a `Baseline Start` date field and a `Baseline Finish` date field.
+
+### 1. Capabilities File
+
+Add the following objects to the `dataRoles` array in the `capabilities.json` file.
+
+```
+{
+    "name": "Baseline Start",
+    "displayName": "Baseline Start",
+    "displayNameKey": "Visual_Values",
+    "kind": "Measure"
+},
+{
+    "name": "Baseline Finish",
+    "displayName": "Baseline Finish",
+    "displayNameKey": "Visual_Values",
+    "kind": "Measure"
+}
+```
+
+### 2. Setting up the Configuration and Activity structure
+
+#### configuration.ts
+
+First, add an enumerated value to the enum `ValueFields`.
+
+```
+export enum ValueFields {
+    START = 'Start',
+    END = 'Finish',
+    ISMILESTONE = 'IsMilestone',
+    ISCRITICAL = 'IsCritical',
+    STATUSDATE = 'StatusDate',
+    BASELINESTART = 'BaselineStart',  //add
+    BASELINEFINISH = 'BaselineFinish' //add
+}
+```
+
+Next, extend the list of member variables and extend the member functions to ensure that the new enum is processed properly.
+
+##### Member Variables and constructor()
+Add a boolean member variable to represent if the new buckets (`baselineStart` and `baselineFinish`) contain a valid field.
+
+```
+export class Configuration {
+
+    private verbose = false;
+
+    private bool_start: boolean; //start      
+    private bool_end: boolean; //end        
+    private bool_isMilestone: boolean; //isMilestone
+    private bool_isCritical: boolean; //isCritical 
+    private bool_statusDate: boolean; //statusDate 
+    private bool_baselineStart: boolean; //baselineStart    <-------- add
+    private bool_baselineFinish: boolean; //baselineFinish  <-------- add
+
+    private valueMap: Map<ValueFields, number>;
+
+    private vs: powerbi.DataViewMetadataColumn[];
+
+    //...
+}
+```
+
+Ensure to initialise the variable to `false` in the `constructor()`.
+
+##### field()
+This function can check or set the bool_* members of the Configuration object through switch statements. Ensure the new cases are evaluated.
+
+##### Support functions
+
+Add the new ValueFields and variables to other support functions within `configuration.ts`. Eg. `printConfig()`, `valueRoles()`, `configurationBooleans()`

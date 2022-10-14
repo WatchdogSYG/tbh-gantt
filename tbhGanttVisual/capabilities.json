@@ -19,6 +19,18 @@
             "kind": "Measure"
         },
         {
+            "name": "Baseline Start",
+            "displayName": "Baseline Start",
+            "displayNameKey": "Visual_Values",
+            "kind": "Measure"
+        },
+        {
+            "name": "Baseline Finish",
+            "displayName": "Baseline Finish",
+            "displayNameKey": "Visual_Values",
+            "kind": "Measure"
+        },
+        {
             "name": "IsMilestone",
             "displayName": "Is Milestone",
             "displayNameKey": "Visual_Values",
