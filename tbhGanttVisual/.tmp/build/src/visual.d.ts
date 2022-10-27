@@ -53,6 +53,7 @@ export declare class Visual implements IVisual {
     private checkConfiguration;
     /**
      * Summarises the higher level matrix elements by taking its childrens' minimum start dates and maximum end dates.
+     * This overrides the provided measure, however why would a user not use min(start) and max(finish)?
      * TODO: abstract this to take any number of custom fields.
      *
      * @param acts the the DFS-derived Activity array to summarise

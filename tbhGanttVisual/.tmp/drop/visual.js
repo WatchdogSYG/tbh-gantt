@@ -1243,7 +1243,7 @@ class Visual {
         this.rowHeight = _src_lib__WEBPACK_IMPORTED_MODULE_6__/* .pxToNumber */ .F(this.style.getPropertyValue('--rowHeight'));
         this.barPadding = 2;
         this.barHeight = this.rowHeight - 2 * this.barPadding;
-        this.baselineHeightProportion = 0.5;
+        this.baselineHeightProportion = 0.25;
         this.timelineSVG = this.divChartHeader
             .append('svg')
             .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlHeight))
@@ -1336,6 +1336,7 @@ class Visual {
     }
     /**
      * Summarises the higher level matrix elements by taking its childrens' minimum start dates and maximum end dates.
+     * This overrides the provided measure, however why would a user not use min(start) and max(finish)?
      * TODO: abstract this to take any number of custom fields.
      *
      * @param acts the the DFS-derived Activity array to summarise
@@ -1346,6 +1347,8 @@ class Visual {
         let currentLevel = acts[acts.length - 1].getLevel();
         let globalStart = [];
         let globalEnd = [];
+        let globalBaselineStart = [];
+        let globalBaselineFinish = [];
         let globalStatus = [];
         // console.log(this.resetAggregateBuffer(dataView));
         //////////////////////////////////////////////////////////////// start
@@ -1392,6 +1395,54 @@ class Visual {
             }
             if (l == 0) {
                 globalEnd.push(acts[acts.length - i - 1].getEnd());
+            }
+            //console.log(aggregateBuffer[l]);
+            //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
+        }
+        //////////////////////////////////////////////////////////////// baseline start
+        currentLevel = acts[acts.length - 1].getLevel();
+        aggregateBuffer = this.resetAggregateBuffer(dataView);
+        for (let i = 0; i < acts.length; i++) {
+            let l = acts[acts.length - i - 1].getLevel();
+            if (l < currentLevel) { // going up indents, summarise, add self to higher buffer
+                acts[acts.length - i - 1].setBaselineStart(_src_time__WEBPACK_IMPORTED_MODULE_2__/* .minDayjs */ .rA(aggregateBuffer[l + 1]));
+                //console.log(l, 'Summarise End', Time.maxDayjs(aggregateBuffer[l + 1]).format('DD/MM/YY'));
+                aggregateBuffer[l].push(acts[acts.length - i - 1].getBaselineStart());
+                currentLevel = l;
+            }
+            else if (l > currentLevel) { //going down indents, clear buffer, add self
+                currentLevel = l;
+                aggregateBuffer[l] = [(acts[acts.length - i - 1].getBaselineStart())];
+            }
+            else { //same indent, add to buffer
+                aggregateBuffer[l].push(acts[acts.length - i - 1].getBaselineStart());
+            }
+            if (l == 0) {
+                globalBaselineStart.push(acts[acts.length - i - 1].getBaselineStart());
+            }
+            //console.log(aggregateBuffer[l]);
+            //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
+        }
+        //////////////////////////////////////////////////////////////// baseline finish
+        currentLevel = acts[acts.length - 1].getLevel();
+        aggregateBuffer = this.resetAggregateBuffer(dataView);
+        for (let i = 0; i < acts.length; i++) {
+            let l = acts[acts.length - i - 1].getLevel();
+            if (l < currentLevel) { // going up indents, summarise, add self to higher buffer
+                acts[acts.length - i - 1].setBaselineFinish(_src_time__WEBPACK_IMPORTED_MODULE_2__/* .maxDayjs */ .AY(aggregateBuffer[l + 1]));
+                //console.log(l, 'Summarise End', Time.maxDayjs(aggregateBuffer[l + 1]).format('DD/MM/YY'));
+                aggregateBuffer[l].push(acts[acts.length - i - 1].getBaselineFinish());
+                currentLevel = l;
+            }
+            else if (l > currentLevel) { //going down indents, clear buffer, add self
+                currentLevel = l;
+                aggregateBuffer[l] = [(acts[acts.length - i - 1].getBaselineFinish())];
+            }
+            else { //same indent, add to buffer
+                aggregateBuffer[l].push(acts[acts.length - i - 1].getBaselineFinish());
+            }
+            if (l == 0) {
+                globalBaselineFinish.push(acts[acts.length - i - 1].getBaselineFinish());
             }
             //console.log(aggregateBuffer[l]);
             //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
@@ -1700,25 +1751,34 @@ class Visual {
                 default: return 'gray';
             }
         });
-        console.log(this.bars
-            .selectAll('.baseline').data(acts).join('rect')
-            .attr('x', function (d) {
-            return (d.getBaselineStart() == null) ? '0px' : _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(_this.timeline.dateLocation(d.getBaselineStart()));
-        })
-            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px((this.barHeight) * this.baselineHeightProportion))
-            .attr('width', function (d) {
-            return (d.getBaselineFinish() == null) ? '0px' : _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(_this.timeline.dateLocation(d.getBaselineFinish()));
-        })
-            .attr('y', function (d, i) {
-            return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px((_this.rowHeight * i) +
-                _this.barPadding -
-                _this.baselineHeightProportion * (_this.rowHeight + 2 * _this.barPadding));
-        })
-            .attr('rx', '3px')
-            .attr('ry', '3px')
-            .classed('activityBar', true)
-            .classed('baseline', true)
-            .attr('fill', '#696969'));
+        if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.BASELINESTART */ .$.BASELINESTART) && this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.BASELINEFINISH */ .$.BASELINEFINISH)) {
+            this.bars
+                .selectAll('.baseline').data(acts).join('rect')
+                .attr('x', function (d) {
+                return (d.getBaselineStart() == null) ? '0px' : _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(_this.timeline.dateLocation(d.getBaselineStart()));
+            })
+                .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px((this.barHeight) * this.baselineHeightProportion))
+                .attr('width', function (d) {
+                return (d.getBaselineFinish() == null) ? '0px' : _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(_this.timeline.dateLocation(d.getBaselineFinish()) - _this.timeline.dateLocation(d.getBaselineStart()));
+            })
+                .attr('y', function (d, i) {
+                console.log(_this.rowHeight.toString() + '*' + i.toString() + ' + ' + _this.barPadding + ' +  (1-' + _this.baselineHeightProportion.toString() + ') * ' + _this.barHeight.toString()
+                    + ' = ' + _src_lib__WEBPACK_IMPORTED_MODULE_6__.px((_this.rowHeight * i) +
+                    _this.barPadding -
+                    (1 - _this.baselineHeightProportion) * _this.barHeight));
+                return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px((_this.rowHeight * i) +
+                    _this.barPadding +
+                    (1 - _this.baselineHeightProportion) * _this.barHeight);
+            })
+                .attr('rx', '2px')
+                .attr('ry', '2px')
+                .classed('activityBar', true)
+                .classed('baseline', true)
+                .attr('fill', '#696969');
+        }
+        else {
+            this.bars.selectAll('.baseline').remove();
+        }
         // this.bars.selectAll("rect").selectAll(".baseline")
         // .data(acts)
         // .join('rect')

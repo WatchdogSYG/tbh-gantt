@@ -259,7 +259,7 @@ export class Visual implements IVisual {
         this.rowHeight = Lib.pxToNumber(this.style.getPropertyValue('--rowHeight'));
         this.barPadding = 2;
         this.barHeight = this.rowHeight - 2* this.barPadding;
-        this.baselineHeightProportion = 0.5;
+        this.baselineHeightProportion = 0.25;
 
         this.timelineSVG = this.divChartHeader
             .append('svg')
@@ -370,6 +370,7 @@ export class Visual implements IVisual {
 
     /**
      * Summarises the higher level matrix elements by taking its childrens' minimum start dates and maximum end dates.
+     * This overrides the provided measure, however why would a user not use min(start) and max(finish)?
      * TODO: abstract this to take any number of custom fields.
      * 
      * @param acts the the DFS-derived Activity array to summarise
@@ -377,16 +378,19 @@ export class Visual implements IVisual {
      */
     private summariseDates(acts: Activity[], dataView: DataView): dayjs.Dayjs[] {
 
-        
         let aggregateBuffer: dayjs.Dayjs[][] = [];
         let currentLevel: number = acts[acts.length - 1].getLevel();
         let globalStart: dayjs.Dayjs[] = [];
         let globalEnd: dayjs.Dayjs[] = [];
+
+        let globalBaselineStart: dayjs.Dayjs[] = [];
+        let globalBaselineFinish: dayjs.Dayjs[] = [];
+
         let globalStatus: dayjs.Dayjs[] = [];
         // console.log(this.resetAggregateBuffer(dataView));
 
         //////////////////////////////////////////////////////////////// start
-       
+
         aggregateBuffer = this.resetAggregateBuffer(dataView);
         for (let i = 0; i < acts.length; i++) {
             let l: number = acts[acts.length - i - 1].getLevel();
@@ -429,6 +433,54 @@ export class Visual implements IVisual {
             }
             if (l == 0) {
                 globalEnd.push(acts[acts.length - i - 1].getEnd());
+            }
+            //console.log(aggregateBuffer[l]);
+            //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
+        }
+
+        //////////////////////////////////////////////////////////////// baseline start
+        currentLevel = acts[acts.length - 1].getLevel();
+        aggregateBuffer = this.resetAggregateBuffer(dataView);
+        for (let i = 0; i < acts.length; i++) {
+            let l: number = acts[acts.length - i - 1].getLevel();
+
+            if (l < currentLevel) {// going up indents, summarise, add self to higher buffer
+                acts[acts.length - i - 1].setBaselineStart(Time.minDayjs(aggregateBuffer[l + 1]));
+                //console.log(l, 'Summarise End', Time.maxDayjs(aggregateBuffer[l + 1]).format('DD/MM/YY'));
+                aggregateBuffer[l].push(acts[acts.length - i - 1].getBaselineStart());
+                currentLevel = l;
+            } else if (l > currentLevel) {//going down indents, clear buffer, add self
+                currentLevel = l;
+                aggregateBuffer[l] = [(acts[acts.length - i - 1].getBaselineStart())];
+            } else {//same indent, add to buffer
+                aggregateBuffer[l].push(acts[acts.length - i - 1].getBaselineStart());
+            }
+            if (l == 0) {
+                globalBaselineStart.push(acts[acts.length - i - 1].getBaselineStart());
+            }
+            //console.log(aggregateBuffer[l]);
+            //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
+        }
+
+        //////////////////////////////////////////////////////////////// baseline finish
+        currentLevel = acts[acts.length - 1].getLevel();
+        aggregateBuffer = this.resetAggregateBuffer(dataView);
+        for (let i = 0; i < acts.length; i++) {
+            let l: number = acts[acts.length - i - 1].getLevel();
+
+            if (l < currentLevel) {// going up indents, summarise, add self to higher buffer
+                acts[acts.length - i - 1].setBaselineFinish(Time.maxDayjs(aggregateBuffer[l + 1]));
+                //console.log(l, 'Summarise End', Time.maxDayjs(aggregateBuffer[l + 1]).format('DD/MM/YY'));
+                aggregateBuffer[l].push(acts[acts.length - i - 1].getBaselineFinish());
+                currentLevel = l;
+            } else if (l > currentLevel) {//going down indents, clear buffer, add self
+                currentLevel = l;
+                aggregateBuffer[l] = [(acts[acts.length - i - 1].getBaselineFinish())];
+            } else {//same indent, add to buffer
+                aggregateBuffer[l].push(acts[acts.length - i - 1].getBaselineFinish());
+            }
+            if (l == 0) {
+                globalBaselineFinish.push(acts[acts.length - i - 1].getBaselineFinish());
             }
             //console.log(aggregateBuffer[l]);
             //console.log(acts[acts.length - i - 1].getLevel(), acts[acts.length - i - 1].getName(), acts.length - i - 1, aggregateBuffer);
@@ -579,7 +631,7 @@ export class Visual implements IVisual {
             if(this.configuration.field(ValueFields.START)){ start = dayjs(node.values[this.configuration.getValueMap(ValueFields.START)].value as Date);}
             if(this.configuration.field(ValueFields.END)){ end = dayjs(node.values[this.configuration.getValueMap(ValueFields.END)].value as Date);}
             if(this.configuration.field(ValueFields.STATUSDATE)){ status = dayjs(node.values[this.configuration.getValueMap(ValueFields.STATUSDATE)].value as Date);}
-           
+
             //create activity with mandatory fields
             //console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
             let a: Activity = new Activity(
@@ -721,36 +773,36 @@ export class Visual implements IVisual {
 
          //////////////////////////////////////////////////////////////// Grid
 
-         this.bars.selectAll('.grid-months-v')
-         .data(ts.monthScale).join('line')
-         .attr('x1', function (d) { return Lib.px(d.offset); })
-         .attr('y1', '0px')
-         .attr('x2', function (d) {
-             return Lib.px(d.offset);
-         })
-         .attr('y2', Lib.px(this.chartHeight))
-         .classed('grid-months-v', true)
-         .attr('style', 'stroke:gray');
+        this.bars.selectAll('.grid-months-v')
+        .data(ts.monthScale).join('line')
+        .attr('x1', function (d) { return Lib.px(d.offset); })
+        .attr('y1', '0px')
+        .attr('x2', function (d) {
+            return Lib.px(d.offset);
+        })
+        .attr('y2', Lib.px(this.chartHeight))
+        .classed('grid-months-v', true)
+        .attr('style', 'stroke:gray');
 
-     this.bars.selectAll('.grid-years-v')
-         .data(ts.yearScale).join('line')
-         .attr('x1', function (d) { return Lib.px(d.offset); })
-         .attr('y1', '0px')
-         .attr('x2', function (d) {
-             return Lib.px(d.offset);
-         })
-         .attr('y2', Lib.px(this.chartHeight))
-         .classed('grid-years-v', true)
-         .attr('style', 'stroke:gray');
+    this.bars.selectAll('.grid-years-v')
+        .data(ts.yearScale).join('line')
+        .attr('x1', function (d) { return Lib.px(d.offset); })
+        .attr('y1', '0px')
+        .attr('x2', function (d) {
+            return Lib.px(d.offset);
+        })
+        .attr('y2', Lib.px(this.chartHeight))
+        .classed('grid-years-v', true)
+        .attr('style', 'stroke:gray');
 
-         this.bars.selectAll('.grid-v')
-         .data(acts).join('line')
-         .attr('x1', '0px')
-         .attr('y1', function(d,i){ return Lib.px(_this.rowHeight * i) })
-         .attr('x2', this.tlWidth)
-         .attr('y2', function(d,i){ return Lib.px(_this.rowHeight * i) })
-         .classed('grid-v', true)
-         .attr('style', 'stroke:gray');
+        this.bars.selectAll('.grid-v')
+        .data(acts).join('line')
+        .attr('x1', '0px')
+        .attr('y1', function(d,i){ return Lib.px(_this.rowHeight * i) })
+        .attr('x2', this.tlWidth)
+        .attr('y2', function(d,i){ return Lib.px(_this.rowHeight * i) })
+        .classed('grid-v', true)
+        .attr('style', 'stroke:gray');
 
         //////////////////////////////////////////////////////////////// bars
 
@@ -783,25 +835,38 @@ export class Visual implements IVisual {
                 }
             });
 
-            console.log(this.bars
-            .selectAll('.baseline').data(acts).join('rect')
-            .attr('x', function (d) {
-                return (d.getBaselineStart()==null) ? '0px' : Lib.px(_this.timeline.dateLocation(d.getBaselineStart()));
-            })
-            .attr('height', Lib.px( (this.barHeight)*this.baselineHeightProportion ))
-            .attr('width', function (d) {
-                return (d.getBaselineFinish()==null) ? '0px' : Lib.px(_this.timeline.dateLocation(d.getBaselineFinish()));
-            })
-            .attr('y', function (d, i) { return Lib.px(
-                (_this.rowHeight * i) + 
-                _this.barPadding - 
-                _this.baselineHeightProportion * ( _this.rowHeight + 2*_this.barPadding ))})
-            .attr('rx', '3px')
-            .attr('ry', '3px')
-            .classed('activityBar', true)
-            .classed('baseline', true)
-            .attr('fill', '#696969')
-            );
+            if(this.configuration.field(ValueFields.BASELINESTART) && this.configuration.field(ValueFields.BASELINEFINISH)){
+                this.bars
+                    .selectAll('.baseline').data(acts).join('rect')
+                    .attr('x', function (d) {
+                        return (d.getBaselineStart()==null) ? '0px' : Lib.px(_this.timeline.dateLocation(d.getBaselineStart()));
+                    })
+                .attr('height', Lib.px( (this.barHeight)*this.baselineHeightProportion ))
+                .attr('width', function (d) {
+                    return (d.getBaselineFinish()==null) ? '0px' : Lib.px(
+                        _this.timeline.dateLocation(d.getBaselineFinish()) - _this.timeline.dateLocation(d.getBaselineStart())
+                        );
+                })
+                .attr('y', function (d, i) { 
+                    console.log( _this.rowHeight.toString() + '*' + i.toString() + ' + ' + _this.barPadding + ' +  (1-' + _this.baselineHeightProportion.toString() + ') * ' + _this.barHeight.toString()
+                    + ' = ' + Lib.px(
+                        (_this.rowHeight * i) + 
+                        _this.barPadding - 
+                        (1 - _this.baselineHeightProportion) * _this.barHeight));
+                        
+                    return Lib.px(
+                    (_this.rowHeight * i) + 
+                    _this.barPadding + 
+                    (1 - _this.baselineHeightProportion) * _this.barHeight)})
+                .attr('rx', '2px')
+                .attr('ry', '2px')
+                .classed('activityBar', true)
+                .classed('baseline', true)
+                .attr('fill', '#696969');
+            } else {
+                this.bars.selectAll('.baseline').remove();
+            }
+            
 
         // this.bars.selectAll("rect").selectAll(".baseline")
         // .data(acts)
@@ -1027,8 +1092,6 @@ export class Visual implements IVisual {
                 }
         }
     }
-
-
 
     //[09:28] Jack Tran
     // Add Custom Formatting 

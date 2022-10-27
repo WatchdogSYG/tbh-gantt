@@ -361,7 +361,40 @@ An example of `dfsPreorder()` with optional fields is shown below.
     }
 ```
 
+For dates that need to summarise, the visual currently iterates through the Activity array and takes the max or min of the dates below a summary. Ensure that the `Visual.summariseDates()` function is updated to handle the baseline dates.
+
 #### Drawing the new bars
 
 Now that the `Activity`s capture the Baseline dates, we now have to check for the baseline field and decide whether to draw bars.
 
+This part requires knowledge of how to method chain in `d3`. Please familiarise yourself with this first.
+
+```ts
+    if(this.configuration.field(ValueFields.BASELINESTART) && this.configuration.field(ValueFields.BASELINEFINISH)){
+                this.bars
+                    .selectAll('.baseline').data(acts).join('rect')
+                    .attr('x', function (d) {
+                        return (d.getBaselineStart()==null) ? '0px' : Lib.px(_this.timeline.dateLocation(d.getBaselineStart()));
+                    })
+                .attr('height', Lib.px( (this.barHeight)*this.baselineHeightProportion ))
+                .attr('width', function (d) {
+                    return (d.getBaselineFinish()==null) ? '0px' : Lib.px(
+                        _this.timeline.dateLocation(d.getBaselineFinish()) - _this.timeline.dateLocation(d.getBaselineStart())
+                        );
+                })
+                .attr('y', function (d, i) { return Lib.px(
+                    (_this.rowHeight * i) + 
+                    _this.barPadding - 
+                    _this.baselineHeightProportion * ( _this.rowHeight + 2*_this.barPadding ))})
+                .attr('rx', '3px')
+                .attr('ry', '3px')
+                .classed('activityBar', true)
+                .classed('baseline', true)
+                .attr('fill', '#696969');
+            } else {
+                this.bars.selectAll('.baseline').remove();
+            }
+```
+
+#### CSS
+Add new CSS to `styles.less` as neccesary.
