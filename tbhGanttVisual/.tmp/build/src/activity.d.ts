@@ -7,6 +7,7 @@ export declare class Activity {
     private globalStatus;
     private baselineStart;
     private baselineFinish;
+    private milestone;
     getName(): string;
     getLevel(): number;
     getLevelString(): string;
@@ -15,6 +16,7 @@ export declare class Activity {
     getBaselineStart(): dayjs.Dayjs;
     getBaselineFinish(): dayjs.Dayjs;
     getGlobalStatus(): dayjs.Dayjs;
+    isMilestone(): boolean;
     getTableText(): string[];
     setLevel(level: number): void;
     setStart(date: dayjs.Dayjs): void;
@@ -22,6 +24,7 @@ export declare class Activity {
     setBaselineStart(date: dayjs.Dayjs): void;
     setBaselineFinish(date: dayjs.Dayjs): void;
     setGlobalStatus(date: dayjs.Dayjs): void;
+    setMilestone(isMilestone: boolean): void;
     constructor(name: string, level: number, start: dayjs.Dayjs, end: dayjs.Dayjs, globalStatus: dayjs.Dayjs);
 }
 export declare class ActivityStyle {

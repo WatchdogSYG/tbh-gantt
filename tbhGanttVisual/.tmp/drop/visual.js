@@ -26,15 +26,15 @@ class Activity {
     getBaselineStart() { return this.baselineStart; }
     getBaselineFinish() { return this.baselineFinish; }
     getGlobalStatus() { return this.globalStatus; }
+    isMilestone() { return this.milestone; }
     getTableText() { return [this.name, this.start.format('DD/MM/YY'), this.end.format('DD/MM/YY')]; }
     setLevel(level) { this.level = level; }
     setStart(date) { this.start = date; }
     setEnd(date) { this.end = date; }
     setBaselineStart(date) { this.baselineStart = date; }
-    ;
     setBaselineFinish(date) { this.baselineFinish = date; }
-    ;
     setGlobalStatus(date) { this.globalStatus = date; }
+    setMilestone(isMilestone) { this.milestone = isMilestone; }
 }
 class ActivityStyle {
     constructor() {
@@ -174,10 +174,10 @@ class Configuration {
         return ValueFields.START + ' = ' + this.bool_start + '\n' +
             ValueFields.END + ' = ' + this.bool_end + '\n' +
             ValueFields.BASELINESTART + ' = ' + this.bool_baselineStart + '\n' +
-            ValueFields.BASELINEFINISH + ' = ' + this.bool_baselineFinish +
+            ValueFields.BASELINEFINISH + ' = ' + this.bool_baselineFinish + '\n' +
             ValueFields.ISMILESTONE + ' = ' + this.bool_isMilestone + '\n' +
             ValueFields.ISCRITICAL + ' = ' + this.bool_isCritical + '\n' +
-            ValueFields.STATUSDATE + ' = ' + this.bool_statusDate + '\n';
+            ValueFields.STATUSDATE + ' = ' + this.bool_statusDate;
     }
     logConfig() {
         console.log(this.printConfig());
@@ -1595,6 +1595,9 @@ class Visual {
             if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.BASELINEFINISH */ .$.BASELINEFINISH)) {
                 a.setBaselineFinish(dayjs__WEBPACK_IMPORTED_MODULE_5__(node.values[this.configuration.getValueMap(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.BASELINEFINISH */ .$.BASELINEFINISH)].value));
             }
+            if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.ISMILESTONE */ .$.ISMILESTONE)) {
+                a.setMilestone(node.values[this.configuration.getValueMap(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.ISMILESTONE */ .$.ISMILESTONE)].value);
+            }
             //push Activity
             activities.push(a);
         }
@@ -1751,6 +1754,7 @@ class Visual {
                 default: return 'gray';
             }
         });
+        //optional elements: baselines
         if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.BASELINESTART */ .$.BASELINESTART) && this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.BASELINEFINISH */ .$.BASELINEFINISH)) {
             this.bars
                 .selectAll('.baseline').data(acts).join('rect')
@@ -1762,10 +1766,6 @@ class Visual {
                 return (d.getBaselineFinish() == null) ? '0px' : _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(_this.timeline.dateLocation(d.getBaselineFinish()) - _this.timeline.dateLocation(d.getBaselineStart()));
             })
                 .attr('y', function (d, i) {
-                console.log(_this.rowHeight.toString() + '*' + i.toString() + ' + ' + _this.barPadding + ' +  (1-' + _this.baselineHeightProportion.toString() + ') * ' + _this.barHeight.toString()
-                    + ' = ' + _src_lib__WEBPACK_IMPORTED_MODULE_6__.px((_this.rowHeight * i) +
-                    _this.barPadding -
-                    (1 - _this.baselineHeightProportion) * _this.barHeight));
                 return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px((_this.rowHeight * i) +
                     _this.barPadding +
                     (1 - _this.baselineHeightProportion) * _this.barHeight);
@@ -1779,22 +1779,26 @@ class Visual {
         else {
             this.bars.selectAll('.baseline').remove();
         }
-        // this.bars.selectAll("rect").selectAll(".baseline")
-        // .data(acts)
-        // .join('rect')
-        // .attr('x', function (d) {
-        //     return Lib.px(_this.timeline.dateLocation(d.getStart()));
-        // })
-        // .attr('height', Lib.px(this.rowHeight - 4))
-        // .attr('width', function (d) {
-        //     return Lib.px(_this.timeline.dateLocation(d.getEnd()) - _this.timeline.dateLocation(d.getStart()));
-        // })
-        // .attr('y', function (d, i) { return Lib.px((_this.rowHeight * i) + 2) })
-        // .attr('rx', '3px')
-        // .attr('ry', '3px')
-        // .classed('activityBar', true)
-        // .classed('baseline', true)
-        // .attr('fill', '#696969');
+        //////////////////////////////////////////////////////////////// Milestones
+        this.bars.selectAll(".milestone").data(acts).join('rect')
+            .attr('x', function (d) {
+            return (d.getStart() == null) ? '0px' : _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(_this.timeline.dateLocation(d.getStart()));
+        })
+            .attr('y', function (d, i) {
+            return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px((_this.rowHeight * i) +
+                _this.barPadding);
+        })
+            .attr('height', '10px')
+            .attr('width', '10px')
+            .attr('fill', '#333333')
+            .attr('stroke', 'black');
+        //I tried using a filter but it didnt work
+        // .selectAll('rect[width^="0px"')
+        //
+        // .filter(function(d, i) {   // Most versatile approach
+        //   return d3.select(this)
+        // .attr("width")=='0px';
+        // });
         //////////////////////////////////////////////////////////////// Status
         //the status lines are destroyed and recreated every update(). I couldn't find a way to use .join or .update
         if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.STATUSDATE */ .$.STATUSDATE)) {

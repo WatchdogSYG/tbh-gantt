@@ -125,10 +125,10 @@ export class Configuration {
         return ValueFields.START + ' = ' + this.bool_start + '\n' +
             ValueFields.END + ' = ' + this.bool_end + '\n' +
             ValueFields.BASELINESTART + ' = ' + this.bool_baselineStart + '\n' +
-            ValueFields.BASELINEFINISH + ' = ' + this.bool_baselineFinish +
+            ValueFields.BASELINEFINISH + ' = ' + this.bool_baselineFinish + '\n' +
             ValueFields.ISMILESTONE + ' = ' + this.bool_isMilestone + '\n' +
             ValueFields.ISCRITICAL + ' = ' + this.bool_isCritical + '\n' +
-            ValueFields.STATUSDATE + ' = ' + this.bool_statusDate + '\n';
+            ValueFields.STATUSDATE + ' = ' + this.bool_statusDate;
     }
 
     public logConfig() {

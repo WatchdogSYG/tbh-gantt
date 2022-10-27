@@ -9,6 +9,7 @@ export class Activity {
     private globalStatus: dayjs.Dayjs;
     private baselineStart: dayjs.Dayjs;
     private baselineFinish: dayjs.Dayjs;
+    private milestone: boolean;
 
     public getName(): string { return this.name; }
     public getLevel(): number { return this.level; }
@@ -18,15 +19,17 @@ export class Activity {
     public getBaselineStart(): dayjs.Dayjs { return this.baselineStart; }
     public getBaselineFinish(): dayjs.Dayjs { return this.baselineFinish; }
     public getGlobalStatus(): dayjs.Dayjs { return this.globalStatus; }
+    public isMilestone(): boolean { return this.milestone; }
 
     public getTableText(): string[] { return [this.name, this.start.format('DD/MM/YY'), this.end.format('DD/MM/YY')]; }
 
     public setLevel(level: number) { this.level = level; }
     public setStart(date: dayjs.Dayjs) { this.start = date; }
     public setEnd(date: dayjs.Dayjs) { this.end = date; }
-    public setBaselineStart(date: dayjs.Dayjs) { this.baselineStart = date };
-    public setBaselineFinish(date: dayjs.Dayjs) { this.baselineFinish = date };
+    public setBaselineStart(date: dayjs.Dayjs) { this.baselineStart = date; }
+    public setBaselineFinish(date: dayjs.Dayjs) { this.baselineFinish = date; }
     public setGlobalStatus(date: dayjs.Dayjs) { this.globalStatus = date; }
+    public setMilestone(isMilestone: boolean){ this.milestone = isMilestone; }
 
     constructor(name: string, level: number, start: dayjs.Dayjs, end: dayjs.Dayjs, globalStatus: dayjs.Dayjs) {
         this.name = name;

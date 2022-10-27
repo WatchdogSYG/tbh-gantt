@@ -648,6 +648,9 @@ export class Visual implements IVisual {
             if(this.configuration.field(ValueFields.BASELINEFINISH)){ 
                 a.setBaselineFinish(dayjs(node.values[this.configuration.getValueMap(ValueFields.BASELINEFINISH)].value as Date));
             }
+            if(this.configuration.field(ValueFields.ISMILESTONE)){
+                a.setMilestone(node.values[this.configuration.getValueMap(ValueFields.ISMILESTONE)].value as boolean);
+            }
 
             //push Activity
             activities.push(a);
@@ -835,6 +838,7 @@ export class Visual implements IVisual {
                 }
             });
 
+            //optional elements: baselines
             if(this.configuration.field(ValueFields.BASELINESTART) && this.configuration.field(ValueFields.BASELINEFINISH)){
                 this.bars
                     .selectAll('.baseline').data(acts).join('rect')
@@ -847,13 +851,7 @@ export class Visual implements IVisual {
                         _this.timeline.dateLocation(d.getBaselineFinish()) - _this.timeline.dateLocation(d.getBaselineStart())
                         );
                 })
-                .attr('y', function (d, i) { 
-                    console.log( _this.rowHeight.toString() + '*' + i.toString() + ' + ' + _this.barPadding + ' +  (1-' + _this.baselineHeightProportion.toString() + ') * ' + _this.barHeight.toString()
-                    + ' = ' + Lib.px(
-                        (_this.rowHeight * i) + 
-                        _this.barPadding - 
-                        (1 - _this.baselineHeightProportion) * _this.barHeight));
-                        
+                .attr('y', function (d, i) {
                     return Lib.px(
                     (_this.rowHeight * i) + 
                     _this.barPadding + 
@@ -866,24 +864,32 @@ export class Visual implements IVisual {
             } else {
                 this.bars.selectAll('.baseline').remove();
             }
-            
 
-        // this.bars.selectAll("rect").selectAll(".baseline")
-        // .data(acts)
-        // .join('rect')
-        // .attr('x', function (d) {
-        //     return Lib.px(_this.timeline.dateLocation(d.getStart()));
-        // })
-        // .attr('height', Lib.px(this.rowHeight - 4))
-        // .attr('width', function (d) {
-        //     return Lib.px(_this.timeline.dateLocation(d.getEnd()) - _this.timeline.dateLocation(d.getStart()));
-        // })
-        // .attr('y', function (d, i) { return Lib.px((_this.rowHeight * i) + 2) })
-        // .attr('rx', '3px')
-        // .attr('ry', '3px')
-        // .classed('activityBar', true)
-        // .classed('baseline', true)
-        // .attr('fill', '#696969');
+        //////////////////////////////////////////////////////////////// Milestones
+
+        this.bars.selectAll(".milestone").data(acts).join('rect')
+        .attr('x', function (d) {
+            return (d.getStart()==null) ? '0px' : Lib.px(_this.timeline.dateLocation(d.getStart()));
+        })
+        .attr('y', function (d, i) {
+            return Lib.px(
+            (_this.rowHeight * i) + 
+            _this.barPadding)})
+        .attr('height','10px')
+        .attr('width','10px')
+        .attr('fill', '#333333')
+        .attr('stroke', 'black')
+
+        //I tried using a filter but it didnt work
+        // .selectAll('rect[width^="0px"')
+        //
+        // .filter(function(d, i) {   // Most versatile approach
+        //   return d3.select(this)
+            // .attr("width")=='0px';
+        // });
+
+
+
 
 
         //////////////////////////////////////////////////////////////// Status
