@@ -12,11 +12,15 @@ export declare class Activity {
     getLevelString(): string;
     getStart(): dayjs.Dayjs;
     getEnd(): dayjs.Dayjs;
+    getBaselineStart(): dayjs.Dayjs;
+    getBaselineFinish(): dayjs.Dayjs;
     getGlobalStatus(): dayjs.Dayjs;
     getTableText(): string[];
     setLevel(level: number): void;
     setStart(date: dayjs.Dayjs): void;
     setEnd(date: dayjs.Dayjs): void;
+    setBaselineStart(date: dayjs.Dayjs): void;
+    setBaselineFinish(date: dayjs.Dayjs): void;
     setGlobalStatus(date: dayjs.Dayjs): void;
     constructor(name: string, level: number, start: dayjs.Dayjs, end: dayjs.Dayjs, globalStatus: dayjs.Dayjs);
 }

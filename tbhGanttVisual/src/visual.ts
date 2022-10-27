@@ -139,6 +139,9 @@ export class Visual implements IVisual {
     private tlWidth: number;
     private tlHeight: number;
     private rowHeight: number;
+    private barHeight: number;
+    private barPadding: number;
+    private baselineHeightProportion: number;
     private chartHeight: number;
 
     private gMonths: Selection<SVGGElement>;
@@ -254,6 +257,9 @@ export class Visual implements IVisual {
         this.tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale());//cannot be less than div width!
         this.tlHeight = Lib.pxToNumber(this.style.getPropertyValue('--timelineHeight'));
         this.rowHeight = Lib.pxToNumber(this.style.getPropertyValue('--rowHeight'));
+        this.barPadding = 2;
+        this.barHeight = this.rowHeight - 2* this.barPadding;
+        this.baselineHeightProportion = 0.5;
 
         this.timelineSVG = this.divChartHeader
             .append('svg')
@@ -564,6 +570,7 @@ export class Visual implements IVisual {
 
         if (node.children == null) {
 
+            //mandatory fields
             let start: dayjs.Dayjs = null;
             let end: dayjs.Dayjs = null;
             let status: dayjs.Dayjs = null;
@@ -572,15 +579,27 @@ export class Visual implements IVisual {
             if(this.configuration.field(ValueFields.START)){ start = dayjs(node.values[this.configuration.getValueMap(ValueFields.START)].value as Date);}
             if(this.configuration.field(ValueFields.END)){ end = dayjs(node.values[this.configuration.getValueMap(ValueFields.END)].value as Date);}
             if(this.configuration.field(ValueFields.STATUSDATE)){ status = dayjs(node.values[this.configuration.getValueMap(ValueFields.STATUSDATE)].value as Date);}
-            
+           
+            //create activity with mandatory fields
             //console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
-            activities.push(new Activity(
-                    this.nodeName(node),
-                    node.level,
-                    start,
-                    end,
-                    status
-                    ));
+            let a: Activity = new Activity(
+                this.nodeName(node),
+                node.level,
+                start,
+                end,
+                status);
+
+            //add optional fields
+            if(this.configuration.field(ValueFields.BASELINESTART)){ 
+                a.setBaselineStart(dayjs(node.values[this.configuration.getValueMap(ValueFields.BASELINESTART)].value as Date));
+            }
+            if(this.configuration.field(ValueFields.BASELINEFINISH)){ 
+                a.setBaselineFinish(dayjs(node.values[this.configuration.getValueMap(ValueFields.BASELINEFINISH)].value as Date));
+            }
+
+            //push Activity
+            activities.push(a);
+
         } else {
             activities.push(new Activity(
                 this.nodeName(node),
@@ -733,7 +752,7 @@ export class Visual implements IVisual {
          .classed('grid-v', true)
          .attr('style', 'stroke:gray');
 
-//////////////////////////////////////////////////////////////// bars
+        //////////////////////////////////////////////////////////////// bars
 
         this.bars
             .attr('width', Lib.px(this.tlWidth))
@@ -745,11 +764,11 @@ export class Visual implements IVisual {
             .attr('x', function (d) {
                 return Lib.px(_this.timeline.dateLocation(d.getStart()));
             })
-            .attr('height', Lib.px(this.rowHeight - 4))
+            .attr('height', Lib.px(this.barHeight))
             .attr('width', function (d) {
                 return Lib.px(_this.timeline.dateLocation(d.getEnd()) - _this.timeline.dateLocation(d.getStart()));
             })
-            .attr('y', function (d, i) { return Lib.px((_this.rowHeight * i) + 2) })
+            .attr('y', function (d, i) { return Lib.px((_this.rowHeight * i) + _this.barPadding) })
             .attr('rx', '3px')
             .attr('ry', '3px')
             .classed('activityBar', true)
@@ -763,6 +782,43 @@ export class Visual implements IVisual {
                     default: return 'gray';
                 }
             });
+
+            console.log(this.bars
+            .selectAll('.baseline').data(acts).join('rect')
+            .attr('x', function (d) {
+                return (d.getBaselineStart()==null) ? '0px' : Lib.px(_this.timeline.dateLocation(d.getBaselineStart()));
+            })
+            .attr('height', Lib.px( (this.barHeight)*this.baselineHeightProportion ))
+            .attr('width', function (d) {
+                return (d.getBaselineFinish()==null) ? '0px' : Lib.px(_this.timeline.dateLocation(d.getBaselineFinish()));
+            })
+            .attr('y', function (d, i) { return Lib.px(
+                (_this.rowHeight * i) + 
+                _this.barPadding - 
+                _this.baselineHeightProportion * ( _this.rowHeight + 2*_this.barPadding ))})
+            .attr('rx', '3px')
+            .attr('ry', '3px')
+            .classed('activityBar', true)
+            .classed('baseline', true)
+            .attr('fill', '#696969')
+            );
+
+        // this.bars.selectAll("rect").selectAll(".baseline")
+        // .data(acts)
+        // .join('rect')
+        // .attr('x', function (d) {
+        //     return Lib.px(_this.timeline.dateLocation(d.getStart()));
+        // })
+        // .attr('height', Lib.px(this.rowHeight - 4))
+        // .attr('width', function (d) {
+        //     return Lib.px(_this.timeline.dateLocation(d.getEnd()) - _this.timeline.dateLocation(d.getStart()));
+        // })
+        // .attr('y', function (d, i) { return Lib.px((_this.rowHeight * i) + 2) })
+        // .attr('rx', '3px')
+        // .attr('ry', '3px')
+        // .classed('activityBar', true)
+        // .classed('baseline', true)
+        // .attr('fill', '#696969');
 
 
         //////////////////////////////////////////////////////////////// Status

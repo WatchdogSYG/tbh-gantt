@@ -158,7 +158,7 @@ https://stackoverflow.com/questions/14422198/how-do-i-remove-all-children-elemen
 
 This procedure aims to document all steps required to add a new measure field into the matrix dataRole in the `capabilities.json` file. In this case, we want to add a `Baseline Start` date field and a `Baseline Finish` date field.
 
-### 1. Capabilities File
+### 1. Adding Capabilities
 
 Add the following objects to the `dataRoles` array in the `capabilities.json` file.
 
@@ -229,9 +229,7 @@ Similarly, add entries to the dataViewMappings.matrix and conditions arrays.
 ]
 ```
 
-### 2. Setting up the Configuration and Activity structure
-
-#### configuration.ts
+### 2. Setting up the Configuration structure (configuration.ts)
 
 First, add an enumerated value to the enum `ValueFields`. Ensure that the order matches the order specified in the capabilities.json `dataRoles` array. This is because the function `Configuration.checkRoles(vs: powerbiDataViewMetadataColumn[])` only reduces the list of value sources by ignoring the missing fields, rather than performing a search on each field; therefore the order matters.
 
@@ -250,7 +248,7 @@ export enum ValueFields {
 
 Next, extend the list of member variables and extend the member functions to ensure that the new enum is processed properly.
 
-##### Member Variables and constructor()
+#### Member Variables and constructor()
 Add a boolean member variable to represent if the new buckets (`baselineStart` and `baselineFinish`) contain a valid field.
 
 ```
@@ -261,7 +259,8 @@ export class Configuration {
     private bool_start: boolean; //start      
     private bool_end: boolean; //end        
     private bool_baselineStart: boolean; //baselineStart    <-------- add
-    private bool_baselineFinish: boolean; //baselineFinish  <-------- addprivate bool_isMilestone: boolean; //isMilestone
+    private bool_baselineFinish: boolean; //baselineFinish  <-------- add
+    private bool_isMilestone: boolean; //isMilestone
     private bool_isCritical: boolean; //isCritical 
     private bool_statusDate: boolean; //statusDate 
     
@@ -273,14 +272,96 @@ export class Configuration {
     //...
 }
 ```
-
 Ensure to initialise the variable to `false` in the `constructor()`.
 
-##### field()
+#### field()
 This function can check or set the bool_* members of the Configuration object through switch statements. Ensure the new cases are evaluated.
 
-##### Support functions
+#### Support functions
 
 Add the new ValueFields and variables to other support functions within `configuration.ts`. Eg. `printConfig()`, `valueRoles()`, `configurationBooleans()`
 
 To test that the Configuration object is behaving properly, set the `Configuration.verbose` variable to true and run the visual with previously valid data, with and without the new fields. Observe that the logging of the `Configuration.printConfig()` function properly reports the supplied fields.
+
+### Setting up the Activity structure (activity.ts)
+
+Next we must modify the code so the `Activity` objects can be constructed with the new fields.
+
+Add members, getters, and setters for each new field.
+
+#### Initialising new Activity Members
+
+Optional fields such as `Baseline Start` can be set after construction in the `Visual.dfsPreorder()` function, rather than requiring a null value in the constructor or using an optional argument. You are free to disagree but I think it is simpler this way.
+
+Skip to the next step.
+
+### Processing the new fields in the Visual
+
+#### Initialising the new fields in Activities
+
+Edit `dfsPreorder()` to capture the new fields. Ensure that it is safe to access the field every time as a null value may cause an exception.
+
+An example of `dfsPreorder()` with optional fields is shown below.
+
+```ts
+/**
+     * Performs a Pre-order Depth-First Search of the DataViewMatrixNode tree structure assuming a general tree structure.
+     * The nodes are arranged into a linear array based on the DFS traversal algorithm, mimicking the view observed in a Gantt chart
+     * and in other Scheduling software.
+     * @param activities The Activity array to output the list of nodes in
+     * @param node the DataViewMatrixNode to consider as the root node of the tree
+     */
+    private dfsPreorder(activities: Activity[], node: powerbi.DataViewMatrixNode) {
+        this.updateMaxDepth(node.level);
+
+        if (node.children == null) {
+
+            //mandatory fields
+            let start: dayjs.Dayjs = null;
+            let end: dayjs.Dayjs = null;
+            let status: dayjs.Dayjs = null;
+
+            //check if safe to access .value
+            if(this.configuration.field(ValueFields.START)){ start = dayjs(node.values[this.configuration.getValueMap(ValueFields.START)].value as Date);}
+            if(this.configuration.field(ValueFields.END)){ end = dayjs(node.values[this.configuration.getValueMap(ValueFields.END)].value as Date);}
+            if(this.configuration.field(ValueFields.STATUSDATE)){ status = dayjs(node.values[this.configuration.getValueMap(ValueFields.STATUSDATE)].value as Date);}
+           
+            //create activity with mandatory fields
+            //console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
+            let a: Activity = new Activity(
+                this.nodeName(node),
+                node.level,
+                start,
+                end,
+                status);
+
+            //add optional fields
+            if(this.configuration.field(ValueFields.BASELINESTART)){ 
+                a.setBaselineStart(dayjs(node.values[this.configuration.getValueMap(ValueFields.BASELINESTART)].value as Date));
+            }
+            if(this.configuration.field(ValueFields.BASELINEFINISH)){ 
+                a.setBaselineFinish(dayjs(node.values[this.configuration.getValueMap(ValueFields.BASELINEFINISH)].value as Date));
+            }
+
+            //push Activity
+            activities.push(a);
+
+        } else {
+            activities.push(new Activity(
+                this.nodeName(node),
+                node.level,
+                null,
+                null,
+                null
+                ));
+            for (let i = 0; i < node.children.length; i++) {
+                this.dfsPreorder(activities, node.children[i]);
+            }
+        }
+    }
+```
+
+#### Drawing the new bars
+
+Now that the `Activity`s capture the Baseline dates, we now have to check for the baseline field and decide whether to draw bars.
+

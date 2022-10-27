@@ -15,6 +15,8 @@ export class Activity {
     public getLevelString(): string { return 'indent'.concat(this.level.toString()); } //required for workaround, search for @indentTypeMismatch in visual.ts
     public getStart(): dayjs.Dayjs { return this.start; }
     public getEnd(): dayjs.Dayjs { return this.end; }
+    public getBaselineStart(): dayjs.Dayjs { return this.baselineStart; }
+    public getBaselineFinish(): dayjs.Dayjs { return this.baselineFinish; }
     public getGlobalStatus(): dayjs.Dayjs { return this.globalStatus; }
 
     public getTableText(): string[] { return [this.name, this.start.format('DD/MM/YY'), this.end.format('DD/MM/YY')]; }
@@ -22,6 +24,8 @@ export class Activity {
     public setLevel(level: number) { this.level = level; }
     public setStart(date: dayjs.Dayjs) { this.start = date; }
     public setEnd(date: dayjs.Dayjs) { this.end = date; }
+    public setBaselineStart(date: dayjs.Dayjs) { this.baselineStart = date };
+    public setBaselineFinish(date: dayjs.Dayjs) { this.baselineFinish = date };
     public setGlobalStatus(date: dayjs.Dayjs) { this.globalStatus = date; }
 
     constructor(name: string, level: number, start: dayjs.Dayjs, end: dayjs.Dayjs, globalStatus: dayjs.Dayjs) {

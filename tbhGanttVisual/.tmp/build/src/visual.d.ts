@@ -31,6 +31,9 @@ export declare class Visual implements IVisual {
     private tlWidth;
     private tlHeight;
     private rowHeight;
+    private barHeight;
+    private barPadding;
+    private baselineHeightProportion;
     private chartHeight;
     private gMonths;
     private gYears;

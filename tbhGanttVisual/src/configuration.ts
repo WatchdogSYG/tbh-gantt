@@ -23,7 +23,7 @@ export enum ValueFields {
 
 export class Configuration {
 
-    private verbose = true;
+    private verbose = false;
 
     private bool_start: boolean; //start      
     private bool_end: boolean; //end        

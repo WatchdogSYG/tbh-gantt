@@ -23,11 +23,17 @@ class Activity {
     getLevelString() { return 'indent'.concat(this.level.toString()); } //required for workaround, search for @indentTypeMismatch in visual.ts
     getStart() { return this.start; }
     getEnd() { return this.end; }
+    getBaselineStart() { return this.baselineStart; }
+    getBaselineFinish() { return this.baselineFinish; }
     getGlobalStatus() { return this.globalStatus; }
     getTableText() { return [this.name, this.start.format('DD/MM/YY'), this.end.format('DD/MM/YY')]; }
     setLevel(level) { this.level = level; }
     setStart(date) { this.start = date; }
     setEnd(date) { this.end = date; }
+    setBaselineStart(date) { this.baselineStart = date; }
+    ;
+    setBaselineFinish(date) { this.baselineFinish = date; }
+    ;
     setGlobalStatus(date) { this.globalStatus = date; }
 }
 class ActivityStyle {
@@ -73,7 +79,7 @@ var ValueFields;
 })(ValueFields || (ValueFields = {}));
 class Configuration {
     constructor() {
-        this.verbose = true;
+        this.verbose = false;
         this.bool_start = false;
         this.bool_end = false;
         this.bool_isMilestone = false;
@@ -1235,6 +1241,9 @@ class Visual {
         this.tlWidth = Math.ceil(this.timeline.getDays() * this.timeline.getDayScale()); //cannot be less than div width!
         this.tlHeight = _src_lib__WEBPACK_IMPORTED_MODULE_6__/* .pxToNumber */ .F(this.style.getPropertyValue('--timelineHeight'));
         this.rowHeight = _src_lib__WEBPACK_IMPORTED_MODULE_6__/* .pxToNumber */ .F(this.style.getPropertyValue('--rowHeight'));
+        this.barPadding = 2;
+        this.barHeight = this.rowHeight - 2 * this.barPadding;
+        this.baselineHeightProportion = 0.5;
         this.timelineSVG = this.divChartHeader
             .append('svg')
             .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.tlHeight))
@@ -1511,6 +1520,7 @@ class Visual {
     dfsPreorder(activities, node) {
         this.updateMaxDepth(node.level);
         if (node.children == null) {
+            //mandatory fields
             let start = null;
             let end = null;
             let status = null;
@@ -1524,8 +1534,18 @@ class Visual {
             if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.STATUSDATE */ .$.STATUSDATE)) {
                 status = dayjs__WEBPACK_IMPORTED_MODULE_5__(node.values[this.configuration.getValueMap(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.STATUSDATE */ .$.STATUSDATE)].value);
             }
+            //create activity with mandatory fields
             //console.log("LOG: RECURSION: level = " + node.level + ', name = ' + this.nodeName(node) + ', start = ' + node.values[0].value);
-            activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_7__/* .Activity */ .c(this.nodeName(node), node.level, start, end, status));
+            let a = new _src_activity__WEBPACK_IMPORTED_MODULE_7__/* .Activity */ .c(this.nodeName(node), node.level, start, end, status);
+            //add optional fields
+            if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.BASELINESTART */ .$.BASELINESTART)) {
+                a.setBaselineStart(dayjs__WEBPACK_IMPORTED_MODULE_5__(node.values[this.configuration.getValueMap(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.BASELINESTART */ .$.BASELINESTART)].value));
+            }
+            if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.BASELINEFINISH */ .$.BASELINEFINISH)) {
+                a.setBaselineFinish(dayjs__WEBPACK_IMPORTED_MODULE_5__(node.values[this.configuration.getValueMap(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.BASELINEFINISH */ .$.BASELINEFINISH)].value));
+            }
+            //push Activity
+            activities.push(a);
         }
         else {
             activities.push(new _src_activity__WEBPACK_IMPORTED_MODULE_7__/* .Activity */ .c(this.nodeName(node), node.level, null, null, null));
@@ -1662,11 +1682,11 @@ class Visual {
             .attr('x', function (d) {
             return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(_this.timeline.dateLocation(d.getStart()));
         })
-            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.rowHeight - 4))
+            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(this.barHeight))
             .attr('width', function (d) {
             return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(_this.timeline.dateLocation(d.getEnd()) - _this.timeline.dateLocation(d.getStart()));
         })
-            .attr('y', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px((_this.rowHeight * i) + 2); })
+            .attr('y', function (d, i) { return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px((_this.rowHeight * i) + _this.barPadding); })
             .attr('rx', '3px')
             .attr('ry', '3px')
             .classed('activityBar', true)
@@ -1680,6 +1700,41 @@ class Visual {
                 default: return 'gray';
             }
         });
+        console.log(this.bars
+            .selectAll('.baseline').data(acts).join('rect')
+            .attr('x', function (d) {
+            return (d.getBaselineStart() == null) ? '0px' : _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(_this.timeline.dateLocation(d.getBaselineStart()));
+        })
+            .attr('height', _src_lib__WEBPACK_IMPORTED_MODULE_6__.px((this.barHeight) * this.baselineHeightProportion))
+            .attr('width', function (d) {
+            return (d.getBaselineFinish() == null) ? '0px' : _src_lib__WEBPACK_IMPORTED_MODULE_6__.px(_this.timeline.dateLocation(d.getBaselineFinish()));
+        })
+            .attr('y', function (d, i) {
+            return _src_lib__WEBPACK_IMPORTED_MODULE_6__.px((_this.rowHeight * i) +
+                _this.barPadding -
+                _this.baselineHeightProportion * (_this.rowHeight + 2 * _this.barPadding));
+        })
+            .attr('rx', '3px')
+            .attr('ry', '3px')
+            .classed('activityBar', true)
+            .classed('baseline', true)
+            .attr('fill', '#696969'));
+        // this.bars.selectAll("rect").selectAll(".baseline")
+        // .data(acts)
+        // .join('rect')
+        // .attr('x', function (d) {
+        //     return Lib.px(_this.timeline.dateLocation(d.getStart()));
+        // })
+        // .attr('height', Lib.px(this.rowHeight - 4))
+        // .attr('width', function (d) {
+        //     return Lib.px(_this.timeline.dateLocation(d.getEnd()) - _this.timeline.dateLocation(d.getStart()));
+        // })
+        // .attr('y', function (d, i) { return Lib.px((_this.rowHeight * i) + 2) })
+        // .attr('rx', '3px')
+        // .attr('ry', '3px')
+        // .classed('activityBar', true)
+        // .classed('baseline', true)
+        // .attr('fill', '#696969');
         //////////////////////////////////////////////////////////////// Status
         //the status lines are destroyed and recreated every update(). I couldn't find a way to use .join or .update
         if (this.configuration.field(_src_configuration__WEBPACK_IMPORTED_MODULE_4__/* .ValueFields.STATUSDATE */ .$.STATUSDATE)) {
