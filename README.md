@@ -163,35 +163,88 @@ This procedure aims to document all steps required to add a new measure field in
 Add the following objects to the `dataRoles` array in the `capabilities.json` file.
 
 ```
-{
-    "name": "Baseline Start",
-    "displayName": "Baseline Start",
-    "displayNameKey": "Visual_Values",
-    "kind": "Measure"
-},
-{
-    "name": "Baseline Finish",
-    "displayName": "Baseline Finish",
-    "displayNameKey": "Visual_Values",
-    "kind": "Measure"
-}
+"dataRoles":[
+    ...,
+
+    {
+        "name": "Baseline Start",
+        "displayName": "Baseline Start",
+        "displayNameKey": "Visual_Values",
+        "kind": "Measure"
+    },
+    {
+        "name": "Baseline Finish",
+        "displayName": "Baseline Finish",
+        "displayNameKey": "Visual_Values",
+        "kind": "Measure"
+    },
+
+    ...
+]
+```
+Similarly, add entries to the dataViewMappings.matrix and conditions arrays.
+
+```
+"matrix": {
+                "rows": {
+                    "for": {
+                        "in": "WBS"
+                    }
+                },
+                "values": {
+                    "select": [
+
+                        ...,
+
+                        {
+                            "for": {
+                                "in": "BaselineStart"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "BaselineFinish"
+                            }
+                        },
+
+                        ...
+                    ]
+                }
+            },
+```
+
+```
+"conditions":[
+
+    ...,
+
+    "BaselineStart":{
+        "max":1
+    },
+    "BaselineFinish":{
+        "max":1
+    },
+
+    ...
+]
 ```
 
 ### 2. Setting up the Configuration and Activity structure
 
 #### configuration.ts
 
-First, add an enumerated value to the enum `ValueFields`.
+First, add an enumerated value to the enum `ValueFields`. Ensure that the order matches the order specified in the capabilities.json `dataRoles` array. This is because the function `Configuration.checkRoles(vs: powerbiDataViewMetadataColumn[])` only reduces the list of value sources by ignoring the missing fields, rather than performing a search on each field; therefore the order matters.
 
 ```
 export enum ValueFields {
     START = 'Start',
     END = 'Finish',
+    BASELINESTART = 'BaselineStart',   //add
+    BASELINEFINISH = 'BaselineFinish', //add
     ISMILESTONE = 'IsMilestone',
     ISCRITICAL = 'IsCritical',
-    STATUSDATE = 'StatusDate',
-    BASELINESTART = 'BaselineStart',  //add
-    BASELINEFINISH = 'BaselineFinish' //add
+    STATUSDATE = 'StatusDate'
+    
 }
 ```
 
@@ -207,11 +260,11 @@ export class Configuration {
 
     private bool_start: boolean; //start      
     private bool_end: boolean; //end        
-    private bool_isMilestone: boolean; //isMilestone
+    private bool_baselineStart: boolean; //baselineStart    <-------- add
+    private bool_baselineFinish: boolean; //baselineFinish  <-------- addprivate bool_isMilestone: boolean; //isMilestone
     private bool_isCritical: boolean; //isCritical 
     private bool_statusDate: boolean; //statusDate 
-    private bool_baselineStart: boolean; //baselineStart    <-------- add
-    private bool_baselineFinish: boolean; //baselineFinish  <-------- add
+    
 
     private valueMap: Map<ValueFields, number>;
 
@@ -229,3 +282,5 @@ This function can check or set the bool_* members of the Configuration object th
 ##### Support functions
 
 Add the new ValueFields and variables to other support functions within `configuration.ts`. Eg. `printConfig()`, `valueRoles()`, `configurationBooleans()`
+
+To test that the Configuration object is behaving properly, set the `Configuration.verbose` variable to true and run the visual with previously valid data, with and without the new fields. Observe that the logging of the `Configuration.printConfig()` function properly reports the supplied fields.

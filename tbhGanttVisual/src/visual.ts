@@ -196,7 +196,7 @@ export class Visual implements IVisual {
             .append('div')
             .attr('id', 'div-header')
             .append('h4')
-            .text('TBH Gantt Chart Visual v0.1 (in development)');
+            .text('TBH Gantt Chart Visual v0.2 (in development)');
 
         //structure of the content below the header
         this.content = d3.select(options.element)

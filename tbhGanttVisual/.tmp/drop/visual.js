@@ -61,17 +61,19 @@ class ActivityStyle {
 //TODO
 var ValueFields;
 (function (ValueFields) {
+    //Ensure that the order of the ValueFields enums are the same as defined in the dataRoles array
+    //in the capabilities.json file.
     ValueFields["START"] = "Start";
     ValueFields["END"] = "Finish";
+    ValueFields["BASELINESTART"] = "BaselineStart";
+    ValueFields["BASELINEFINISH"] = "BaselineFinish";
     ValueFields["ISMILESTONE"] = "IsMilestone";
     ValueFields["ISCRITICAL"] = "IsCritical";
     ValueFields["STATUSDATE"] = "StatusDate";
-    ValueFields["BASELINESTART"] = "BaselineStart";
-    ValueFields["BASELINEFINISH"] = "BaselineFinish";
 })(ValueFields || (ValueFields = {}));
 class Configuration {
     constructor() {
-        this.verbose = false;
+        this.verbose = true;
         this.bool_start = false;
         this.bool_end = false;
         this.bool_isMilestone = false;
@@ -137,7 +139,7 @@ class Configuration {
         let r = this.valueRoles();
         let valueSourceIndex = 0;
         for (let i = 0; (i < r.length) && (valueSourceIndex < vs.length); i++) {
-            //console.log('vs[' + valueSourceIndex + '] = ' + vs[valueSourceIndex].roles + ', r[' + i + '] = ' + r[i]);
+            console.log('vs[' + valueSourceIndex + '] = ' + vs[valueSourceIndex].roles + ', r[' + i + '] = ' + r[i]);
             if (vs[valueSourceIndex].roles[r[i]] == true) {
                 this.field(r[i], true);
                 this.valueMap.set(r[valueSourceIndex], valueSourceIndex);
@@ -146,7 +148,16 @@ class Configuration {
             else {
                 this.field(r[i], false); //must explicitly set in case a field is removed
             }
-            //this.logConfig();
+            this.logConfig();
+        }
+        if (this.verbose) {
+            console.log(this.valueMap.get(ValueFields.START));
+            console.log(this.valueMap.get(ValueFields.END));
+            console.log(this.valueMap.get(ValueFields.BASELINESTART));
+            console.log(this.valueMap.get(ValueFields.BASELINEFINISH));
+            console.log(this.valueMap.get(ValueFields.ISCRITICAL));
+            console.log(this.valueMap.get(ValueFields.ISMILESTONE));
+            console.log(this.valueMap.get(ValueFields.STATUSDATE));
         }
         return this;
     }
@@ -156,11 +167,11 @@ class Configuration {
     printConfig() {
         return ValueFields.START + ' = ' + this.bool_start + '\n' +
             ValueFields.END + ' = ' + this.bool_end + '\n' +
+            ValueFields.BASELINESTART + ' = ' + this.bool_baselineStart + '\n' +
+            ValueFields.BASELINEFINISH + ' = ' + this.bool_baselineFinish +
             ValueFields.ISMILESTONE + ' = ' + this.bool_isMilestone + '\n' +
             ValueFields.ISCRITICAL + ' = ' + this.bool_isCritical + '\n' +
-            ValueFields.STATUSDATE + ' = ' + this.bool_statusDate + '\n' +
-            ValueFields.BASELINESTART + ' = ' + this.bool_baselineStart + '\n' +
-            ValueFields.BASELINEFINISH + ' = ' + this.bool_baselineFinish;
+            ValueFields.STATUSDATE + ' = ' + this.bool_statusDate + '\n';
     }
     logConfig() {
         console.log(this.printConfig());
@@ -212,22 +223,22 @@ class Configuration {
         return [
             ValueFields.START,
             ValueFields.END,
+            ValueFields.BASELINESTART,
+            ValueFields.BASELINEFINISH,
             ValueFields.ISMILESTONE,
             ValueFields.ISCRITICAL,
             ValueFields.STATUSDATE,
-            ValueFields.BASELINESTART,
-            ValueFields.BASELINEFINISH
         ];
     }
     configurationBooleans() {
         return [
             this.bool_start,
             this.bool_end,
+            this.bool_baselineStart,
+            this.bool_baselineFinish,
             this.bool_isMilestone,
             this.bool_isCritical,
             this.bool_statusDate,
-            this.bool_baselineStart,
-            this.bool_baselineFinish
         ];
     }
 }
@@ -1178,7 +1189,7 @@ class Visual {
             .append('div')
             .attr('id', 'div-header')
             .append('h4')
-            .text('TBH Gantt Chart Visual v0.1 (in development)');
+            .text('TBH Gantt Chart Visual v0.2 (in development)');
         //structure of the content below the header
         this.content = d3__WEBPACK_IMPORTED_MODULE_1__/* .select */ .Ys(options.element)
             .append('div')

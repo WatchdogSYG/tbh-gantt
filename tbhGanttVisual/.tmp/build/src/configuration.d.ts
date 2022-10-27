@@ -7,11 +7,11 @@ import powerbi from "powerbi-visuals-api";
 export declare enum ValueFields {
     START = "Start",
     END = "Finish",
+    BASELINESTART = "BaselineStart",
+    BASELINEFINISH = "BaselineFinish",
     ISMILESTONE = "IsMilestone",
     ISCRITICAL = "IsCritical",
-    STATUSDATE = "StatusDate",
-    BASELINESTART = "BaselineStart",
-    BASELINEFINISH = "BaselineFinish"
+    STATUSDATE = "StatusDate"
 }
 export declare class Configuration {
     private verbose;
